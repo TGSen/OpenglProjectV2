@@ -19,8 +19,10 @@ varying vec2 V_textcoord;
 varying vec4 V_color;
 varying vec4 V_Normal;
 varying vec4 V_WorldPos;
-const vec3 monoMultiplier = vec3(0.299, 0.587, 0.114);
+uniform vec4 U_MultipleFilter;
+//const vec3 monoMultiplier = vec3(0.299, 0.587, 0.114);
 void main(){
+//这些先不用 ----------start
     vec4 color = vec4(0.0f,0.0f,0.0f,0.0f);
       //--计算环境光
     vec4 ambientColor = U_LightAmbient*U_AmbientMaterial;
@@ -51,14 +53,21 @@ void main(){
     }else{
         color = ambientColor+diffuseColor*texture2D(U_Texture,V_textcoord.xy);
     }
+ //这些先不用 ----------start
     //增加一些滤镜效果
     // gl_FragColor =color;
     //gl_FragColor = vec4((1.0 - gl_FragColor.rgb), gl_FragColor.w);
         //gl_FragColor = V_color;
   //gl_FragColor = V_color*texture2D(U_Texture, V_textcoord);
  // gl_FragColor = texture2D(U_Texture, V_textcoord.xy);
+
+ //黑白滤镜
   vec4 colorBase = texture2D(U_Texture, V_textcoord.xy);
-  float monoColor = dot(colorBase.rgb,monoMultiplier);
-   gl_FragColor = vec4(monoColor, monoColor, monoColor, 1.0);
+  //混合之后的效果
+  float blendColorR = dot(colorBase.r,U_MultipleFilter.x);
+  float blendColorG = dot(colorBase.g,U_MultipleFilter.y);
+  float blendColorB = dot(colorBase.b,U_MultipleFilter.z);
+  float blendColorA = dot(colorBase.a,U_MultipleFilter.w);
+   gl_FragColor = vec4(blendColorR, blendColorG, blendColorB, blendColorA);
 
 }

@@ -44,8 +44,11 @@ public:
     //设置UniformVec4
     void setUiformVec4(const char* name , float x,float y, float z,float w);
 
-    void setTextureEexternalOes(GLuint textureId);
-};
+    //设置UniformVec3 跟上面的一样，比如修改更改颜色滤镜分量
+//    void setUiformVec3f(const char * namefloat ,r,float g ,float b);
 
+    void setTextureEexternalOes(GLuint textureId);
+
+};
 
 #endif //OPENGLSTUDYV1_SHADER_H

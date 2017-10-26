@@ -25,9 +25,9 @@ Camera* beforInit(JNIEnv *env) {
 
 void init() {
 //    mViewMatrix = glm::lookAt(carmeaPos,glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,1.0f));
-    model = new Model;
-    model->initModel("Res/Sphere.obj");
-    model->setModelTexture("Res/earth.bmp");
+//    model = new Model;
+//    model->initModel("Res/Sphere.obj");
+//    model->setModelTexture("Res/earth.bmp");
 //    model->setModelPosition(0.0f,0.0f,0.0f);
 //    ground = new DrawAnyS;
 //    ground->initData();
@@ -64,12 +64,12 @@ void draw() {
 //    ground->draw(mViewMatrix,mProjectionMatrix);
 //    model->drawModel(mViewMatrix,mProjectionMatrix,carmeaPos.x,carmeaPos.y,carmeaPos.z);
     //绘制粒子
-    particleSystem->draw(mViewMatrix, mProjectionMatrix);
+   // particleSystem->draw(mViewMatrix, mProjectionMatrix);
     //粒子运动
-    particleSystem->updataFrame(time);
+  //  particleSystem->updataFrame(time);
 //    oxHead->drawModel(mViewMatrix,mProjectionMatrix,carmeaPos.x,carmeaPos.y,carmeaPos.z);
 
     //良好习惯，当绘制完毕后，将程序置为0 号程序
     glUseProgram(0);
-    LOGE("draw usetime %f",time);
+//    LOGE("draw usetime %f",time);
 }

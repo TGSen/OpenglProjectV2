@@ -22,6 +22,8 @@ public:
     jobject javaSurfaceTextureObj;
     jobject getSurfaceTextureObject();
     void createSurfaceTextureObject(JNIEnv *env);
+
+    void changeFilter(float cr,float cg, float cb , float ca);
 };
 
 

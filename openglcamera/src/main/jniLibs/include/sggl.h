@@ -21,6 +21,6 @@
 #include "Glm/ext.hpp"
 
 #include "android/log.h"
-#define LOG_TAG    "sgllog"
+#define LOG_TAG    "sen_"
 #define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG, __VA_ARGS__)
 

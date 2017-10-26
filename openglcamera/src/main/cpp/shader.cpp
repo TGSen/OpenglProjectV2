@@ -20,8 +20,11 @@ void SShader::init(const char *vsPath, const char *fsPath) {
     glDeleteShader(vsShader);
     glDeleteShader(fsShader);
 
-    if (mProgram==0)
+    if (mProgram==0){
+        LOGE("mProgram ==0");
         return;
+    }
+    LOGE("mProgram !=0");
     //从shader 读取属性
     positionLocation = glGetAttribLocation(mProgram,"poistion");
     colorLocation = glGetAttribLocation(mProgram,"color");
@@ -31,6 +34,8 @@ void SShader::init(const char *vsPath, const char *fsPath) {
     viewMatrixLocation = glGetUniformLocation(mProgram,"ViewMatrix");
     modelMatrixLocation = glGetUniformLocation(mProgram,"ModelMatrix");
 
+
+
 }
 
 void SShader::bind(float *M, float *V, float *P) {
@@ -38,6 +43,7 @@ void SShader::bind(float *M, float *V, float *P) {
     glUniformMatrix4fv(modelMatrixLocation,1,GL_FALSE,M);
     glUniformMatrix4fv(viewMatrixLocation,1,GL_FALSE,V);
     glUniformMatrix4fv(projectionMatrixLocation,1,GL_FALSE,P);
+
     ////多重贴图的做法
     int index = 0;
     for(auto iterators = uniformTextures.begin(); iterators !=uniformTextures.end();++iterators){
@@ -74,6 +80,8 @@ void SShader::bind(float *M, float *V, float *P) {
     glEnableVertexAttribArray(normalLocation);
     glVertexAttribPointer(normalLocation, 4, GL_FLOAT, GL_FALSE, sizeof(Vertex),
                           (const void *) (sizeof(float) * 12));
+
+
 
 }
 
@@ -146,7 +154,7 @@ void SShader::setTexture(char * name,GLuint texture){
     auto iterators = uniformTextures.find(name);
     if (iterators ==uniformTextures.end()){
         //找不到就创建
-        GLuint  location  = glGetUniformLocation(mProgram,name);
+        GLint  location  = glGetUniformLocation(mProgram,name);
         if (location !=-1){
             UniformTexture *uniformTexture =new UniformTexture;
             LOGE("setTexture yes");
@@ -161,6 +169,13 @@ void SShader::setTexture(char * name,GLuint texture){
     }
 
 }
+
+//void SShader::setUiformVec3f(char * name,float r,float g ,float b){
+//
+//    glUniform3f(glGetUniformLocation(mProgram, "U_MultipleFilter"), r, g,b);
+////    GLint  location  = glGetUniformLocation(mProgram,"U_MultipleFilter");
+////    glUniform3f(location,r,g,b);
+//}
 
 
 

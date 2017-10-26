@@ -4,6 +4,8 @@
 
 #ifndef _Included_sen_com_openglcamera_natives_CameraSGLNative
 #define _Included_sen_com_openglcamera_natives_CameraSGLNative
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -46,6 +48,9 @@ JNIEXPORT void JNICALL Java_sen_com_openglcamera_natives_CameraSGLNative_onDrawF
  */
 JNIEXPORT jobject JNICALL Java_sen_com_openglcamera_natives_CameraSGLNative_getSurfaceTexture
   (JNIEnv *, jclass);
+
+
+JNIEXPORT void JNICALL Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeFileter(JNIEnv * , jclass , jstring , jstring ) ;
 
 #ifdef __cplusplus
 }

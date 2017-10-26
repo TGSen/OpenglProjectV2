@@ -9,7 +9,7 @@ import java.io.Serializable;
  * Des    : 当前的Camera 的设置
  */
 
-public class CurrentCameInfo implements Serializable {
+public class CurrentCameInfo implements Serializable , Cloneable{
     private int picIndex;
     private int preIndex;
     private int filterIndex;
@@ -74,5 +74,28 @@ public class CurrentCameInfo implements Serializable {
         this.preWith = preWith;
     }
 
+    @Override
+    public String toString() {
+        return "CurrentCameInfo{" +
+                "picIndex=" + picIndex +
+                ", preIndex=" + preIndex +
+                ", filterIndex=" + filterIndex +
+                "\n picWith*picHeigth=" + picWith +
+                "*" + picHeigth +
+                "\n preWith*preHeigth=" + preWith +
+                "*" + preHeigth +
+                '}';
+    }
 
+    @Override
+    public Object clone(){
+        CurrentCameInfo c = null;
+        try
+        {
+            c = (CurrentCameInfo) super.clone();
+        } catch (CloneNotSupportedException e){
+            e.printStackTrace();
+        }
+        return c;
+    }
 }

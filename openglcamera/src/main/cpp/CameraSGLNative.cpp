@@ -62,3 +62,14 @@ JNIEXPORT jobject JNICALL Java_sen_com_openglcamera_natives_CameraSGLNative_getS
         (JNIEnv *, jclass){
     return camera->getSurfaceTextureObject();
 }
+
+JNIEXPORT void JNICALL
+Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeFileter(JNIEnv *env, jclass type,
+                                                                  jstring camera_vs,
+                                                                  jstring camera_fs) {
+    const char *cameraVs = env->GetStringUTFChars(camera_vs, 0);
+    const char *cameraFs = env->GetStringUTFChars(camera_fs, 0);
+    camera->changeFilter(0.8f,0.0f,0.2f,0.0f);
+    env->ReleaseStringUTFChars(camera_vs, cameraVs);
+    env->ReleaseStringUTFChars(camera_fs, cameraFs);
+}

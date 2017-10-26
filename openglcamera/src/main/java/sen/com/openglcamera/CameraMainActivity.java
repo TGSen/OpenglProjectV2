@@ -19,7 +19,7 @@ import sen.com.openglcamera.natives.CameraSGLNative;
 import sen.com.openglcamera.view.CameraButtonView;
 import sen.com.openglcamera.view.CameraSGLSurfaceView;
 
-public class CameraMainActivity extends AppCompatActivity implements View.OnClickListener {
+public class CameraMainActivity extends AppCompatActivity implements View.OnClickListener, CameraInfoFragment.OnSettingChangeLinstener {
     CameraSGLSurfaceView mSGlSurfaceView;
     private int mCameraId;
     private CameraOldVersion mCamera;
@@ -66,6 +66,7 @@ public class CameraMainActivity extends AppCompatActivity implements View.OnClic
         bundle.putSerializable("CameraSettingInfo",info);
         bundle.putSerializable("CurrentCameInfo",currentCameInfo);
         dialog.setArguments(bundle);
+        dialog.setOnSettingChangeLinstener(this);
         dialog.show(getFragmentManager(), "CameraInfoFragment");
     }
 
@@ -113,6 +114,12 @@ public class CameraMainActivity extends AppCompatActivity implements View.OnClic
                 break;
         }
 
+    }
+
+    @Override
+    public void onSettingChange(CurrentCameInfo currentCameInfo) {
+        mCamera.setCameraInfo(currentCameInfo);
+//        Log.e("sen_",currentCameInfo.toString());
     }
 }
 

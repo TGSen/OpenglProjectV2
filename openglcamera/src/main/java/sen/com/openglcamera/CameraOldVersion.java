@@ -11,12 +11,14 @@ import java.util.List;
 
 import sen.com.openglcamera.bean.CameraSettingInfo;
 import sen.com.openglcamera.bean.CurrentCameInfo;
+import sen.com.openglcamera.natives.CameraSGLNative;
 import sen.com.openglcamera.utils.BitmapUtils;
 
 /**
  * Author : 唐家森
  * Version: 1.0
  * Des    : 相机的操作，拍照，预览
+ * 目前在NDK 层做了加载Asseset/Res 的加载GLSL 代码，和图片bmp
  */
 
 public class CameraOldVersion {
@@ -47,30 +49,41 @@ public class CameraOldVersion {
         if(mCamera!=null){
             try {
                 Camera.Parameters parameters = mCamera.getParameters();
+                boolean isChange =false;
                 //有变化才设置
                 if (cameInfo.getPicWith()>0 && cameInfo.getPicHeigth()>0&&
                         currentCameInfo.getPicWith()!=cameInfo.getPicWith()&&
                         currentCameInfo.getPicHeigth()!=cameInfo.getPicHeigth()){
+                    Log.e("sen_","pic change");
                     parameters.setPictureSize(cameInfo.getPicWith(),cameInfo.getPicHeigth());
+                    isChange =true;
                 }
                 if(cameInfo.getPreWith()>0 && cameInfo.getPreHeigth()>0&&
                         currentCameInfo.getPreWith()!=cameInfo.getPreWith()&&
                         currentCameInfo.getPreHeigth()!=cameInfo.getPreHeigth()){
                     parameters.setPreviewSize(cameInfo.getPreWith(),cameInfo.getPreHeigth());
+                    Log.e("sen_","pre change");
+                    isChange =true;
                 }
+                //目前在NDK 层做了加载Asseset/Res 的加载方法，所以，目前遵从这样的写法
+                if(cameInfo.getFilterIndex()!=currentCameInfo.getFilterIndex()){
+                    if(cameInfo.getFilterIndex()==0){
+                        CameraSGLNative.onChangeFileter("Res/camera_normal.vs", "Res/camera_normal.fs");
+                    }else if(cameInfo.getFilterIndex()==1){
+                        CameraSGLNative.onChangeFileter("Res/camera_back&while.vs","Res/camera_back&while.fs");
+                    }
+                }
+                if(isChange){
+                    //有变化才从新
+                    mCamera.stopPreview();
+                    mCamera.setParameters(parameters);
+                    mCamera.startPreview();
+                }
+                currentCameInfo = (CurrentCameInfo) cameInfo.clone();
 
-//                if(cameInfo.getFilterIndex()!=currentCameInfo.getFilterIndex()){
-//                    if(cameInfo.getFilterIndex()==0){
-//                        CameraSGLNative.onChangeFileter("camera_narmol_vs","camera_narmol_fs");
-//                    }else if(cameInfo.getFilterIndex()==1){
-//                        CameraSGLNative.onChangeFileter("camera_back&while_vs","camera_back&while_fs");
-//                    }
-//
-//                }
-
-                mCamera.setParameters(parameters);
             }catch (Exception e){
                 e.printStackTrace();
+                Log.e("sen_",e.getMessage());
             }
         }
     }

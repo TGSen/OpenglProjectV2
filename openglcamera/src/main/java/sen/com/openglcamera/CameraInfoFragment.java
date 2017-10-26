@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -52,11 +53,20 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 	private RecycleCommonAdapter pictureAdapter;
 	private RecycleCommonAdapter preViewAdapter;
 	private RecycleCommonAdapter filterAdapter;
-	private CurrentCameInfo currentCameInfo;
+	private CurrentCameInfo oldCurrentCameInfo;
+	private CurrentCameInfo newCurrentCameInfo;
 	private List<ItemCameraSetting> picList;
 	private List<ItemCameraSetting> preList;
 	private List<ItemCameraSetting> filterList;
+	private TextView tvSaveSetting;
+	private OnSettingChangeLinstener mLinstener;
+	public interface OnSettingChangeLinstener{
+		void onSettingChange(CurrentCameInfo currentCameInfo);
+	}
 
+	public void setOnSettingChangeLinstener(OnSettingChangeLinstener linstener){
+		mLinstener = linstener;
+	}
 	@Override
 	public void onAttach(Context activity) {
 		super.onAttach(activity);
@@ -84,25 +94,56 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 		pictureAdapter.setOnItemClickLinstener(new OnItemOnclickLinstener() {
 			@Override
 			public void itemOnclickLinstener(int position) {
-				currentCameInfo.setPicIndex(position);
-				currentCameInfo.setPicWith(picList.get(position).getWith());
-				currentCameInfo.setPicHeigth(picList.get(position).getHeigth());
+				if(newCurrentCameInfo.getPicIndex()==position){
+					return;
+				}
+				//改变样式
+				pictureAdapter.notifyItemChanged(position);
+				pictureAdapter.notifyItemChanged(newCurrentCameInfo.getPicIndex());
+				//然后改变currentCameInfo数据
+				newCurrentCameInfo.setPicIndex(position);
+				newCurrentCameInfo.setPicWith(picList.get(position).getWith());
+				newCurrentCameInfo.setPicHeigth(picList.get(position).getHeigth());
+
 			}
 		});
 
 		preViewAdapter.setOnItemClickLinstener(new OnItemOnclickLinstener() {
 			@Override
 			public void itemOnclickLinstener(int position) {
-				currentCameInfo.setPreIndex(position);
-				currentCameInfo.setPreWith(preList.get(position).getWith());
-				currentCameInfo.setPreHeigth(preList.get(position).getHeigth());
+				if(newCurrentCameInfo.getPreIndex()==position){
+					return;
+				}
+				//改变样式
+				preViewAdapter.notifyItemChanged(position);
+				preViewAdapter.notifyItemChanged(newCurrentCameInfo.getPreIndex());
+				newCurrentCameInfo.setPreIndex(position);
+				newCurrentCameInfo.setPreWith(preList.get(position).getWith());
+				newCurrentCameInfo.setPreHeigth(preList.get(position).getHeigth());
 			}
 		});
 
 		filterAdapter.setOnItemClickLinstener(new OnItemOnclickLinstener() {
 			@Override
 			public void itemOnclickLinstener(int position) {
-				currentCameInfo.setFilterIndex(position);
+				if(newCurrentCameInfo.getFilterIndex()==position){
+					return;
+				}
+				//改变样式
+				filterAdapter.notifyItemChanged(position);
+				filterAdapter.notifyItemChanged(newCurrentCameInfo.getFilterIndex());
+				newCurrentCameInfo.setFilterIndex(position);
+			}
+		});
+
+		tvSaveSetting.setOnClickListener(new OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				if (mLinstener!=null){
+					mLinstener.onSettingChange(newCurrentCameInfo);
+					//不能在这里dimiss 要不onSettingChange 会执行完毕
+					dialog.dismiss();
+				}
 			}
 		});
 	}
@@ -111,7 +152,8 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 		// // 获取数据
 		 Bundle bundle = getArguments();
 		CameraSettingInfo cameraSettingInfos= (CameraSettingInfo) bundle.getSerializable("CameraSettingInfo");
-		currentCameInfo = (CurrentCameInfo) bundle.getSerializable("CurrentCameInfo");
+		oldCurrentCameInfo = (CurrentCameInfo) bundle.getSerializable("CurrentCameInfo");
+		newCurrentCameInfo = (CurrentCameInfo) oldCurrentCameInfo.clone();
 		Iterator<Camera.Size> picIterator = cameraSettingInfos.getSupportedPictureSize().iterator();
 		picList = new ArrayList<>();
 		int index =0;
@@ -143,7 +185,7 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 				R.layout.layout_item_camera) {
 			@Override
 			public void bindItemData(SViewHolder holder, ItemCameraSetting itemData, int position) {
-				if(currentCameInfo.getPicIndex()==position){
+				if(newCurrentCameInfo.getPicIndex()==position){
 					holder.setTextAndTextColor(R.id.item_name,itemData.name, ContextCompat.getColor(mActivity,R.color.red_ff52));
 				}else{
 					holder.setTextAndTextColor(R.id.item_name,itemData.name, ContextCompat.getColor(mActivity,R.color.gray61));
@@ -155,7 +197,7 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 				preList, R.layout.layout_item_camera) {
 			@Override
 			public void bindItemData(SViewHolder holder, ItemCameraSetting itemData, int position) {
-				if(currentCameInfo.getPreIndex()==position){
+				if(newCurrentCameInfo.getPreIndex()==position){
 					holder.setTextAndTextColor(R.id.item_name,itemData.name, ContextCompat.getColor(mActivity,R.color.red_ff52));
 				}else{
 					holder.setTextAndTextColor(R.id.item_name,itemData.name, ContextCompat.getColor(mActivity,R.color.gray61));
@@ -167,7 +209,7 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 				filterList, R.layout.layout_item_camera) {
 			@Override
 			public void bindItemData(SViewHolder holder, ItemCameraSetting itemData, int position) {
-				if(currentCameInfo.getFilterIndex()==position){
+				if(newCurrentCameInfo.getFilterIndex()==position){
 					holder.setTextAndTextColor(R.id.item_name,itemData.name, ContextCompat.getColor(mActivity,R.color.red_ff52));
 				}else{
 					holder.setTextAndTextColor(R.id.item_name,itemData.name, ContextCompat.getColor(mActivity,R.color.gray61));
@@ -178,9 +220,9 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 		previewSizeRecyView.setAdapter(preViewAdapter);
 		filterRecyView.setAdapter(filterAdapter);
 		//移动到选择的地方，当然这个移动有点突然，不太好看，这个到时优化一下
-		pictureSizeRecyView.smoothScrollToPosition(currentCameInfo.getPicIndex());
-		previewSizeRecyView.smoothScrollToPosition(currentCameInfo.getPreIndex());
-		filterRecyView.smoothScrollToPosition(currentCameInfo.getFilterIndex());
+		pictureSizeRecyView.smoothScrollToPosition(newCurrentCameInfo.getPicIndex());
+		previewSizeRecyView.smoothScrollToPosition(newCurrentCameInfo.getPreIndex());
+		filterRecyView.smoothScrollToPosition(newCurrentCameInfo.getFilterIndex());
 		cameraSettingInfos =null;
 		bundle =null;
 	}
@@ -207,6 +249,7 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 		pictureSizeRecyView= (RecyclerView) dialog.findViewById(R.id.pictureSizeRecyView);
         previewSizeRecyView = (RecyclerView) dialog.findViewById(R.id.previewSizeRecyView);
         filterRecyView = (RecyclerView) dialog.findViewById(R.id.filterRecyView);
+		tvSaveSetting = (TextView) dialog.findViewById(R.id.tv_save_setting);
 
 		LinearLayoutManager pictureManager = new LinearLayoutManager(mActivity);
 		pictureManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -229,6 +272,7 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+
 
 	}
 
