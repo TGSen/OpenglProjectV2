@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:id="@+id/tv_preview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_marginTop="8dp"
+            android:text="预览分辨率" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/previewSizeRecyView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_preview" />
+
+        <TextView
+            android:id="@+id/tv_pictrue"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/previewSizeRecyView"
+            android:layout_marginLeft="8dp"
+            android:text="图片分辨率" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/pictureSizeRecyView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_pictrue" />
+
+        <TextView
+            android:id="@+id/tv_filter"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/pictureSizeRecyView"
+            android:layout_marginLeft="8dp"
+            android:text="设置滤镜" />
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/filterRecyView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/tv_filter" />
+    </RelativeLayout>
+</android.support.v4.widget.NestedScrollView>

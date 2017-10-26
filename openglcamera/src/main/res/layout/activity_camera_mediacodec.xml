@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <SurfaceView
+        android:id="@+id/surfaceView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+    <LinearLayout
+        android:layout_marginTop="8dp"
+        android:layout_width="match_parent"
+        android:background="@android:color/transparent"
+        android:layout_marginLeft="56dp"
+        android:layout_marginRight="56dp"
+        android:layout_height="48dp">
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:text="开始录制"
+            android:textColor="#dcdcdc"
+            android:textSize="16sp"
+            android:layout_marginRight="4dp"
+            android:onClick="startLive"
+            android:background="@drawable/bg_btn"
+            android:layout_height="match_parent" />
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="4dp"
+            android:text="停止"
+            android:textSize="16sp"
+            android:textColor="#dcdcdc"
+            android:onClick="stopLive"
+            android:background="@drawable/bg_btn"
+            android:layout_height="match_parent" />
+
+        <Button
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_marginLeft="4dp"
+            android:text="切换摄像头"
+            android:textSize="16sp"
+            android:textColor="#dcdcdc"
+            android:onClick="switchCamera"
+            android:background="@drawable/bg_btn"
+            android:layout_height="match_parent" />
+
+    </LinearLayout>
+
+
+
+</FrameLayout>
