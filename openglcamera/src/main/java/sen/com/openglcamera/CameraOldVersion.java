@@ -11,7 +11,6 @@ import java.util.List;
 
 import sen.com.openglcamera.bean.CameraSettingInfo;
 import sen.com.openglcamera.bean.CurrentCameInfo;
-import sen.com.openglcamera.natives.CameraSGLNative;
 import sen.com.openglcamera.utils.BitmapUtils;
 
 /**
@@ -65,14 +64,7 @@ public class CameraOldVersion {
                     Log.e("sen_","pre change");
                     isChange =true;
                 }
-                //目前在NDK 层做了加载Asseset/Res 的加载方法，所以，目前遵从这样的写法
-                if(cameInfo.getFilterIndex()!=currentCameInfo.getFilterIndex()){
-                    if(cameInfo.getFilterIndex()==0){
-                        CameraSGLNative.onChangeFileter("Res/camera_normal.vs", "Res/camera_normal.fs");
-                    }else if(cameInfo.getFilterIndex()==1){
-                        CameraSGLNative.onChangeFileter("Res/camera_back&while.vs","Res/camera_back&while.fs");
-                    }
-                }
+
                 if(isChange){
                     //有变化才从新
                     mCamera.stopPreview();

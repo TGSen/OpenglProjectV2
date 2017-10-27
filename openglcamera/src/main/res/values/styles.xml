@@ -16,4 +16,27 @@
         <item name="android:backgroundDimEnabled">false</item>
     </style>
 
+    <style name="dialogAnimation" mce_bogus="1" parent="android:Animation">
+        <item name="android:windowEnterAnimation">@anim/dialog_in</item>
+        <item name="android:windowExitAnimation">@anim/dialog_out</item>
+    </style>
+
+    <style name="SwitchCompat.Control" parent="Theme.AppCompat.Light">
+        <!-- active thumb & track color (30% transparency) -->
+        <item name="colorControlActivated">@color/red_ff52</item>
+        <item name="colorSwitchThumbNormal">@color/gray9E</item>
+        <item name="android:colorForeground">@color/gray9E</item>
+    </style>
+
+    <style name="SwitchCompat.Text" parent="Theme.AppCompat.Light">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">12sp</item>
+
+    </style>
+
+
+
+
+
+
 </resources>

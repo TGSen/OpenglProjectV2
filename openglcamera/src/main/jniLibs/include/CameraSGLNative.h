@@ -50,7 +50,7 @@ JNIEXPORT jobject JNICALL Java_sen_com_openglcamera_natives_CameraSGLNative_getS
   (JNIEnv *, jclass);
 
 
-JNIEXPORT void JNICALL Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeFileter(JNIEnv * , jclass , jstring , jstring ) ;
+JNIEXPORT void JNICALL Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeFileter(JNIEnv * , jclass , jint ,jint,jint,jint,jint) ;
 
 #ifdef __cplusplus
 }

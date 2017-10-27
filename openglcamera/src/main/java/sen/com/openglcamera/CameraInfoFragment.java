@@ -9,11 +9,15 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SwitchCompat;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewStub;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import java.util.ArrayList;
@@ -26,11 +30,12 @@ import sen.com.openglcamera.bean.ItemCameraSetting;
 import sen.com.openglcamera.commadapter.OnItemOnclickLinstener;
 import sen.com.openglcamera.commadapter.RecycleCommonAdapter;
 import sen.com.openglcamera.commadapter.SViewHolder;
+import sen.com.openglcamera.natives.CameraSGLNative;
 
 
-public class CameraInfoFragment extends DialogFragment implements OnClickListener {
+public class CameraInfoFragment extends DialogFragment implements OnClickListener, CompoundButton.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener {
 	private Activity mActivity;
-	private RecyclerView pictureSizeRecyView ,previewSizeRecyView ,filterRecyView;
+	private RecyclerView pictureSizeRecyView ,previewSizeRecyView ;
 	private Dialog dialog;
 	//设置RecyclerView.RecycledViewPool 让RecyclerView 共用一个view 池 提高性能
 	RecyclerView.RecycledViewPool mViewPool = new RecyclerView.RecycledViewPool() {
@@ -60,6 +65,61 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 	private List<ItemCameraSetting> filterList;
 	private TextView tvSaveSetting;
 	private OnSettingChangeLinstener mLinstener;
+	private ViewStub viewStubRGB;
+	private SeekBar seekBarR;
+	private SeekBar seekBarG;
+	private SeekBar seekBarB;
+	private SeekBar seekBarA;
+	private View layoutView;
+
+	@Override
+	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+		if(isChecked){
+			if(seekBarR ==null ||seekBarG==null|| seekBarB ==null ||seekBarA==null){
+				layoutView = viewStubRGB.inflate();
+				seekBarR = (SeekBar) layoutView.findViewById(R.id.seekBarR);
+				seekBarG = (SeekBar) layoutView.findViewById(R.id.seekBarG);
+				seekBarB = (SeekBar) layoutView.findViewById(R.id.seekBarB);
+				seekBarA = (SeekBar) layoutView.findViewById(R.id.seekBarA);
+				seekBarR.setMax(100);
+				seekBarG.setMax(100);
+				seekBarB.setMax(100);
+				seekBarA.setMax(100);
+				seekBarR.setOnSeekBarChangeListener(this);
+				seekBarG.setOnSeekBarChangeListener(this);
+				seekBarB.setOnSeekBarChangeListener(this);
+				seekBarA.setOnSeekBarChangeListener(this);
+			}else {
+				layoutView.setVisibility(View.VISIBLE);
+			}
+		}else{
+			if(layoutView!=null)
+			layoutView.setVisibility(View.GONE);
+		}
+	}
+
+	@Override
+	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+		//只要seekBar有变化，都全部获取当前的进度
+		int progressR = seekBarR.getProgress();
+		int progressG = seekBarG.getProgress();
+		int progressB = seekBarB.getProgress();
+		int progressA = seekBarA.getProgress();
+		//底层根据这个来计算分量
+		int max = seekBarA.getMax();
+		CameraSGLNative.onChangeFileter(progressR,progressG,progressB,progressA,max);
+	}
+
+	@Override
+	public void onStartTrackingTouch(SeekBar seekBar) {
+
+	}
+
+	@Override
+	public void onStopTrackingTouch(SeekBar seekBar) {
+
+	}
+
 	public interface OnSettingChangeLinstener{
 		void onSettingChange(CurrentCameInfo currentCameInfo);
 	}
@@ -218,11 +278,12 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 		};
 		pictureSizeRecyView.setAdapter(pictureAdapter);
 		previewSizeRecyView.setAdapter(preViewAdapter);
-		filterRecyView.setAdapter(filterAdapter);
 		//移动到选择的地方，当然这个移动有点突然，不太好看，这个到时优化一下
 		pictureSizeRecyView.smoothScrollToPosition(newCurrentCameInfo.getPicIndex());
 		previewSizeRecyView.smoothScrollToPosition(newCurrentCameInfo.getPreIndex());
-		filterRecyView.smoothScrollToPosition(newCurrentCameInfo.getFilterIndex());
+		//这个有个bug,有空回来修复一下，没展示
+//		pictureSizeRecyView.addItemDecoration(new LineanItemDecorationV2(mActivity,R.drawable.bg_item_decoration));
+//		previewSizeRecyView.addItemDecoration(new LineanItemDecorationV2(mActivity,R.drawable.bg_item_decoration));
 		cameraSettingInfos =null;
 		bundle =null;
 	}
@@ -238,18 +299,22 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 		dialog.setCanceledOnTouchOutside(false); // 外部点击取消
 		// 设置宽度为屏宽, 靠近屏幕底部。
 		Window window = dialog.getWindow();
+		window.setWindowAnimations(R.style.dialogAnimation);
 		WindowManager.LayoutParams lp = window.getAttributes();
 		lp.gravity = Gravity.BOTTOM; // 紧贴底部
 		lp.width = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
 		lp.height = getActivity().getWindowManager().getDefaultDisplay()
-				.getHeight()/2;
-		lp.dimAmount = 0.2f;
+				.getHeight()*2/3;
+		lp.dimAmount = 0.0f;
+		lp.alpha =0.9f;
 		window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 		window.setAttributes(lp);
 		pictureSizeRecyView= (RecyclerView) dialog.findViewById(R.id.pictureSizeRecyView);
         previewSizeRecyView = (RecyclerView) dialog.findViewById(R.id.previewSizeRecyView);
-        filterRecyView = (RecyclerView) dialog.findViewById(R.id.filterRecyView);
 		tvSaveSetting = (TextView) dialog.findViewById(R.id.tv_save_setting);
+		SwitchCompat switchCompat = (SwitchCompat) dialog.findViewById(R.id.sc_switch);
+		switchCompat.setOnCheckedChangeListener(this);
+		viewStubRGB = (ViewStub) dialog.findViewById(R.id.viewStubRGB);
 
 		LinearLayoutManager pictureManager = new LinearLayoutManager(mActivity);
 		pictureManager.setOrientation(LinearLayoutManager.HORIZONTAL);
@@ -257,16 +322,12 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 		LinearLayoutManager previewManager = new LinearLayoutManager(mActivity);
 		previewManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 
-		LinearLayoutManager filterManager = new LinearLayoutManager(mActivity);
-		filterManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 
 		pictureSizeRecyView.setLayoutManager(pictureManager);
 		previewSizeRecyView.setLayoutManager(previewManager);
-		filterRecyView.setLayoutManager(filterManager);
 
 		pictureSizeRecyView.setRecycledViewPool(mViewPool);
 		previewSizeRecyView.setRecycledViewPool(mViewPool);
-		filterRecyView.setRecycledViewPool(mViewPool);
 	}
 
 	@Override

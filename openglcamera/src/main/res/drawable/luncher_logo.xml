@@ -8,7 +8,7 @@
             <bitmap
                 android:width="50dp"
                 android:height="50dp"
-                android:gravity="center"
+                android:gravity="bottom"
                 android:src="@drawable/icon_logo" />
         </item>
 

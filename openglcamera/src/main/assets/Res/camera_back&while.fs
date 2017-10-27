@@ -53,7 +53,7 @@ void main(){
     }else{
         color = ambientColor+diffuseColor*texture2D(U_Texture,V_textcoord.xy);
     }
- //这些先不用 ----------start
+ //这些先不用 ----------end
     //增加一些滤镜效果
     // gl_FragColor =color;
     //gl_FragColor = vec4((1.0 - gl_FragColor.rgb), gl_FragColor.w);

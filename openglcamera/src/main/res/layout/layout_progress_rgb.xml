@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <TextView
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="8dp"
+        android:textSize="12sp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="分别R,G,B,A调色"/>
+
+    <SeekBar
+        android:id="@+id/seekBarR"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:maxHeight="2dp"
+        android:thumb="@drawable/seekbar_thumb"
+        android:progressDrawable="@drawable/seekbar_style"
+        android:layout_marginTop="16dp" />
+
+    <SeekBar
+        android:id="@+id/seekBarG"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:maxHeight="2dp"
+        android:thumb="@drawable/seekbar_thumb"
+        android:progressDrawable="@drawable/seekbar_style"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp" />
+
+    <SeekBar
+        android:id="@+id/seekBarB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:thumb="@drawable/seekbar_thumb"
+        android:maxHeight="2dp"
+        android:progressDrawable="@drawable/seekbar_style"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp" />
+
+    <SeekBar
+        android:id="@+id/seekBarA"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:maxHeight="2dp"
+        android:thumb="@drawable/seekbar_thumb"
+        android:layout_marginLeft="8dp"
+        android:progressDrawable="@drawable/seekbar_style"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp" />
+
+</LinearLayout>

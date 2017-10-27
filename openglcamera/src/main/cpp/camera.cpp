@@ -50,8 +50,8 @@ void Camera::init(float x,float y,float z) {
     mShader = new SShader;
 //    mShader->init("Res/camera_normal.vs", "Res/camera_normal.fs");
     mShader->init("Res/camera_back&while.vs", "Res/camera_back&while.fs");
-    //设置滤镜的分量，请查看
-    mShader->setUiformVec4("U_MultipleFilter",1.0f,0.1f,0.2f,0.5f);
+    //设置滤镜的分量，请查看camera_back&while.fs
+    mShader->setUiformVec4("U_MultipleFilter",1.0f,1.0f,1.0f,1.0f);
     //光照，目前先不用
 //    mShader->setUiformVec4("U_LightPos",0.0f,0.0f,1.0f,1.0f);
 //    mShader->setUiformVec4("U_LightAmbient",1.0f,1.0f,1.0f,1.0f);

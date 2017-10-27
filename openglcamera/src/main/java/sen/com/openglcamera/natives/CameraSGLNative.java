@@ -35,5 +35,5 @@ public class CameraSGLNative {
     public static native SurfaceTexture getSurfaceTexture();
 
 
-    public static native void onChangeFileter(String camera_narmol_vs, String camera_narmol_fs);
+    public static native void onChangeFileter(int r,int g,int b,int a,int max);
 }
