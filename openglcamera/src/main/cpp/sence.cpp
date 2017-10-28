@@ -31,11 +31,10 @@ void init() {
 //    model->setModelPosition(0.0f,0.0f,0.0f);
 //    ground = new DrawAnyS;
 //    ground->initData();
-    particleSystem = new ParticleSystem;
-    particleSystem->init(0.0f,0.0f,0.0f,180);
-    particleSystem->mModelMatrix =glm::translate(-1.0f,0.0f,1.0f);
+//    particleSystem = new ParticleSystem;
+//    particleSystem->init(0.0f,0.0f,0.0f,180);
+//    particleSystem->mModelMatrix =glm::translate(-1.0f,0.0f,1.0f);
 
-//    camera->initData();
     mCamera->init(0.0f,0.0f,0.0f);
 //    mCamera->mModelMatrix =glm::translate(-1.0f,0.0f,1.0f);
 

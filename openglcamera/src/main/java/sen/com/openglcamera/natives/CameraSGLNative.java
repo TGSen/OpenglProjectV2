@@ -34,6 +34,12 @@ public class CameraSGLNative {
      */
     public static native SurfaceTexture getSurfaceTexture();
 
-
+    //修改滤镜参数
     public static native void onChangeFileter(int r,int g,int b,int a,int max);
+    //修改 滤镜文件
+    public static native void onChangeVSFS(String vs, String fs) ;
+
+    public static native void releaseNative();
+
+    public static boolean isStop = false;
 }

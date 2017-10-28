@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.opengl.GLSurfaceView;
+import android.util.Log;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
@@ -49,12 +50,15 @@ public class CameraRenderer implements GLSurfaceView.Renderer, SurfaceTexture.On
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        if (mSurfaceTexture != null) {
+        if (mSurfaceTexture != null &&!CameraSGLNative.isStop) {
             mSurfaceTexture.updateTexImage();
 
-//            mSurfaceTexture.getTransformMatrix(transformMatrix);
+            CameraSGLNative.onDrawFrame();
+        }else {
+            mCamera.stopPreview();
+            Log.e("sen_","java stop");
         }
-        CameraSGLNative.onDrawFrame();
+
     }
 
     public void init(CameraSGLSurfaceView cameraSGLSurfaceView, CameraOldVersion camera, boolean isPreviewStarted, Activity context) {
@@ -66,7 +70,9 @@ public class CameraRenderer implements GLSurfaceView.Renderer, SurfaceTexture.On
 
     @Override
     public void onFrameAvailable(SurfaceTexture surfaceTexture) {
-        mGLSurfaceView.requestRender();
+        if(!CameraSGLNative.isStop) {
+            mGLSurfaceView.requestRender();
+        }
 
     }
 

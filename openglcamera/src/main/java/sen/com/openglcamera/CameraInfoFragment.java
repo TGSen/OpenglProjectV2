@@ -16,6 +16,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewStub;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
@@ -31,6 +32,9 @@ import sen.com.openglcamera.commadapter.OnItemOnclickLinstener;
 import sen.com.openglcamera.commadapter.RecycleCommonAdapter;
 import sen.com.openglcamera.commadapter.SViewHolder;
 import sen.com.openglcamera.natives.CameraSGLNative;
+
+import static sen.com.openglcamera.R.id.changeVSFS;
+import static sen.com.openglcamera.R.id.releseNative;
 
 
 public class CameraInfoFragment extends DialogFragment implements OnClickListener, CompoundButton.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener {
@@ -206,7 +210,11 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 				}
 			}
 		});
+
+
 	}
+
+
 
 	private void initData() {
 		// // 获取数据

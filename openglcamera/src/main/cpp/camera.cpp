@@ -6,7 +6,29 @@
 #include "camera.h"
 
 
+Camera::Camera (){
+    isChangeVSFS = false;
+    fsPath = nullptr;
+    vsPath = nullptr;
+}
 
+Camera::~Camera(){
+    if (fsPath!= nullptr){
+        delete fsPath;
+    }
+
+    if(vsPath!= nullptr){
+        delete vsPath;
+    }
+    if(mShader!= nullptr){
+        delete mShader;
+    }
+
+   if(vertexBuffer){
+       free(vertexBuffer);
+   }
+    LOGE("稀放完毕");
+}
 
 jobject Camera::getSurfaceTextureObject() {
     if (javaSurfaceTextureObj == NULL) {
@@ -48,17 +70,10 @@ void Camera::init(float x,float y,float z) {
 
 
     mShader = new SShader;
-//    mShader->init("Res/camera_normal.vs", "Res/camera_normal.fs");
-    mShader->init("Res/camera_back&while.vs", "Res/camera_back&while.fs");
-    //设置滤镜的分量，请查看camera_back&while.fs
+    mShader->init("Res/camera_normal.vs", "Res/camera_normal.fs");
+//    mShader->init("Res/camera_filter_rgba.vs", "Res/camera_filter_rgba.fs");
+    //设置滤镜的分量，请查看camera_back&while.fs ,注意的是如果fs vs 没有这个属性不要设置，避免出现黑屏，或者是清屏颜色
     mShader->setUiformVec4("U_MultipleFilter",1.0f,1.0f,1.0f,1.0f);
-    //光照，目前先不用
-//    mShader->setUiformVec4("U_LightPos",0.0f,0.0f,1.0f,1.0f);
-//    mShader->setUiformVec4("U_LightAmbient",1.0f,1.0f,1.0f,1.0f);
-//    mShader->setUiformVec4("U_LightDiffuse",.0f,1.0f,1.0f,1.0f);
-//    mShader->setUiformVec4("U_LightOpt",32.0f,0.0f,0.0f,1.0f);
-//    mShader->setUiformVec4("U_AmbientMaterial",0.1f,0.1f,0.1f,1.0f);
-//    mShader->setUiformVec4("U_DiffuseMaterial",0.6f,0.6f,0.6f,1.0f);
 }
 
 
@@ -86,27 +101,45 @@ void Camera::createSurfaceTextureObject(JNIEnv *env) {
 
 }
 void Camera::drawModel(glm::mat4 &mViewMatrix, glm::mat4 &mProjectionMatrix) {
+    if (isChangeVSFS == true){
+        LOGE("chang fs vs");
+        mShader->init(vsPath,fsPath);
+        mShader->setUiformVec4("U_MultipleFilter",1.0f,1.0f,1.0f,1.0f);
+        delete vsPath;
+        delete fsPath;
+        isChangeVSFS = false;
+    }
     glEnable(GL_DEPTH_TEST);
     //由于光照需要摄像机的位置
 //    mShader->setUiformVec4("U_CameraPos", x, y, z, 1.0);
     vertexBuffer->bind();
 //    glm::mat4 it = glm::inverseTranspose(mModelMatrix);
-
     mShader->bind(glm::value_ptr(mModelMatrix), glm::value_ptr(mViewMatrix),
                   glm::value_ptr(mProjectionMatrix));
-
-
-//    mShader->setOESTextureId(textureId);
-//    glUniformMatrix4fv(glGetUniformLocation(mShader->mProgram, "IT_ModelMatrix"), 1, GL_FALSE,
-//                       glm::value_ptr(it));
 
     glDrawArrays(GL_TRIANGLE_FAN, 0, vertexBuffer->mVertexCount);
     vertexBuffer->unBind();
 }
-
+//修改 shader 变量参数
 void Camera::changeFilter(float cr,float cg, float cb , float ca){
     mShader->setUiformVec4("U_MultipleFilter",cr,cg,cb,ca);
 
+}
+
+//修改 vs shader ,和fs shader
+void Camera::changeVSFS(const char* vspath, const char*fspath){
+    //给camera vsPath ，fsPath 中赋值，到时用完后得 清内存
+    size_t vsSize = strlen(vspath);
+    vsPath = (char *) malloc(vsSize);
+    memset(vsPath, 0, vsSize + 1);
+    memcpy(vsPath, vspath, vsSize);
+
+    size_t fsSize = strlen(fspath);
+    fsPath = (char *) malloc(fsSize);
+    memset(fsPath, 0, fsSize + 1);
+    memcpy(fsPath, fspath, fsSize);
+    LOGE("changeVSFS:%s,%s",vsPath,fsPath);
+    isChangeVSFS = true;
 }
 
 

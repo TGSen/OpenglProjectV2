@@ -9,7 +9,7 @@
 //c++ 11 的nullptr
 AAssetManager *aAssetManager = nullptr;
 Camera *camera;
-
+bool isRelese = false;
 
 unsigned char *loadFile(const char *path, int &fileSize) {
     unsigned char *file = nullptr;
@@ -54,7 +54,10 @@ JNIEXPORT void JNICALL Java_sen_com_openglcamera_natives_CameraSGLNative_onSurfa
 
 JNIEXPORT void JNICALL Java_sen_com_openglcamera_natives_CameraSGLNative_onDrawFrame
         (JNIEnv *env, jclass clzss) {
-    draw();
+    if(camera!= nullptr &&!isRelese){
+        draw();
+    }
+
 
 };
 
@@ -72,4 +75,31 @@ Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeFileter(JNIEnv *env, j
     float ac = (float)a/(float)max;
     LOGE("rc:%f-gc:%f-bc:%f-ac:%f",rc,gc,bc,ac);
     camera->changeFilter(rc,gc,bc,ac);
+}
+
+JNIEXPORT void JNICALL
+Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeVSFS(JNIEnv *env, jclass type,
+                                                             jstring vs_, jstring fs_) {
+    if (isRelese){
+        return;
+    }
+    const char *vs = env->GetStringUTFChars(vs_, 0);
+    const char *fs = env->GetStringUTFChars(fs_, 0);
+    if (vs!= nullptr && fs!= nullptr){
+        camera->changeVSFS(vs,fs);
+    }
+    env->ReleaseStringUTFChars(vs_, vs);
+    env->ReleaseStringUTFChars(fs_, fs);
+}
+
+
+JNIEXPORT void JNICALL
+Java_sen_com_openglcamera_natives_CameraSGLNative_releaseNative(JNIEnv *env, jclass type) {
+    if(camera !=NULL &&!isRelese){
+        //javaSurfaceTextureObj 在析构函数好像不能delete ，因为是env Ref
+        env->DeleteGlobalRef(camera->javaSurfaceTextureObj);
+        delete(camera);
+        isRelese = true;
+    }
+
 }

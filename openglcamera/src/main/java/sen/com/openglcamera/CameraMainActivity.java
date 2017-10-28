@@ -93,6 +93,7 @@ public class CameraMainActivity extends AppCompatActivity implements View.OnClic
         if(mCamera!=null){
             mCamera.releaseCamera();
         }
+        CameraSGLNative.releaseNative();
     }
     //点击屏幕对焦
     @Override

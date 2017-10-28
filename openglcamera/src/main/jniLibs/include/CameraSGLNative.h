@@ -52,6 +52,16 @@ JNIEXPORT jobject JNICALL Java_sen_com_openglcamera_natives_CameraSGLNative_getS
 
 JNIEXPORT void JNICALL Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeFileter(JNIEnv * , jclass , jint ,jint,jint,jint,jint) ;
 
+
+
+JNIEXPORT void JNICALL
+Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeVSFS(JNIEnv *, jclass ,
+                                                               jstring , jstring );
+
+
+
+JNIEXPORT void JNICALL
+Java_sen_com_openglcamera_natives_CameraSGLNative_releaseNative(JNIEnv *, jclass );
 #ifdef __cplusplus
 }
 #endif

@@ -6,10 +6,14 @@
 void SShader::init(const char *vsPath, const char *fsPath) {
     int fileSize = 0;
     unsigned char *shaderCode = loadFile(vsPath, fileSize);
+    LOGE("shaderCode");
     GLuint vsShader = complieShader(GL_VERTEX_SHADER, (const char *) shaderCode);
     delete shaderCode;
-    if (vsShader == 0)
+    if (vsShader == 0){
+        LOGE("vsShader == 0");
         return;
+    }
+
 
     shaderCode = loadFile(fsPath, fileSize);
     GLuint fsShader = complieShader(GL_FRAGMENT_SHADER, (const char *) shaderCode);
