@@ -70,8 +70,8 @@ void Camera::init(float x,float y,float z) {
 
 
     mShader = new SShader;
-    mShader->init("Res/camera_normal.vs", "Res/camera_normal.fs");
-//    mShader->init("Res/camera_filter_rgba.vs", "Res/camera_filter_rgba.fs");
+    mShader->init("resource/camera/camera_normal.vs", "resource/camera/camera_normal.fs");
+//    mShader->init("Res/camera_filter_rgba.vs", "Res/camera_filter_customer.fs");
     //设置滤镜的分量，请查看camera_back&while.fs ,注意的是如果fs vs 没有这个属性不要设置，避免出现黑屏，或者是清屏颜色
     mShader->setUiformVec4("U_MultipleFilter",1.0f,1.0f,1.0f,1.0f);
 }
@@ -101,6 +101,7 @@ void Camera::createSurfaceTextureObject(JNIEnv *env) {
 
 }
 void Camera::drawModel(glm::mat4 &mViewMatrix, glm::mat4 &mProjectionMatrix) {
+    //画之前看看有没有更改了滤镜文件
     if (isChangeVSFS == true){
         LOGE("chang fs vs");
         mShader->init(vsPath,fsPath);
@@ -110,10 +111,7 @@ void Camera::drawModel(glm::mat4 &mViewMatrix, glm::mat4 &mProjectionMatrix) {
         isChangeVSFS = false;
     }
     glEnable(GL_DEPTH_TEST);
-    //由于光照需要摄像机的位置
-//    mShader->setUiformVec4("U_CameraPos", x, y, z, 1.0);
     vertexBuffer->bind();
-//    glm::mat4 it = glm::inverseTranspose(mModelMatrix);
     mShader->bind(glm::value_ptr(mModelMatrix), glm::value_ptr(mViewMatrix),
                   glm::value_ptr(mProjectionMatrix));
 

@@ -169,7 +169,7 @@ GLuint createBufferObj(GLenum bufferType,GLsizeiptr size,GLenum usage, void *dat
     glBindBuffer(bufferType,0);
     return obj;
 }
-//Openl 程序纹理
+//Openl 程序纹理,程序生成的颜色，提供纹理
 GLuint createProcedureTexture(int size) {
     unsigned char *imageData = new unsigned char[size*size * 4];
     float halfSize = (float)size / 2.0f;

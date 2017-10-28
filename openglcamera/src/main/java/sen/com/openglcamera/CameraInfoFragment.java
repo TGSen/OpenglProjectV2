@@ -9,15 +9,13 @@ import android.os.Bundle;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.SwitchCompat;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewStub;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.Button;
-import android.widget.CompoundButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -27,19 +25,22 @@ import java.util.List;
 
 import sen.com.openglcamera.bean.CameraSettingInfo;
 import sen.com.openglcamera.bean.CurrentCameInfo;
+import sen.com.openglcamera.bean.FilterInfo;
 import sen.com.openglcamera.bean.ItemCameraSetting;
 import sen.com.openglcamera.commadapter.OnItemOnclickLinstener;
 import sen.com.openglcamera.commadapter.RecycleCommonAdapter;
 import sen.com.openglcamera.commadapter.SViewHolder;
 import sen.com.openglcamera.natives.CameraSGLNative;
 
-import static sen.com.openglcamera.R.id.changeVSFS;
-import static sen.com.openglcamera.R.id.releseNative;
+/**
+ * Author : 唐家森
+ * Version: 1.0
+ * Des    : 这里先不保存用户的设置，也就是每次进来或许从新设置，等我想要的功能完毕后再来完善
+ */
 
-
-public class CameraInfoFragment extends DialogFragment implements OnClickListener, CompoundButton.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener {
+public class CameraInfoFragment extends DialogFragment implements OnClickListener, SeekBar.OnSeekBarChangeListener {
 	private Activity mActivity;
-	private RecyclerView pictureSizeRecyView ,previewSizeRecyView ;
+	private RecyclerView pictureSizeRecyView ,previewSizeRecyView ,filterRecyView;
 	private Dialog dialog;
 	//设置RecyclerView.RecycledViewPool 让RecyclerView 共用一个view 池 提高性能
 	RecyclerView.RecycledViewPool mViewPool = new RecyclerView.RecycledViewPool() {
@@ -66,7 +67,7 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 	private CurrentCameInfo newCurrentCameInfo;
 	private List<ItemCameraSetting> picList;
 	private List<ItemCameraSetting> preList;
-	private List<ItemCameraSetting> filterList;
+	private List<FilterInfo> filterList;
 	private TextView tvSaveSetting;
 	private OnSettingChangeLinstener mLinstener;
 	private ViewStub viewStubRGB;
@@ -75,32 +76,34 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 	private SeekBar seekBarB;
 	private SeekBar seekBarA;
 	private View layoutView;
+	private TextView tv_adjust_info;
+	private int currentFilter;
 
-	@Override
-	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-		if(isChecked){
-			if(seekBarR ==null ||seekBarG==null|| seekBarB ==null ||seekBarA==null){
-				layoutView = viewStubRGB.inflate();
-				seekBarR = (SeekBar) layoutView.findViewById(R.id.seekBarR);
-				seekBarG = (SeekBar) layoutView.findViewById(R.id.seekBarG);
-				seekBarB = (SeekBar) layoutView.findViewById(R.id.seekBarB);
-				seekBarA = (SeekBar) layoutView.findViewById(R.id.seekBarA);
-				seekBarR.setMax(100);
-				seekBarG.setMax(100);
-				seekBarB.setMax(100);
-				seekBarA.setMax(100);
-				seekBarR.setOnSeekBarChangeListener(this);
-				seekBarG.setOnSeekBarChangeListener(this);
-				seekBarB.setOnSeekBarChangeListener(this);
-				seekBarA.setOnSeekBarChangeListener(this);
-			}else {
-				layoutView.setVisibility(View.VISIBLE);
-			}
-		}else{
-			if(layoutView!=null)
-			layoutView.setVisibility(View.GONE);
-		}
-	}
+//	@Override
+//	public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+//		if(isChecked){
+//			if(seekBarR ==null ||seekBarG==null|| seekBarB ==null ||seekBarA==null){
+//				layoutView = viewStubRGB.inflate();
+//				seekBarR = (SeekBar) layoutView.findViewById(R.id.seekBarR);
+//				seekBarG = (SeekBar) layoutView.findViewById(R.id.seekBarG);
+//				seekBarB = (SeekBar) layoutView.findViewById(R.id.seekBarB);
+//				seekBarA = (SeekBar) layoutView.findViewById(R.id.seekBarA);
+//				seekBarR.setMax(100);
+//				seekBarG.setMax(100);
+//				seekBarB.setMax(100);
+//				seekBarA.setMax(100);
+//				seekBarR.setOnSeekBarChangeListener(this);
+//				seekBarG.setOnSeekBarChangeListener(this);
+//				seekBarB.setOnSeekBarChangeListener(this);
+//				seekBarA.setOnSeekBarChangeListener(this);
+//			}else {
+//				layoutView.setVisibility(View.VISIBLE);
+//			}
+//		}else{
+//			if(layoutView!=null)
+//			layoutView.setVisibility(View.GONE);
+//		}
+//	}
 
 	@Override
 	public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
@@ -109,6 +112,16 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 		int progressG = seekBarG.getProgress();
 		int progressB = seekBarB.getProgress();
 		int progressA = seekBarA.getProgress();
+		//处理比较特殊的数据，由于对比度可以是负数
+		if(filterList.get(currentFilter).isSeekbarHalf()){
+			//如果是美白的话，对比度从中间开始，50< 为负数
+			//那么第二个数
+			if (progressG==50){
+				progressG =0;
+			}else{
+				progressG=progressG-50;
+			}
+		}
 		//底层根据这个来计算分量
 		int max = seekBarA.getMax();
 		CameraSGLNative.onChangeFileter(progressR,progressG,progressB,progressA,max);
@@ -190,13 +203,19 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 		filterAdapter.setOnItemClickLinstener(new OnItemOnclickLinstener() {
 			@Override
 			public void itemOnclickLinstener(int position) {
-				if(newCurrentCameInfo.getFilterIndex()==position){
-					return;
-				}
+				currentFilter = position;
 				//改变样式
 				filterAdapter.notifyItemChanged(position);
 				filterAdapter.notifyItemChanged(newCurrentCameInfo.getFilterIndex());
 				newCurrentCameInfo.setFilterIndex(position);
+				FilterInfo info = filterList.get(position);
+				CameraSGLNative.onChangeVSFS(info.getVsPath(),info.getFsPath());
+				if (info.isShowSeekbar()){
+					Log.e("sen_",info.getFilterName());
+					createSeekBar(true,info.getCountSeekBar(),info.getInfo());
+				}else {
+					createSeekBar(false,0,"");
+				}
 			}
 		});
 
@@ -212,8 +231,62 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 		});
 
 
-	}
+}
+	//目前作为测试
+	private void createSeekBar(boolean isShow ,int countSeekBar,String info) {
+		if(!isShow ){
+			if(layoutView!=null)
+			layoutView.setVisibility(View.GONE);
+			return;
+		}
+		if(seekBarR ==null ||seekBarG==null|| seekBarB ==null ||seekBarA==null){
+				layoutView = viewStubRGB.inflate();
+				seekBarR = (SeekBar) layoutView.findViewById(R.id.seekBarR);
+				seekBarG = (SeekBar) layoutView.findViewById(R.id.seekBarG);
+				seekBarB = (SeekBar) layoutView.findViewById(R.id.seekBarB);
+				seekBarA = (SeekBar) layoutView.findViewById(R.id.seekBarA);
+				tv_adjust_info = (TextView)layoutView.findViewById(R.id.tv_adjust_info);
+				tv_adjust_info.setText(info);
+				if(countSeekBar ==2){
+					//只要前面两个好了
+					seekBarB.setVisibility(View.GONE);
+					seekBarA.setVisibility(View.GONE);
+				}
 
+
+				seekBarR.setMax(100);
+				seekBarG.setMax(100);
+				seekBarB.setMax(100);
+				seekBarA.setMax(100);
+				seekBarR.setOnSeekBarChangeListener(this);
+				seekBarG.setOnSeekBarChangeListener(this);
+				seekBarB.setOnSeekBarChangeListener(this);
+				seekBarA.setOnSeekBarChangeListener(this);
+			}else {
+				layoutView.setVisibility(View.VISIBLE);
+				tv_adjust_info.setText(info);
+				if(countSeekBar ==2){
+				//只要前面两个好了
+					seekBarB.setVisibility(View.GONE);
+					seekBarA.setVisibility(View.GONE);
+				}else{
+					seekBarB.setVisibility(View.VISIBLE);
+					seekBarA.setVisibility(View.VISIBLE);
+				}
+			}
+
+		if(filterList.get(currentFilter).isSeekbarHalf()){
+			//如果是美白的话，对比度从中间开始，50< 为负数
+			seekBarG.setProgress(50);
+		}else{
+			seekBarG.setProgress(0);
+		}
+		seekBarR.setProgress(0);
+		seekBarB.setProgress(0);
+		seekBarA.setProgress(0);
+
+
+	}
 
 
 	private void initData() {
@@ -233,7 +306,6 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 			index++;
 			picList.add(setting);
 		}
-
 		Iterator<Camera.Size> preIterator = cameraSettingInfos.getSupportedPreviewSizes().iterator();
 		preList = new ArrayList<>();
 		 index =0;
@@ -245,9 +317,8 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 			index++;
 			preList.add(setting);
 		}
-		filterList = new ArrayList<>();
-		filterList.add(new ItemCameraSetting(0,"无滤镜"));
-		filterList.add(new ItemCameraSetting(1,"黑白滤镜"));
+		filterList = FilterInfo.getFilterInfos();
+
 
 		pictureAdapter = new RecycleCommonAdapter<ItemCameraSetting>(mActivity, picList,
 				R.layout.layout_item_camera) {
@@ -273,25 +344,27 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 
 			}
 		};
-		filterAdapter = new RecycleCommonAdapter<ItemCameraSetting>(mActivity,
+		filterAdapter = new RecycleCommonAdapter<FilterInfo>(mActivity,
 				filterList, R.layout.layout_item_camera) {
 			@Override
-			public void bindItemData(SViewHolder holder, ItemCameraSetting itemData, int position) {
+			public void bindItemData(SViewHolder holder, FilterInfo itemData, int position) {
 				if(newCurrentCameInfo.getFilterIndex()==position){
-					holder.setTextAndTextColor(R.id.item_name,itemData.name, ContextCompat.getColor(mActivity,R.color.red_ff52));
+					holder.setTextAndTextColor(R.id.item_name,itemData.getFilterName(), ContextCompat.getColor(mActivity,R.color.red_ff52));
 				}else{
-					holder.setTextAndTextColor(R.id.item_name,itemData.name, ContextCompat.getColor(mActivity,R.color.gray61));
+					holder.setTextAndTextColor(R.id.item_name,itemData.getFilterName(), ContextCompat.getColor(mActivity,R.color.gray61));
 				}
 			}
+
+
 		};
 		pictureSizeRecyView.setAdapter(pictureAdapter);
 		previewSizeRecyView.setAdapter(preViewAdapter);
+		filterRecyView.setAdapter(filterAdapter);
 		//移动到选择的地方，当然这个移动有点突然，不太好看，这个到时优化一下
 		pictureSizeRecyView.smoothScrollToPosition(newCurrentCameInfo.getPicIndex());
 		previewSizeRecyView.smoothScrollToPosition(newCurrentCameInfo.getPreIndex());
-		//这个有个bug,有空回来修复一下，没展示
-//		pictureSizeRecyView.addItemDecoration(new LineanItemDecorationV2(mActivity,R.drawable.bg_item_decoration));
-//		previewSizeRecyView.addItemDecoration(new LineanItemDecorationV2(mActivity,R.drawable.bg_item_decoration));
+
+//		filterRecyView.smoothScrollToPosition(newCurrentCameInfo.getFilterIndex());
 		cameraSettingInfos =null;
 		bundle =null;
 	}
@@ -319,9 +392,8 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 		window.setAttributes(lp);
 		pictureSizeRecyView= (RecyclerView) dialog.findViewById(R.id.pictureSizeRecyView);
         previewSizeRecyView = (RecyclerView) dialog.findViewById(R.id.previewSizeRecyView);
+        filterRecyView = (RecyclerView) dialog.findViewById(R.id.filterRecyView);
 		tvSaveSetting = (TextView) dialog.findViewById(R.id.tv_save_setting);
-		SwitchCompat switchCompat = (SwitchCompat) dialog.findViewById(R.id.sc_switch);
-		switchCompat.setOnCheckedChangeListener(this);
 		viewStubRGB = (ViewStub) dialog.findViewById(R.id.viewStubRGB);
 
 		LinearLayoutManager pictureManager = new LinearLayoutManager(mActivity);
@@ -330,12 +402,16 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 		LinearLayoutManager previewManager = new LinearLayoutManager(mActivity);
 		previewManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 
+		LinearLayoutManager filterManager = new LinearLayoutManager(mActivity);
+		filterManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 
 		pictureSizeRecyView.setLayoutManager(pictureManager);
 		previewSizeRecyView.setLayoutManager(previewManager);
+		filterRecyView.setLayoutManager(filterManager);
 
 		pictureSizeRecyView.setRecycledViewPool(mViewPool);
 		previewSizeRecyView.setRecycledViewPool(mViewPool);
+		filterRecyView.setRecycledViewPool(mViewPool);
 	}
 
 	@Override

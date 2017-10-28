@@ -64,7 +64,7 @@
             android:text="设置滤镜" />
 
 
-
+<!--
         <android.support.v7.widget.SwitchCompat
             android:layout_marginTop="4dp"
             android:layout_below="@+id/pictureSizeRecyView"
@@ -80,15 +80,25 @@
             android:textOn="on"
             app:showText="true"
             app:switchTextAppearance="@style/SwitchCompat.Text"
-            app:theme="@style/SwitchCompat.Control"/>
+            app:theme="@style/SwitchCompat.Control"/>-->
+
+        <android.support.v7.widget.RecyclerView
+            android:layout_marginTop="8dp"
+            android:id="@+id/filterRecyView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_filter" />
 
         <ViewStub
             android:layout_marginTop="8dp"
-            android:layout_below="@+id/tv_filter"
+            android:layout_below="@+id/filterRecyView"
             android:id="@+id/viewStubRGB"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginBottom="48dp"
             android:layout="@layout/layout_progress_rgb"/>
+
+
 
     </RelativeLayout>
 </android.support.v4.widget.NestedScrollView>

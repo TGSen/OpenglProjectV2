@@ -73,7 +73,7 @@ Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeFileter(JNIEnv *env, j
     float gc = (float)g/(float)max;
     float bc = (float)b/(float)max;
     float ac = (float)a/(float)max;
-    LOGE("rc:%f-gc:%f-bc:%f-ac:%f",rc,gc,bc,ac);
+    LOGE("rc:%f**gc:%f**bc:%f**ac:%f",rc,gc,bc,ac);
     camera->changeFilter(rc,gc,bc,ac);
 }
 
