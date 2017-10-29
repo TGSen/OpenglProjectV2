@@ -80,7 +80,7 @@ public class CameraButtonView extends View {
         switch (event.getAction() ){
             case  MotionEvent.ACTION_DOWN:
                 //currentState = DOWN_STATE;
-                changeOffset =8;
+                changeOffset =-4;
                 invalidate();
 
                break;

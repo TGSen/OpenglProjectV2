@@ -11,6 +11,18 @@ import android.graphics.SurfaceTexture;
  */
 
 public class CameraSGLNative {
+    public enum CameraShape{
+
+        Normal(1),Circle(2),Others(3);
+        private int value;
+        CameraShape(int i) {
+            this.value=i;
+        }
+
+        public int getValue() {
+            return value;
+        }
+    }
     static{
         System.loadLibrary("sgles");
     }
@@ -39,6 +51,10 @@ public class CameraSGLNative {
     //修改 滤镜文件
     public static native void onChangeVSFS(String vs, String fs) ;
 
+    //修改形状
+    public static native void onChangeShape(int  cameraShape) ;
+
+    //稀放
     public static native void releaseNative();
 
     public static boolean isStop = false;

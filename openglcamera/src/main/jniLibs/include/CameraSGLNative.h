@@ -6,6 +6,8 @@
 #define _Included_sen_com_openglcamera_natives_CameraSGLNative
 
 
+
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -62,6 +64,9 @@ Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeVSFS(JNIEnv *, jclass 
 
 JNIEXPORT void JNICALL
 Java_sen_com_openglcamera_natives_CameraSGLNative_releaseNative(JNIEnv *, jclass );
+
+JNIEXPORT void JNICALL
+Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeShape(JNIEnv *, jclass , jint );
 #ifdef __cplusplus
 }
 #endif

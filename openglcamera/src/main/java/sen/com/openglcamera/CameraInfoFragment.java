@@ -395,7 +395,12 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
         filterRecyView = (RecyclerView) dialog.findViewById(R.id.filterRecyView);
 		tvSaveSetting = (TextView) dialog.findViewById(R.id.tv_save_setting);
 		viewStubRGB = (ViewStub) dialog.findViewById(R.id.viewStubRGB);
-
+		 dialog.findViewById(R.id.changeShape).setOnClickListener(new OnClickListener() {
+			 @Override
+			 public void onClick(View v) {
+				 CameraSGLNative.onChangeShape(CameraSGLNative.CameraShape.Circle.getValue());
+			 }
+		 });
 		LinearLayoutManager pictureManager = new LinearLayoutManager(mActivity);
 		pictureManager.setOrientation(LinearLayoutManager.HORIZONTAL);
 

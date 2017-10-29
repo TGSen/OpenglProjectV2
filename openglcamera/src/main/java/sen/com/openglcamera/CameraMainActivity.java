@@ -43,7 +43,6 @@ public class CameraMainActivity extends AppCompatActivity implements View.OnClic
     public void onContentChanged() {
         super.onContentChanged();
         mSGlSurfaceView = (CameraSGLSurfaceView) findViewById(R.id.camera_glview);
-        mSGlSurfaceView.setVisibility(View.VISIBLE);
         mCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
         DisplayMetrics dm = new DisplayMetrics();
         mCamera = new CameraOldVersion(this);
@@ -89,11 +88,16 @@ public class CameraMainActivity extends AppCompatActivity implements View.OnClic
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
+        if(mSGlSurfaceView!=null){
+            mSGlSurfaceView.destroyDrawingCache();
+        }
         if(mCamera!=null){
             mCamera.releaseCamera();
+            mCamera=null;
         }
         CameraSGLNative.releaseNative();
+        super.onDestroy();
+
     }
     //点击屏幕对焦
     @Override

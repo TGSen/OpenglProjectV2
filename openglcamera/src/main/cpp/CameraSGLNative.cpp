@@ -50,7 +50,8 @@ JNIEXPORT void JNICALL Java_sen_com_openglcamera_natives_CameraSGLNative_onSurfa
 
 JNIEXPORT void JNICALL Java_sen_com_openglcamera_natives_CameraSGLNative_onSurfaceChanged
         (JNIEnv *env, jclass clzss, jint width, jint height) {
-    setViewPortSize(width, height);
+    LOGE("onSurfaceChanged %f*%f",width,height);
+    setViewPortSize((float)width,(float) height);
 
 
 };
@@ -95,7 +96,7 @@ Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeVSFS(JNIEnv *env, jcla
     env->ReleaseStringUTFChars(fs_, fs);
 }
 
-
+//稀放
 JNIEXPORT void JNICALL
 Java_sen_com_openglcamera_natives_CameraSGLNative_releaseNative(JNIEnv *env, jclass type) {
     if(camera !=NULL &&!isRelese){
@@ -104,5 +105,14 @@ Java_sen_com_openglcamera_natives_CameraSGLNative_releaseNative(JNIEnv *env, jcl
         delete(camera);
         isRelese = true;
     }
+
+}
+//修改形状
+JNIEXPORT void JNICALL
+Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeShape(JNIEnv *env, jclass type, jint cameraShape) {
+   if(camera->currentShap !=cameraShape){
+       camera->changeShape(cameraShape);
+   }
+
 
 }

@@ -8,13 +8,17 @@
 #include "shader.h"
 class Circle {
 public:
+    //修改以前的 MVP ,都有自己来维护
     SShader *mShader;
     VertexBuffer *vertexBuffer;
     glm::mat4 mModelMatrix;
+    glm::mat4 mViewMatrix;
+    glm::mat4 mProjectionMatrix;
 
 public:
-    void initData();//初始化数据
-    void draw(glm::mat4 &mViewMatrix, glm::mat4 &mProjectionMatrix);
+    void initVertex(float x, float y, float z,int count );//初始化数据
+    void initMVP( float width,float height,glm::vec3 carmeaPos);
+    void draw();
 };
 
 
