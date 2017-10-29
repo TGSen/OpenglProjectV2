@@ -4,7 +4,7 @@
 
 #include <sggl.h>
 #include "camera.h"
-
+#include "BaseObj.h"
 
 Camera::Camera (){
     isChangeVSFS = false;
@@ -41,11 +41,38 @@ void Camera::init(float x,float y,float z) {
     mModelMatrix = glm::translate(x,y,z);
     vertexBuffer = new VertexBuffer;
     vertexBuffer->setSize(4);
-    vertexBuffer->setColor(0,0.3f,0.3f,0.3f,1.0f);
-    vertexBuffer->setColor(1,0.3f,0.3f,0.3f,1.0f);
-    vertexBuffer->setColor(2,0.3f,0.3f,0.3f,1.0f);
-    vertexBuffer->setColor(3,0.3f,0.3f,0.3f,1.0f);
+//    vertexBuffer->setColor(0,0.3f,0.3f,0.3f,1.0f);
+//    vertexBuffer->setColor(1,0.3f,0.3f,0.3f,1.0f);
+//    vertexBuffer->setColor(2,0.3f,0.3f,0.3f,1.0f);
+//    vertexBuffer->setColor(3,0.3f,0.3f,0.3f,1.0f);
+//
+//    vertexBuffer->setTexcoord(0,0.0f,1.0f);
+//    vertexBuffer->setTexcoord(1,1.0f, 1.0f);
+//    vertexBuffer->setTexcoord(2,1.0f, 0.0f);
+//    vertexBuffer->setTexcoord(3,0.0f, 0.0f);
+//
+//    vertexBuffer->setPosition(0,-1.0f, 1.0f, 0.0f, 1.0f);
+//    vertexBuffer->setPosition(1,-1.0f, -1.0f, 0.0f, 1.0f);
+//    vertexBuffer->setPosition(2,1.0f, -1.0f, 0.0f, 1.0f);
+//    vertexBuffer->setPosition(3,1.0f, 1.0f, 0.0f,1.0f);
 
+
+    vertexBuffer->setSize(3);
+    float rudis = 1.0f;
+    float sinValue;
+    float cosValue;
+    double angle ;
+    int i;
+    for ( i = 0; i <vertexBuffer->mVertexCount; i++) {
+        angle= 2 * M_PI * i / vertexBuffer->mVertexCount;
+        sinValue= sin(angle);
+        cosValue = cos(angle);
+        vertexBuffer->setPosition(i, rudis * cosValue, rudis *sinValue, 0);
+        vertexBuffer->setColor(i, 0.7f, 0.3f, 0.1f, 1.0f);
+        vertexBuffer->setTexcoord(i,(-cosValue + 1.0f)*0.5f,(sinValue + 1.0f)*0.5f);
+    }
+
+/////测试数据
 //    vertexBuffer->setPosition(0,-1.0f, 1.0f, 0.0f, 1.0f);
 //    vertexBuffer->setPosition(1,-1.0f, -1.0f, 0.0f, 1.0f);
 //    vertexBuffer->setPosition(2,1.0f, 1.0f, 0.0f, 1.0f);
@@ -55,18 +82,6 @@ void Camera::init(float x,float y,float z) {
 //    vertexBuffer->setTexcoord(1,1.0f, 0.0f);
 //    vertexBuffer->setTexcoord(2,0.0f, 1.0f);
 //    vertexBuffer->setTexcoord(3,1.0f, 1.0f);
-
-    vertexBuffer->setTexcoord(0,0.0f,1.0f);
-    vertexBuffer->setTexcoord(1,1.0f, 1.0f);
-    vertexBuffer->setTexcoord(2,1.0f, 0.0f);
-    vertexBuffer->setTexcoord(3,0.0f, 0.0f);
-
-    vertexBuffer->setPosition(0,-1.0f, 1.0f, 0.0f, 1.0f);
-    vertexBuffer->setPosition(1,-1.0f, -1.0f, 0.0f, 1.0f);
-    vertexBuffer->setPosition(2,1.0f, -1.0f, 0.0f, 1.0f);
-    vertexBuffer->setPosition(3,1.0f, 1.0f, 0.0f,1.0f);
-
-
 
 
     mShader = new SShader;

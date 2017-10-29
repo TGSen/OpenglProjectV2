@@ -6,7 +6,11 @@
 void SShader::init(const char *vsPath, const char *fsPath) {
     int fileSize = 0;
     unsigned char *shaderCode = loadFile(vsPath, fileSize);
-    LOGE("shaderCode");
+    if(shaderCode== nullptr){
+        LOGE("SShader::init shaderCode is nullptr");
+        return;
+    }
+
     GLuint vsShader = complieShader(GL_VERTEX_SHADER, (const char *) shaderCode);
     delete shaderCode;
     if (vsShader == 0){
@@ -16,6 +20,10 @@ void SShader::init(const char *vsPath, const char *fsPath) {
 
 
     shaderCode = loadFile(fsPath, fileSize);
+    if(shaderCode== nullptr){
+        LOGE("SShader::init fsShaderCode is nullptr");
+        return;
+    }
     GLuint fsShader = complieShader(GL_FRAGMENT_SHADER, (const char *) shaderCode);
     delete shaderCode;
     if (fsShader == 0)
@@ -28,7 +36,6 @@ void SShader::init(const char *vsPath, const char *fsPath) {
         LOGE("mProgram ==0");
         return;
     }
-    LOGE("mProgram !=0");
     //从shader 读取属性
     positionLocation = glGetAttribLocation(mProgram,"poistion");
     colorLocation = glGetAttribLocation(mProgram,"color");

@@ -94,7 +94,7 @@ public class FilterInfo {
     //先产生固定的数据先
 
     /**
-     * camera_normal.vs 使用同一份
+     * circle_normal.vs 使用同一份
      * fs 就不是
      */
     public static List<FilterInfo> getFilterInfos (){

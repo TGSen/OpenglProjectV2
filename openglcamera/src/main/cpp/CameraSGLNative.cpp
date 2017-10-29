@@ -13,6 +13,9 @@ bool isRelese = false;
 
 unsigned char *loadFile(const char *path, int &fileSize) {
     unsigned char *file = nullptr;
+    if(path== nullptr){
+        return nullptr;
+    }
     fileSize = 0;
     //android 读取内部资源的方法
     AAsset *asset = AAssetManager_open(aAssetManager, path, AASSET_MODE_UNKNOWN);
