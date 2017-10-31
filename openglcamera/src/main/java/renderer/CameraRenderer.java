@@ -72,7 +72,7 @@ public class CameraRenderer implements GLSurfaceView.Renderer, SurfaceTexture.On
     @Override
     public void onFrameAvailable(SurfaceTexture surfaceTexture) {
         if(!CameraSGLNative.isStop) {
-//            mGLSurfaceView.requestRender();
+            mGLSurfaceView.requestRender();
         }
 
     }

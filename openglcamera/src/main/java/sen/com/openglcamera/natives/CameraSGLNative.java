@@ -11,9 +11,11 @@ import android.graphics.SurfaceTexture;
  */
 
 public class CameraSGLNative {
+
+
     public enum CameraShape{
 
-        Normal(1),Circle(2),Others(3);
+        Normal(0),Circle(1),Multiple(2);
         private int value;
         CameraShape(int i) {
             this.value=i;
@@ -58,4 +60,7 @@ public class CameraSGLNative {
     public static native void releaseNative();
 
     public static boolean isStop = false;
+
+    //修改背景颜色，请传0-1之间的值
+    public static native void onChangeBgColor(float r, float g, float b, float a);
 }

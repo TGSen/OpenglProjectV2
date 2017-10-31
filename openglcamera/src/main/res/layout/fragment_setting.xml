@@ -23,6 +23,7 @@
         android:paddingTop="16dp">
 
         <ImageButton
+            android:id="@+id/btnClose"
             android:layout_width="48dp"
             android:layout_height="64dp"
             android:layout_gravity="center"
@@ -37,6 +38,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:divider="@drawable/bg_divider"
+            android:background="@android:color/transparent"
             app:tabBackground="@drawable/selector_tab_bg"
             app:tabGravity="fill"
             app:tabIndicatorHeight="0dp"

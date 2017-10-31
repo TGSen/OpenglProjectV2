@@ -8,8 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
-    <style name="ThemeWithLogo" parent="AppTheme">
+    <style name="SplashWithLogo" parent="AppTheme">
         <item name="android:windowBackground">@drawable/luncher_logo</item>
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:windowNoTitle">true</item>
     </style>
 
     <style name="Dialog" parent="@style/Theme.AppCompat.Light.NoActionBar">

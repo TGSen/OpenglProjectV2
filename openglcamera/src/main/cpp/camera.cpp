@@ -13,6 +13,8 @@ Camera::Camera (){
     vsPath = nullptr;
     float mWidth=0;
     float mHeight=0;
+    //初始化为黑色
+    mBgColor =glm::vec4(1.0f,0.0f,0.0f,0.0f);
 }
 
 Camera::~Camera(){
@@ -87,18 +89,19 @@ void Camera::createSurfaceTextureObject(JNIEnv *env) {
     glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    //创建 java SurfaceTexture 并绑定textureId
     const char *stClassPath = "android/graphics/SurfaceTexture";
     const jclass surfaceTextureClass = env->FindClass(stClassPath);
-    if (surfaceTextureClass == 0) {
+    if (surfaceTextureClass == nullptr) {
+        LOGE("surfaceTextureClass ==0");
     }
-
-//    // find the constructor that takes an int
     const jmethodID constructor = env->GetMethodID(surfaceTextureClass, "<init>", "(I)V");
-    if (constructor == 0) {
+    if (constructor == nullptr) {
+        LOGE("surfaceTextureClass constructor ==0");
     }
-
     jobject obj = env->NewObject(surfaceTextureClass, constructor, textureId);
-    if (obj == 0) {
+    if (obj == nullptr) {
+        LOGE("surfaceTextureClass obj ==0");
     }
     javaSurfaceTextureObj = env->NewGlobalRef(obj);
 
@@ -167,6 +170,5 @@ void Camera::changeShape(int shape){
     currentShap =shape;
     isChangeShape = true;
 }
-
 
 

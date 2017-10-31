@@ -25,6 +25,7 @@ import android.view.ViewGroup;
 import android.view.ViewStub;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.ImageButton;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
@@ -192,7 +193,10 @@ public class CameraInfoFragmentV2 extends DialogFragment implements OnClickListe
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
+        ImageButton btnClose = (ImageButton) view.findViewById(R.id.btnClose);
+        ImageButton btnSave = (ImageButton) view.findViewById(R.id.btnSave);
+        btnClose.setOnClickListener(this);
+        btnSave.setOnClickListener(this);
         mTablayout = (TabLayout) view.findViewById(R.id.tabLayout);
         mViewPager = (ViewPager)view. findViewById(R.id.viewPager);
         for (int i = 0;i<mTiltes.length;i++){
@@ -232,8 +236,6 @@ public class CameraInfoFragmentV2 extends DialogFragment implements OnClickListe
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Light_NoTitleBar);
         initDialog();
-//		initData();
-//		initLinster();
         return dialog;
     }
 
@@ -501,7 +503,14 @@ public class CameraInfoFragmentV2 extends DialogFragment implements OnClickListe
 
     @Override
     public void onClick(View view) {
-
+        switch (view.getId()) {
+            case R.id.btnClose:
+                dialog.dismiss();
+                break;
+            case R.id.btnSave:
+                dialog.dismiss();
+                break;
+        }
 
     }
 

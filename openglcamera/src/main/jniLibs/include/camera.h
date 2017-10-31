@@ -18,6 +18,7 @@ public:
     VertexBuffer *vertexBuffer;
     SShader *mShader;
     glm::vec3 mCameraPos;
+    glm::vec4 mBgColor;
     int currentShap;
     float mWidth;
     float mHeight;
@@ -45,6 +46,7 @@ public:
     void changeVSFS(const char* vsPath, const char*fsPath);
     //修改 shape 形状
     void changeShape(int shape);
+
 };
 
 

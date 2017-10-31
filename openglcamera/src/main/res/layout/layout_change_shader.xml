@@ -24,6 +24,14 @@
             android:text="普通" />
 
         <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/btnMultiple"
+            style="@style/CircleRadioStytle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="多边形" />
+
+        <android.support.v7.widget.AppCompatRadioButton
             android:id="@+id/btnCircle"
             style="@style/CircleRadioStytle"
             android:layout_width="wrap_content"
@@ -43,7 +51,7 @@
         android:showDividers="middle">
 
         <android.support.v7.widget.AppCompatRadioButton
-            android:id="@+id/btnBack"
+            android:id="@+id/btnBlack"
             style="@style/CircleRadioStytle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

@@ -47,9 +47,9 @@ void setViewPortSize(float width, float height) {
 void draw() {
 
     float time = getTime();
-    glClearColor(0.0f,0.0f,0.0f,1.0f);
+    glClearColor(mCamera->mBgColor.r,mCamera->mBgColor.g,mCamera->mBgColor.b,mCamera->mBgColor.a);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-    mCamera->draw();
+   // mCamera->draw();
     //绘制粒子
    // particleSystem->draw(mViewMatrix, mProjectionMatrix);
     //粒子运动

@@ -116,3 +116,25 @@ Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeShape(JNIEnv *env, jcl
 
 
 }
+//检验数据
+float checkData(float data){
+    if(data >1.0f){
+        data =1.0f;
+    } else if(data <0){
+        data =0.0f;
+    }
+    return data;
+}
+//修改背景颜色
+JNIEXPORT void JNICALL
+Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeBgColor(JNIEnv *env, jclass type,
+                                                                  jfloat r, jfloat g, jfloat b,
+                                                                  jfloat a) {
+    //检验数据
+    r = checkData(r);
+    g = checkData(g);
+    b = checkData(b);
+    a = checkData(a);
+
+    camera->mBgColor = glm::vec4(r,g,b,a);
+}
