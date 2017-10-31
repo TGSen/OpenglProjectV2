@@ -1,4 +1,4 @@
-package sen.com.openglcamera;
+package renderer;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,6 +9,7 @@ import android.util.Log;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import camera.CameraOldVersion;
 import sen.com.openglcamera.natives.CameraSGLNative;
 import sen.com.openglcamera.view.CameraSGLSurfaceView;
 
@@ -71,7 +72,7 @@ public class CameraRenderer implements GLSurfaceView.Renderer, SurfaceTexture.On
     @Override
     public void onFrameAvailable(SurfaceTexture surfaceTexture) {
         if(!CameraSGLNative.isStop) {
-            mGLSurfaceView.requestRender();
+//            mGLSurfaceView.requestRender();
         }
 
     }

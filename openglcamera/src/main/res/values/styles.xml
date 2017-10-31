@@ -6,6 +6,9 @@
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="ThemeWithLogo" parent="AppTheme">
         <item name="android:windowBackground">@drawable/luncher_logo</item>
     </style>
 
@@ -35,7 +38,23 @@
     </style>
 
 
+<style name="RadioStytle" parent="Widget.AppCompat.CompoundButton.RadioButton">
+    <item name="android:button">@null</item>
+    <item name="android:gravity">center</item>
+    <item name="android:background">@drawable/selector_tab_bg</item>
+    <item name="android:textColor">@drawable/selector_radio_text</item>
+</style>
 
+    <style name="CircleRadioStytle" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@drawable/selector_radio_circle</item>
+        <item name="android:textColor">@drawable/selector_radio_text</item>
+        <item name="android:paddingRight">10dp</item>
+        <item name="android:paddingLeft">10dp</item>
+        <item name="android:paddingTop">6dp</item>
+        <item name="android:paddingBottom">6dp</item>
+    </style>
 
 
 

@@ -1,4 +1,4 @@
-package sen.com.openglcamera;
+package activity;
 
 import android.content.pm.ActivityInfo;
 import android.hardware.Camera;
@@ -13,6 +13,10 @@ import android.view.WindowManager;
 
 import java.io.File;
 
+import fragment.CameraInfoFragment;
+import camera.CameraOldVersion;
+import fragment.CameraInfoFragmentV2;
+import sen.com.openglcamera.R;
 import sen.com.openglcamera.bean.CameraSettingInfo;
 import sen.com.openglcamera.bean.CurrentCameInfo;
 import sen.com.openglcamera.natives.CameraSGLNative;
@@ -60,12 +64,12 @@ public class CameraMainActivity extends AppCompatActivity implements View.OnClic
         CameraSettingInfo info =mCamera.getCameraSettingInfo();
         //获取当前的设置
         CurrentCameInfo currentCameInfo = mCamera.getCurrentSettingInfo();
-        CameraInfoFragment dialog = new CameraInfoFragment();
+        CameraInfoFragmentV2 dialog = new CameraInfoFragmentV2();
         Bundle bundle = new Bundle();
         bundle.putSerializable("CameraSettingInfo",info);
         bundle.putSerializable("CurrentCameInfo",currentCameInfo);
         dialog.setArguments(bundle);
-        dialog.setOnSettingChangeLinstener(this);
+        //dialog.setOnSettingChangeLinstener(this);
         dialog.show(getFragmentManager(), "CameraInfoFragment");
     }
 

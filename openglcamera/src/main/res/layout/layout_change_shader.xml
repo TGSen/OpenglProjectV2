@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+
+    android:gravity="bottom"
+    android:orientation="vertical">
+
+    <RadioGroup
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:paddingBottom="8dp"
+        android:showDividers="middle">
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/btnNormal"
+            style="@style/CircleRadioStytle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="普通" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/btnCircle"
+            style="@style/CircleRadioStytle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:text="多边形" />
+    </RadioGroup>
+
+    <RadioGroup
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="16dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginTop="8dp"
+        android:orientation="horizontal"
+        android:showDividers="middle">
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/btnBack"
+            style="@style/CircleRadioStytle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="黑色" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/btnWhile"
+            style="@style/CircleRadioStytle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="8dp"
+            android:layout_weight="1"
+            android:text="白色" />
+
+    </RadioGroup>
+</LinearLayout>

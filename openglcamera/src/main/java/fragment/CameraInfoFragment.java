@@ -1,4 +1,4 @@
-package sen.com.openglcamera;
+package fragment;
 
 import android.app.Activity;
 import android.app.Dialog;
@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
+import sen.com.openglcamera.R;
 import sen.com.openglcamera.bean.CameraSettingInfo;
 import sen.com.openglcamera.bean.CurrentCameInfo;
 import sen.com.openglcamera.bean.FilterInfo;
@@ -374,7 +375,7 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 
 	private void initView() {
 		dialog = new Dialog(mActivity, R.style.Dialog);
-		dialog.getWindow().setBackgroundDrawable(null);
+//		dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
 		dialog.requestWindowFeature(Window.FEATURE_NO_TITLE); // 设置Content前设定
 		dialog.setContentView(R.layout.fragment_setting);
 		dialog.setCanceledOnTouchOutside(false); // 外部点击取消
@@ -386,8 +387,7 @@ public class CameraInfoFragment extends DialogFragment implements OnClickListene
 		lp.width = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
 		lp.height = getActivity().getWindowManager().getDefaultDisplay()
 				.getHeight()*2/3;
-		lp.dimAmount = 0.0f;
-		lp.alpha =0.9f;
+		lp.dimAmount = 1.0f;
 		window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
 		window.setAttributes(lp);
 		pictureSizeRecyView= (RecyclerView) dialog.findViewById(R.id.pictureSizeRecyView);
