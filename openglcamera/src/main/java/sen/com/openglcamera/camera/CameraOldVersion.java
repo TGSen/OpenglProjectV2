@@ -1,4 +1,4 @@
-package camera;
+package sen.com.openglcamera.camera;
 
 import android.app.Activity;
 import android.graphics.SurfaceTexture;

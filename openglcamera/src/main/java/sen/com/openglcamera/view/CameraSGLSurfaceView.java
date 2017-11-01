@@ -5,8 +5,8 @@ import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
 
-import camera.CameraOldVersion;
-import renderer.CameraRenderer;
+import sen.com.openglcamera.camera.CameraOldVersion;
+import sen.com.openglcamera.renderer.CameraRenderer;
 
 /**
  * Author : 唐家森

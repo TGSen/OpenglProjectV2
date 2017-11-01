@@ -1,4 +1,4 @@
-package activity;
+package sen.com.openglcamera.activity;
 
 import android.content.pm.ActivityInfo;
 import android.hardware.Camera;
@@ -13,9 +13,8 @@ import android.view.WindowManager;
 
 import java.io.File;
 
-import fragment.CameraInfoFragment;
-import camera.CameraOldVersion;
-import fragment.CameraInfoFragmentV2;
+import sen.com.openglcamera.camera.CameraOldVersion;
+import sen.com.openglcamera.fragment.CameraInfoFragmentV2;
 import sen.com.openglcamera.R;
 import sen.com.openglcamera.bean.CameraSettingInfo;
 import sen.com.openglcamera.bean.CurrentCameInfo;
@@ -23,7 +22,7 @@ import sen.com.openglcamera.natives.CameraSGLNative;
 import sen.com.openglcamera.view.CameraButtonView;
 import sen.com.openglcamera.view.CameraSGLSurfaceView;
 
-public class CameraMainActivity extends AppCompatActivity implements View.OnClickListener, CameraInfoFragment.OnSettingChangeLinstener {
+public class CameraMainActivity extends AppCompatActivity implements View.OnClickListener, CameraInfoFragmentV2.OnSettingChangeLinstener {
     CameraSGLSurfaceView mSGlSurfaceView;
     private int mCameraId;
     private CameraOldVersion mCamera;

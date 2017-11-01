@@ -27,3 +27,8 @@ OpenglCamera
 1.加入MD 控件
 2.调整java 与c++ 参数，java层可控滤镜等参数
 
+2017-11-1
+1.修改UI-2
+2.review c++ 代码
+
+

@@ -66,7 +66,7 @@ JNIEXPORT void JNICALL
 Java_sen_com_openglcamera_natives_CameraSGLNative_releaseNative(JNIEnv *, jclass );
 
 JNIEXPORT void JNICALL
-Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeShape(JNIEnv *, jclass , jint );
+Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeShape(JNIEnv *, jclass , jint,jint );
 
 
 
@@ -76,6 +76,14 @@ JNIEXPORT void JNICALL
 Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeBgColor(JNIEnv *, jclass,
                                                                   jfloat, jfloat, jfloat,
                                                                   jfloat);
+
+JNIEXPORT void JNICALL
+Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeShapeSize(JNIEnv *, jclass ,jint, jint ) ;
+
+
+
+JNIEXPORT void JNICALL
+Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeShapeCount(JNIEnv *, jclass , jint );
 #ifdef __cplusplus
 }
 #endif

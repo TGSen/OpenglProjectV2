@@ -6,10 +6,13 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.support.annotation.Nullable;
+import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import sen.com.openglcamera.R;
 
 /**
  * Created by Administrator on 2017/7/24.
@@ -68,7 +71,7 @@ public class CameraButtonView extends View {
         canvas.drawPath(bigCirclePath, mPaint);
         smollCirclePath.addCircle(centerX,centerY,ruduis-12+changeOffset,Path.Direction.CW);
         mPaint.setStrokeWidth(0);
-        mPaint.setColor(Color.RED);
+        mPaint.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         mPaint.setStyle(Paint.Style.FILL);
         canvas.drawPath(smollCirclePath, mPaint);
     }
@@ -89,10 +92,8 @@ public class CameraButtonView extends View {
               //  currentState = DEF_STATE;
                 changeOffset =0;
                 invalidate();
-                Log.e("sggllog","ACTION_UP");
                 break;
         }
-        Log.e("sggllog","truetruetrue");
         return super.onTouchEvent(event);
     }
 

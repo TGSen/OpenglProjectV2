@@ -3,11 +3,16 @@
     android:id="@+id/item_name"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:padding="4dp"
     android:layout_margin="16dp"
-    android:gravity="center"
+    android:gravity="bottom"
     android:text="Page1"
-    android:textSize="12sp" />
+    android:paddingBottom="6dp"
+    android:paddingLeft="10dp"
+    android:paddingRight="10dp"
+    android:paddingTop="6dp"
+    android:background="@drawable/selector_select_bg"
+    android:textColor="@drawable/selector_text"
+    android:textSize="14sp" />
 
 
 

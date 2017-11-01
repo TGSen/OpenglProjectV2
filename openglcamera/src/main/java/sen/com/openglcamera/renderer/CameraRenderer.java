@@ -1,4 +1,4 @@
-package renderer;
+package sen.com.openglcamera.renderer;
 
 import android.app.Activity;
 import android.content.Context;
@@ -9,7 +9,7 @@ import android.util.Log;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import camera.CameraOldVersion;
+import sen.com.openglcamera.camera.CameraOldVersion;
 import sen.com.openglcamera.natives.CameraSGLNative;
 import sen.com.openglcamera.view.CameraSGLSurfaceView;
 
@@ -23,7 +23,6 @@ import sen.com.openglcamera.view.CameraSGLSurfaceView;
 public class CameraRenderer implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener {
     GLSurfaceView mGLSurfaceView;
     private Context mContext;
-    private boolean bIsPreviewStarted;
     private CameraOldVersion mCamera;
     private SurfaceTexture mSurfaceTexture;
 
@@ -66,7 +65,6 @@ public class CameraRenderer implements GLSurfaceView.Renderer, SurfaceTexture.On
         mContext = context;
         mGLSurfaceView = cameraSGLSurfaceView;
         mCamera = camera;
-        bIsPreviewStarted = isPreviewStarted;
     }
 
     @Override

@@ -2,29 +2,42 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
     android:gravity="bottom"
     android:orientation="vertical">
+
     <SeekBar
-        android:id="@+id/seekBarSize"
+        android:id="@+id/seekBarOne"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
         android:maxHeight="2dp"
-        android:thumb="@drawable/seekbar_thumb"
         android:progressDrawable="@drawable/seekbar_style"
-        android:layout_marginTop="16dp" />
+        android:thumb="@drawable/seekbar_thumb" />
+
     <SeekBar
-        android:id="@+id/seekBarCount"
+        android:id="@+id/seekBarTwo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="8dp"
         android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
         android:maxHeight="2dp"
-        android:thumb="@drawable/seekbar_thumb"
         android:progressDrawable="@drawable/seekbar_style"
-        android:layout_marginTop="16dp" />
+        android:thumb="@drawable/seekbar_thumb" />
+
+    <SeekBar
+        android:id="@+id/seekBarThree"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="8dp"
+        android:layout_marginTop="16dp"
+        android:maxHeight="2dp"
+        android:progressDrawable="@drawable/seekbar_style"
+        android:thumb="@drawable/seekbar_thumb" />
+
     <RadioGroup
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -32,7 +45,7 @@
         android:layout_marginLeft="16dp"
         android:layout_marginTop="16dp"
         android:orientation="horizontal"
-        android:paddingBottom="8dp"
+        android:paddingBottom="16dp"
         android:showDividers="middle">
 
         <android.support.v7.widget.AppCompatRadioButton
@@ -40,51 +53,32 @@
             style="@style/CircleRadioStytle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="普通" />
+            android:text="无滤镜" />
 
         <android.support.v7.widget.AppCompatRadioButton
-            android:id="@+id/btnMultiple"
+            android:id="@+id/btnGray"
             style="@style/CircleRadioStytle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
-            android:text="多边形" />
+            android:text="灰色" />
 
         <android.support.v7.widget.AppCompatRadioButton
-            android:id="@+id/btnCircle"
+            android:id="@+id/btnSkinWhile"
             style="@style/CircleRadioStytle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
-            android:text="圆形" />
+            android:text="美白" />
+
+        <android.support.v7.widget.AppCompatRadioButton
+            android:id="@+id/btnCustomer"
+            style="@style/CircleRadioStytle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:text="自定义" />
     </RadioGroup>
 
-    <RadioGroup
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="16dp"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="8dp"
-        android:orientation="horizontal"
-        android:showDividers="middle">
 
-        <android.support.v7.widget.AppCompatRadioButton
-            android:id="@+id/btnBlack"
-            style="@style/CircleRadioStytle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="黑色" />
-
-        <android.support.v7.widget.AppCompatRadioButton
-            android:id="@+id/btnWhile"
-            style="@style/CircleRadioStytle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:layout_weight="1"
-            android:text="白色" />
-
-    </RadioGroup>
 </LinearLayout>

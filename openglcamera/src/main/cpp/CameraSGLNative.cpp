@@ -1,7 +1,11 @@
-//
-// Created by Administrator on 2017/10/11.
-// 方法名和java 层opengl 对应
-//
+
+/**
+ * Author : 唐家森
+ * Version: 1.0
+ * On     :
+ * Des    :方法名和java 层opengl 对应，还有Camera的一些属性，不应该public 像java 那封装，到时在修改了
+ *
+ */
 #include "CameraSGLNative.h"
 #include "sggl.h"
 #include "scence.h"
@@ -109,9 +113,12 @@ Java_sen_com_openglcamera_natives_CameraSGLNative_releaseNative(JNIEnv *env, jcl
 }
 //修改形状
 JNIEXPORT void JNICALL
-Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeShape(JNIEnv *env, jclass type, jint cameraShape) {
+Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeShape(JNIEnv *env, jclass type, jint cameraShape,jint count) {
    if(camera->currentShap !=cameraShape){
-       camera->changeShape(cameraShape);
+       if (count<3){
+           count =3;
+       }
+       camera->changeShape(cameraShape,count);
    }
 
 
@@ -137,4 +144,27 @@ Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeBgColor(JNIEnv *env, j
     a = checkData(a);
 
     camera->mBgColor = glm::vec4(r,g,b,a);
+}
+
+
+JNIEXPORT void JNICALL
+Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeShapeSize(JNIEnv *env, jclass type,
+                                                                    jint size,jint max) {
+
+    if(size>0){
+        //这些属性不应该这样暴露，到时在修改了，像这样camera->changeShapeDrawCount(count);
+        //先减少
+        camera->mShapSize =1.0f-float(size)/float(max);
+        camera->isChangeShape= true;
+    }
+}
+
+JNIEXPORT void JNICALL
+Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeShapeCount(JNIEnv *env, jclass type,
+                                                                   jint count) {
+    //组成一个面至少3个顶点
+    if(count>=3 ){
+        camera->changeShapeDrawCount(count);
+    }
+
 }

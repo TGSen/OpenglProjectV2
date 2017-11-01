@@ -9,29 +9,30 @@
 #include <vertexbuffer.h>
 #include <shader.h>
 #include "CameraSGLNative.h"
-
+#include "CameraShape.h"
+#include "ShapeType.h"
 class Camera{
 public:
     Camera ();
     ~Camera();
     GLuint textureId;
-    VertexBuffer *vertexBuffer;
     SShader *mShader;
+    CameraShape * cameraShape;
     glm::vec3 mCameraPos;
     glm::vec4 mBgColor;
-    int currentShap;
     float mWidth;
     float mHeight;
-    //矩阵相关
-    glm::mat4 mModelMatrix;
-    glm::mat4 mViewMatrix;
-    glm::mat4 mProjectionMatrix;
+    int mMultipleCount;
+    float mShapSize;
     bool isChangeVSFS;//检查是否更改了vs 和fs
     bool isChangeShape;
+    enum ShapeType currentShap;
     char* vsPath;
     char* fsPath;
-    //初始化顶点
-    void initVertex(float x,float y,float z);
+    //初始化shader 顶点
+    void initVertex(float x,float y,float z, int count);
+    //初始化形状数据顶点,和形状大小
+    void initShapeData(float x, float y, float z, int count, float shapeSize);
     //初始化矩阵
     void initMVP( float width,float height,glm::vec3 carmeaPos);
     //画
@@ -45,7 +46,9 @@ public:
     //修改 vs shader ,和fs shader
     void changeVSFS(const char* vsPath, const char*fsPath);
     //修改 shape 形状
-    void changeShape(int shape);
+    void changeShape(int shape, int count);
+    //修改要画的顶点个数
+    void changeShapeDrawCount(int count);
 
 };
 

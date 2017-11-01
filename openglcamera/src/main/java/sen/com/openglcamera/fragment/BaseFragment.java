@@ -1,4 +1,4 @@
-package fragment;
+package sen.com.openglcamera.fragment;
 
 import android.app.Fragment;
 import android.os.Bundle;
@@ -37,10 +37,13 @@ public abstract class BaseFragment extends Fragment {
 
         if (getUserVisibleHint()) {
             isVisible = true;
+            onLoadData();
         } else {
             isVisible = false;
         }
     }
+
+    protected abstract void onLoadData();
 
     /**
      * 初始化view

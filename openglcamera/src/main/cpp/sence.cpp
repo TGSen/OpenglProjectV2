@@ -7,9 +7,6 @@
 #include "camera.h"
 #include "circle.h"
 
-glm::mat4 mViewMatrix;
-glm::mat4 mProjectionMatrix;
-glm::mat4 mModelMatrix;
 ParticleSystem *particleSystem;
 glm::vec3 carmeaPos(0.0f,0.0f,2.4f);
 Camera *mCamera;
@@ -24,7 +21,7 @@ void init() {
 //    particleSystem = new ParticleSystem;
 //    particleSystem->init(0.0f,0.0f,0.0f,180);
 //    particleSystem->mModelMatrix =glm::translate(-1.0f,0.0f,1.0f);
-    mCamera->initVertex(0.0f,0.0f,0.0f);
+    mCamera->initVertex(0.0f,0.0f,0.0f,4);
 
 
 }
@@ -39,7 +36,6 @@ void setViewPortSize(float width, float height) {
      * 4.最远看到的距离
      */
 
-    //其他两个没设置就是单位矩阵
 }
 
 
@@ -49,7 +45,7 @@ void draw() {
     float time = getTime();
     glClearColor(mCamera->mBgColor.r,mCamera->mBgColor.g,mCamera->mBgColor.b,mCamera->mBgColor.a);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
-   // mCamera->draw();
+    mCamera->draw();
     //绘制粒子
    // particleSystem->draw(mViewMatrix, mProjectionMatrix);
     //粒子运动

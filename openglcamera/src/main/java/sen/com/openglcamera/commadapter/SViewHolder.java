@@ -51,10 +51,10 @@ public class SViewHolder extends RecyclerView.ViewHolder {
      * @param text
      * @return
      */
-    public SViewHolder setTextAndTextColor(int viewId, CharSequence text,int color) {
+    public SViewHolder setTextAndTextSeleted(int viewId, CharSequence text,boolean isSeleted) {
         TextView textView = getView(viewId);
         textView.setText(text);
-        textView.setTextColor(color);
+        textView.setSelected(isSeleted);
         return this;
     }
 

@@ -7,10 +7,12 @@ import android.graphics.SurfaceTexture;
  * Author : 唐家森
  * Version: 1.0
  * On     : 2017/10/11 13:19
- * Des    :
+ * Des    :CameraShape 需要跟c++ 定义顺序保持一致
  */
 
 public class CameraSGLNative {
+
+
 
 
     public enum CameraShape{
@@ -54,7 +56,7 @@ public class CameraSGLNative {
     public static native void onChangeVSFS(String vs, String fs) ;
 
     //修改形状
-    public static native void onChangeShape(int  cameraShape) ;
+    public static native void onChangeShape(int  cameraShape,int count) ;
 
     //稀放
     public static native void releaseNative();
@@ -63,4 +65,8 @@ public class CameraSGLNative {
 
     //修改背景颜色，请传0-1之间的值
     public static native void onChangeBgColor(float r, float g, float b, float a);
+    //修改形状的大小
+    public static native void onChangeShapeSize(int size,int max) ;
+    //修改及几遍行
+    public static native void onChangeShapeCount(int count) ;
 }
