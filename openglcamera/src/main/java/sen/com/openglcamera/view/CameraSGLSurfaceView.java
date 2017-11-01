@@ -26,11 +26,11 @@ public class CameraSGLSurfaceView extends GLSurfaceView {
 
     }
 
-    public void init(CameraOldVersion mCamera, boolean isPreviewStarted, Activity mainActivity) {
+    public void init(CameraOldVersion mCamera, Activity mainActivity) {
         //设置opengl 的渲染环境版本2，如果需要是3.0的话，那么在c++ 层去做
         setEGLContextClientVersion(2);
         sRenderer = new CameraRenderer(this);
-        sRenderer.init(this, mCamera, isPreviewStarted, mainActivity);
+        sRenderer.init(this, mCamera, mainActivity);
         setRenderer(sRenderer);
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
     }

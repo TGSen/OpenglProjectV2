@@ -62,7 +62,7 @@ JNIEXPORT void JNICALL Java_sen_com_openglcamera_natives_CameraSGLNative_onSurfa
 
 JNIEXPORT void JNICALL Java_sen_com_openglcamera_natives_CameraSGLNative_onDrawFrame
         (JNIEnv *env, jclass clzss) {
-    if(camera!= nullptr &&!isRelese){
+    if(camera!= nullptr){
         draw();
     }
 
@@ -103,6 +103,7 @@ Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeVSFS(JNIEnv *env, jcla
 //稀放
 JNIEXPORT void JNICALL
 Java_sen_com_openglcamera_natives_CameraSGLNative_releaseNative(JNIEnv *env, jclass type) {
+
     if(camera !=NULL &&!isRelese){
         //javaSurfaceTextureObj 在析构函数好像不能delete ，因为是env Ref
         env->DeleteGlobalRef(camera->javaSurfaceTextureObj);

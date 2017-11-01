@@ -5,7 +5,6 @@ import android.hardware.Camera;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
@@ -13,11 +12,11 @@ import android.view.WindowManager;
 
 import java.io.File;
 
-import sen.com.openglcamera.camera.CameraOldVersion;
-import sen.com.openglcamera.fragment.CameraInfoFragmentV2;
 import sen.com.openglcamera.R;
 import sen.com.openglcamera.bean.CameraSettingInfo;
 import sen.com.openglcamera.bean.CurrentCameInfo;
+import sen.com.openglcamera.camera.CameraOldVersion;
+import sen.com.openglcamera.fragment.CameraInfoFragmentV2;
 import sen.com.openglcamera.natives.CameraSGLNative;
 import sen.com.openglcamera.view.CameraButtonView;
 import sen.com.openglcamera.view.CameraSGLSurfaceView;
@@ -47,19 +46,20 @@ public class CameraMainActivity extends AppCompatActivity implements View.OnClic
         super.onContentChanged();
         mSGlSurfaceView = (CameraSGLSurfaceView) findViewById(R.id.camera_glview);
         mCameraId = Camera.CameraInfo.CAMERA_FACING_BACK;
-        DisplayMetrics dm = new DisplayMetrics();
         mCamera = new CameraOldVersion(this);
         String path = Environment.getExternalStorageDirectory().getAbsolutePath()+ File.separator;
         mCamera.setTakePicturePath(path);
-        if (mCamera.openCamera(dm.widthPixels, dm.heightPixels, mCameraId)) {
-            mSGlSurfaceView.init(mCamera, false, this);
+        if (mCamera.openCamera(mCameraId)) {
+            mSGlSurfaceView.init(mCamera, this);
             takePicture = (CameraButtonView) findViewById(R.id.takePicture);
             takePicture.setOnClickListener(this);
         }
 
     }
+    //对button需要做多次点击才行，要不会弹出多个
     //对camera setting
     public void settingView(View view){
+
         CameraSettingInfo info =mCamera.getCameraSettingInfo();
         //获取当前的设置
         CurrentCameInfo currentCameInfo = mCamera.getCurrentSettingInfo();
@@ -68,7 +68,6 @@ public class CameraMainActivity extends AppCompatActivity implements View.OnClic
         bundle.putSerializable("CameraSettingInfo",info);
         bundle.putSerializable("CurrentCameInfo",currentCameInfo);
         dialog.setArguments(bundle);
-        //dialog.setOnSettingChangeLinstener(this);
         dialog.show(getFragmentManager(), "CameraInfoFragment");
     }
 

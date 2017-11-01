@@ -35,6 +35,7 @@ public class CameraRenderer implements GLSurfaceView.Renderer, SurfaceTexture.On
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         mSurfaceTexture = CameraSGLNative.getSurfaceTexture();
         if(mSurfaceTexture!=null){
+            Log.e("sen_","mSurfaceTexture is not null");
             mSurfaceTexture.setOnFrameAvailableListener(this);
         }
         mCamera.setPreviewTexture(mSurfaceTexture);
@@ -61,7 +62,7 @@ public class CameraRenderer implements GLSurfaceView.Renderer, SurfaceTexture.On
 
     }
 
-    public void init(CameraSGLSurfaceView cameraSGLSurfaceView, CameraOldVersion camera, boolean isPreviewStarted, Activity context) {
+    public void init(CameraSGLSurfaceView cameraSGLSurfaceView, CameraOldVersion camera, Activity context) {
         mContext = context;
         mGLSurfaceView = cameraSGLSurfaceView;
         mCamera = camera;

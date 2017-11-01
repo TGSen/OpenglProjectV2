@@ -88,7 +88,7 @@ public class CameraOldVersion {
         this.rootPicPath = path;
     }
 
-    public boolean openCamera(int screenWidth, int screenHeight, int cameraId) {
+    public boolean openCamera(int cameraId) {
         try {
             cameraSettingInfo = new CameraSettingInfo();
             currentCameInfo = new CurrentCameInfo();
