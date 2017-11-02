@@ -19,8 +19,7 @@ void MultipleShape::initMVP( float width,float height,glm::vec3 carmeaPos){
     mViewMatrix = glm::lookAt(carmeaPos,glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,1.0f));
     mProjectionMatrix= glm::perspective(60.0f,width/height,0.1f,1000.0f);
     //初始化为单位矩阵
-//    mModelMatrix = glm::mat4(1.0f);
-//    mModelMatrix=   glm::rotate(mModelMatrix,-45.f,glm::vec3(1.0f,0.0f,0.0f));
+    mModelMatrix = glm::rotate(glm::mat4(1.0f),90.0f,glm::vec3(0.0f,0.0f,1.0f));
 
 }
 //初始化顶点 ,假如多边形为200 为圆形

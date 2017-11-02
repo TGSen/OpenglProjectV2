@@ -33,7 +33,8 @@ void NormalShape::initShapeData(float x,float y,float z,int count, float shapeSi
     vertexBuffer->setColor(1,0.3f,0.3f,0.3f,1.0f);
     vertexBuffer->setColor(2,0.3f,0.3f,0.3f,1.0f);
     vertexBuffer->setColor(3,0.3f,0.3f,0.3f,1.0f);
-
+    //在android 屏幕的坐标系，左上角为0,0 ，跟opengl 左下角为0，0,所以得倒过来，才能对应
+    //要不会出现图像倒转
     vertexBuffer->setTexcoord(0,0.0f,1.0f);
     vertexBuffer->setTexcoord(1,1.0f, 1.0f);
     vertexBuffer->setTexcoord(2,1.0f, 0.0f);

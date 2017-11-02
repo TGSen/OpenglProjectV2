@@ -3,7 +3,7 @@
  * Author : 唐家森
  * Version: 1.0
  * On     : 2017/11/1 00:13
- * Des    : 
+ * Des    : 11-2 矩阵变换，操作形状的大小
  */
 //
 
@@ -55,6 +55,7 @@ void CameraShape::changeDrawCount(int count){
 void CameraShape::changeShapeSize(float size){
     LOGE("CameraShape:: changeShapeSize%f",size);
     //每次都初始化为单位矩阵
-    mModelMatrix = glm::mat4(1.0f);
-    mModelMatrix = glm::scale(mModelMatrix,glm::vec3(size,size,1.0f));
+    mModelMatrix = glm::scale(glm::mat4(1.0f),glm::vec3(size,size,1.0f));
+    //还需要旋转过来
+    mModelMatrix = glm::rotate(mModelMatrix,90.0f,glm::vec3(0.0f,0.0f,1.0f));
 }
