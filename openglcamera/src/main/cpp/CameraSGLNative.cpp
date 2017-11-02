@@ -13,7 +13,6 @@
 //c++ 11 的nullptr
 AAssetManager *aAssetManager = nullptr;
 Camera *camera;
-bool isRelese = false;
 
 unsigned char *loadFile(const char *path, int &fileSize) {
     unsigned char *file = nullptr;
@@ -88,9 +87,8 @@ Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeFileter(JNIEnv *env, j
 JNIEXPORT void JNICALL
 Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeVSFS(JNIEnv *env, jclass type,
                                                              jstring vs_, jstring fs_) {
-    if (isRelese){
+    if(camera== nullptr)
         return;
-    }
     const char *vs = env->GetStringUTFChars(vs_, 0);
     const char *fs = env->GetStringUTFChars(fs_, 0);
     if (vs!= nullptr && fs!= nullptr){
@@ -104,11 +102,11 @@ Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeVSFS(JNIEnv *env, jcla
 JNIEXPORT void JNICALL
 Java_sen_com_openglcamera_natives_CameraSGLNative_releaseNative(JNIEnv *env, jclass type) {
 
-    if(camera !=NULL &&!isRelese){
+    if(camera != nullptr){
         //javaSurfaceTextureObj 在析构函数好像不能delete ，因为是env Ref
         env->DeleteGlobalRef(camera->javaSurfaceTextureObj);
         delete(camera);
-        isRelese = true;
+        camera= nullptr;
     }
 
 }
@@ -153,10 +151,8 @@ Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeShapeSize(JNIEnv *env,
                                                                     jint size,jint max) {
 
     if(size>0){
-        //这些属性不应该这样暴露，到时在修改了，像这样camera->changeShapeDrawCount(count);
-        //先减少
-        camera->mShapSize =1.0f-float(size)/float(max);
-        camera->isChangeShape= true;
+        //先减少 ，后变大
+        camera->changeShapeSize(1.0f-float(size)/float(max));
     }
 }
 

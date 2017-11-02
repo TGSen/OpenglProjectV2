@@ -29,7 +29,9 @@ public:
     virtual void initShapeData(float x,float y,float z,int count, float shapeSize);
     //调用父类方法，不需virtual ，需要在加上
      int getDrawCount();
-     void changeDrawCount(int count);
+    void changeDrawCount(int count);
+
+    void changeShapeSize(float size);
 };
 
 

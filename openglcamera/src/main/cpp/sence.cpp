@@ -8,7 +8,7 @@
 #include "circle.h"
 
 ParticleSystem *particleSystem;
-glm::vec3 carmeaPos(0.0f,0.0f,2.4f);
+glm::vec3 carmeaPos(0.0f,0.0f,2.6f);
 Camera *mCamera;
 Camera* beforInit(JNIEnv *env) {
     mCamera = new Camera;
@@ -27,15 +27,8 @@ void init() {
 }
 
 void setViewPortSize(float width, float height) {
+    glViewport(0,0,width,height);
     mCamera->initMVP(width,height,carmeaPos);
-//    glViewport(0,0,width,height);
-    /**
-     * 1.视角
-     * 2.宽高比
-     * 3.最近看到的距离
-     * 4.最远看到的距离
-     */
-
 }
 
 

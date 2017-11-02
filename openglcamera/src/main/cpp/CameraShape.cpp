@@ -51,3 +51,10 @@ void CameraShape::changeDrawCount(int count){
     }
     this->drawCount = count;
 }
+
+void CameraShape::changeShapeSize(float size){
+    LOGE("CameraShape:: changeShapeSize%f",size);
+    //每次都初始化为单位矩阵
+    mModelMatrix = glm::mat4(1.0f);
+    mModelMatrix = glm::scale(mModelMatrix,glm::vec3(size,size,1.0f));
+}

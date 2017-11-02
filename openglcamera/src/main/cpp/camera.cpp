@@ -153,8 +153,13 @@ void Camera::draw() {
         isChangeVSFS = false;
     }
 
+    //OpenGl设定
+//    glEnable(GL_BLEND);             //启用混合功能，将图形颜色同周围颜色相混合
+//    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
 
+    //深度测试
     glEnable(GL_DEPTH_TEST);
+    glHint(GL_NEAREST_MIPMAP_LINEAR,GL_NICEST);
     cameraShape->vertexBuffer->bind();
     mShader->bind(glm::value_ptr(cameraShape->mModelMatrix),
                   glm::value_ptr(cameraShape->mViewMatrix),
@@ -201,6 +206,11 @@ void Camera::changeShapeDrawCount(int count){
         cameraShape->changeDrawCount(count);
     }
 
+}
+
+void Camera::changeShapeSize(float size){
+    mShapSize =size;
+    cameraShape->changeShapeSize(size);
 }
 
 

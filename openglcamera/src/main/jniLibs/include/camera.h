@@ -12,6 +12,8 @@
 #include "CameraShape.h"
 #include "ShapeType.h"
 class Camera{
+private:
+    float mShapSize;
 public:
     Camera ();
     ~Camera();
@@ -23,7 +25,7 @@ public:
     float mWidth;
     float mHeight;
     int mMultipleCount;
-    float mShapSize;
+
     bool isChangeVSFS;//检查是否更改了vs 和fs
     bool isChangeShape;
     enum ShapeType currentShap;
@@ -50,6 +52,8 @@ public:
     //修改要画的顶点个数
     void changeShapeDrawCount(int count);
 
+    //修改size
+    void changeShapeSize(float size);
 };
 
 
