@@ -2,14 +2,16 @@
 // Created by Administrator on 2017/10/11.
 //
 
-#include "scence.h"
-#include "particlesystem.h"
-#include "camera.h"
-#include "circle.h"
+#include "camera/scence.h"
+#include "camera/particlesystem.h"
+#include "camera/camera.h"
+#include "camera/circle.h"
 
 ParticleSystem *particleSystem;
 glm::vec3 carmeaPos(0.0f,0.0f,2.6f);
 Camera *mCamera;
+//这里需要在init 前产生一个SurfaceTexture给java 绑定接口，请对应查看
+//CamerRenderer.java
 Camera* beforInit(JNIEnv *env) {
     mCamera = new Camera;
     mCamera->createSurfaceTextureObject(env);

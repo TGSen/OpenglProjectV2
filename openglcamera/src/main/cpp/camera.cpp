@@ -2,10 +2,10 @@
 // Created by Administrator on 2017/10/20.
 //
 
-#include <sggl.h>
-#include "camera.h"
-#include <NormalShape.h>
-#include "MultipleShape.h"
+#include <camera/sggl.h>
+#include "camera/camera.h"
+#include <camera/NormalShape.h>
+#include "camera/MultipleShape.h"
 
 
 

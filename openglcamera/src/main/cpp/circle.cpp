@@ -2,8 +2,8 @@
 // Created by Administrator on 2017/10/12.
 //
 
-#include "utils.h"
-#include "circle.h"
+#include "camera/utils.h"
+#include "camera/circle.h"
 
 
 void Circle::initVertex(float x, float y, float z, int count) {

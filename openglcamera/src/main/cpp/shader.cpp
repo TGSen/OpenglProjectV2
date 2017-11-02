@@ -1,7 +1,7 @@
 //
 // Created by Administrator on 2017/10/12.
 //
-#include "shader.h"
+#include "camera/shader.h"
 
 void SShader::init(const char *vsPath, const char *fsPath) {
     int fileSize = 0;

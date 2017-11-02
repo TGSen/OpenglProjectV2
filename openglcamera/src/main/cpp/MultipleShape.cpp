@@ -6,7 +6,7 @@
  * Des    : 这个是多边行的，假如无数的边，那么就成为圆形
  */
 
-#include "MultipleShape.h"
+#include "camera/MultipleShape.h"
 MultipleShape::MultipleShape(){
     LOGE("MultipleShapeV::MultipleShape()");
 }

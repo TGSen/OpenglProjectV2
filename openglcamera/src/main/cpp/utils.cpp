@@ -1,8 +1,7 @@
 //
 // Created by Administrator on 2017/10/11.
 //
-#include "utils.h"
-
+#include "camera/utils.h"
 GLuint complieShader(GLenum shaderType, const char *shaderCode) {
     GLuint shader = glCreateShader(shaderType);
     //1 代表的是1个shader 代码因为就存在shaderCode变量里，shaderCode代表着一个vs fs 文件里代码

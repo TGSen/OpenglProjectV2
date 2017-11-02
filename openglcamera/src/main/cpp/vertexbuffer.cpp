@@ -1,8 +1,8 @@
 //
 // Created by Administrator on 2017/10/12.
 //
-#include "vertexbuffer.h"
-#include "utils.h"
+#include "camera/vertexbuffer.h"
+#include "camera/utils.h"
 
 
 

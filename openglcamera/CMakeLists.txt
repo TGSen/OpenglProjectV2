@@ -5,11 +5,9 @@
 
 cmake_minimum_required(VERSION 3.4.1)
 file(GLOB s_source src/main/cpp/*.cpp src/main/cpp/*.c)
-# Creates and names a library, sets it as either STATIC
-# or SHARED, and provides the relative paths to its source code.
-# You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
 include_directories(src/main/jniLibs/include)
+set(LibDir ${CMAKE_CURRENT_SOURCE_DIR}/src/main/jniLibs/${ANDROID_ABI})
 add_library( # Sets the name of the library.
              sgles
              # Sets the library as a shared library.

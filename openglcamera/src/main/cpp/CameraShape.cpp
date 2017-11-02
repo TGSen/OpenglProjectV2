@@ -7,7 +7,7 @@
  */
 //
 
-#include "CameraShape.h"
+#include "camera/CameraShape.h"
 CameraShape::CameraShape(){
     LOGE("CameraShape::CameraShape()");
     vertexBuffer = nullptr;

@@ -2,9 +2,9 @@
 // Created by Administrator on 2017/10/20.
 //
 
-#include <sggl.h>
-#include "camera.h"
-#include "circle.h"
+#include <camera/sggl.h>
+#include "camera/camera.h"
+#include "camera/circle.h"
 
 Camera::Camera (){
     isChangeVSFS = false;

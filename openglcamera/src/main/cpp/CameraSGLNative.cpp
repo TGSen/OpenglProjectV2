@@ -6,9 +6,9 @@
  * Des    :方法名和java 层opengl 对应，还有Camera的一些属性，不应该public 像java 那封装，到时在修改了
  *
  */
-#include "CameraSGLNative.h"
-#include "sggl.h"
-#include "scence.h"
+#include "camera/CameraSGLNative.h"
+#include "camera/sggl.h"
+#include "camera/scence.h"
 
 //c++ 11 的nullptr
 AAssetManager *aAssetManager = nullptr;

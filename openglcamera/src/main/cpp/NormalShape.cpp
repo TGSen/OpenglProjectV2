@@ -7,8 +7,8 @@
  */
 //
 
-#include "NormalShape.h"
-#include "MultipleShape.h"
+#include "camera/NormalShape.h"
+#include "camera/MultipleShape.h"
 NormalShape::NormalShape(){
     LOGE("NormalShape::NormalShape()");
 }

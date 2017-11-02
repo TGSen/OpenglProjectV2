@@ -5,9 +5,9 @@
 #ifndef OPENGLSTUDYV1_CAMERA_H
 #define OPENGLSTUDYV1_CAMERA_H
 
-#include <sggl.h>
-#include <vertexbuffer.h>
-#include <shader.h>
+#include <camera/sggl.h>
+#include <camera/vertexbuffer.h>
+#include <camera/shader.h>
 #include "CameraSGLNative.h"
 #include "CameraShape.h"
 #include "ShapeType.h"

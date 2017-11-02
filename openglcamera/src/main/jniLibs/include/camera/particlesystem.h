@@ -6,8 +6,8 @@
 #define OPENGLSTUDYV1_PARTICLESYSTEM_H
 
 
-#include <vertexbuffer.h>
-#include <shader.h>
+#include <camera/vertexbuffer.h>
+#include <camera/shader.h>
 
 class ParticleSystem {
 public:

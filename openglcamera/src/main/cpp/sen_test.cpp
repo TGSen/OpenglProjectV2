@@ -3,7 +3,7 @@
 //
 
 #include <map>
-#include "sen_test.h"
+#include "camera/sen_test.h"
 #include<string>
 #include "android/log.h"
 #define LOG_TAG    "sgllog"

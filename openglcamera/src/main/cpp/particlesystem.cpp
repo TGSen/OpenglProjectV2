@@ -2,7 +2,7 @@
 // Created by Administrator on 2017/10/16.
 //
 
-#include "particlesystem.h"
+#include "camera/particlesystem.h"
 
 void ParticleSystem::init(float x,float y,float z,int count){
     mModelMatrix = glm::translate(x,y,z);
