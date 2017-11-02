@@ -54,7 +54,7 @@ void CameraShape::changeDrawCount(int count){
 
 void CameraShape::changeShapeSize(float size){
     LOGE("CameraShape:: changeShapeSize%f",size);
-    //每次都初始化为单位矩阵
+    //每次用初始化为单位矩阵glm::mat4(1.0f)
     mModelMatrix = glm::scale(glm::mat4(1.0f),glm::vec3(size,size,1.0f));
     //还需要旋转过来
     mModelMatrix = glm::rotate(mModelMatrix,90.0f,glm::vec3(0.0f,0.0f,1.0f));
