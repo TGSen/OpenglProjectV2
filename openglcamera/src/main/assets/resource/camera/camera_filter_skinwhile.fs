@@ -13,13 +13,13 @@ uniform vec4 U_MultipleFilter;
 void main(){
     //增加一些滤镜效果
  //美白
- float lightRatio = 0.25f; //亮度
- float contrastRatio = 0.26f;//对比度
+ float lightRatio = 0.25; //亮度
+ float contrastRatio = 0.26;//对比度
 
  //美白亮度增加
- float light = 1.0f*lightRatio;
+ float light = 1.0*lightRatio;
  //对比度也增加
- float contrast = 1.0f+contrastRatio;
+ float contrast = 1.0+contrastRatio;
   vec4 colorBase = texture2D(U_Texture, V_textcoord.xy);
   //混合之后的效果
   float colorR = colorBase.r;
@@ -32,56 +32,56 @@ void main(){
    float tempColorB =colorB+light;
 
    //颜色在0-1 之间
-   if(tempColorR > 1.0f){
-        colorR = 1.0f;
-   }else if(tempColorR < 0.0f){
-        colorR = 0.0f;
+   if(tempColorR > 1.0){
+        colorR = 1.0;
+   }else if(tempColorR < 0.0){
+        colorR = 0.0;
    }else{
         colorR = tempColorR;
    }
 
-   if(tempColorG > 1.0f){
-           colorG = 1.0f;
-      }else if(tempColorG < 0.0f){
-           colorG = 0.0f;
+   if(tempColorG > 1.0){
+           colorG = 1.0;
+      }else if(tempColorG < 0.0){
+           colorG = 0.0;
       }else{
            colorG = tempColorG;
       }
 
-      if(tempColorB > 1.0f){
-              colorB = 1.0f;
-         }else if(tempColorB < 0.0f){
-              colorB = 0.0f;
+      if(tempColorB > 1.0){
+              colorB = 1.0;
+         }else if(tempColorB < 0.0){
+              colorB = 0.0;
          }else{
               colorB = tempColorB;
          }
 
    //对比度处理 ，让白的更白点，黑更黑点，在中间点0.5就作为对比
-   //(colorR-0.5f)*contrast 这个是变化量，在加回原来的
-   tempColorR = (colorR-0.5f)*contrast+0.5f;
-   tempColorG = (colorG-0.5f)*contrast+0.5f;
-   tempColorB = (colorB-0.5f)*contrast+0.5f;
+   //(colorR-0.5)*contrast 这个是变化量，在加回原来的
+   tempColorR = (colorR-0.5)*contrast+0.5;
+   tempColorG = (colorG-0.5)*contrast+0.5;
+   tempColorB = (colorB-0.5)*contrast+0.5;
 
-     if(tempColorR > 1.0f){
-          colorR = 1.0f;
-     }else if(tempColorR < 0.0f){
-          colorR = 0.0f;
+     if(tempColorR > 1.0){
+          colorR = 1.0;
+     }else if(tempColorR < 0.0){
+          colorR = 0.0;
      }else{
           colorR = tempColorR;
      }
 
-     if(tempColorG > 1.0f){
-             colorG = 1.0f;
-        }else if(tempColorG < 0.0f){
-             colorG = 0.0f;
+     if(tempColorG > 1.0){
+             colorG = 1.0;
+        }else if(tempColorG < 0.0){
+             colorG = 0.0;
         }else{
              colorG = tempColorG;
         }
 
-        if(tempColorB > 1.0f){
-                colorB = 1.0f;
-           }else if(tempColorB < 0.0f){
-                colorB = 0.0f;
+        if(tempColorB > 1.0){
+                colorB = 1.0;
+           }else if(tempColorB < 0.0){
+                colorB = 0.0;
            }else{
                 colorB = tempColorB;
         }

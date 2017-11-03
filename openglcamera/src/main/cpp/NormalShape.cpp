@@ -18,15 +18,17 @@ NormalShape::~NormalShape(){
 //初始化矩阵
 void NormalShape::initMVP( float width,float height,glm::vec3 carmeaPos){
     LOGE("NormalShape::initMVP");
-
-//    mViewMatrix = glm::lookAt(carmeaPos,glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,1.0f));
-//    mProjectionMatrix= glm::perspective(60.0f,width/height,0.1f,1000.0f);
+    mProjectionMatrix =glm::mat4(1.0f);
+    mViewMatrix =glm::mat4(1.0f);
+    mModelMatrix =glm::mat4(1.0f);
 }
 //初始化顶点 ,normal 是4个顶点，
 void NormalShape::initShapeData(float x,float y,float z,int count, float shapeSize){
     LOGE("NormalShape::initShapeData");
     mModelMatrix = glm::translate(x,y,z);
-    vertexBuffer = new VertexBuffer;
+    if(vertexBuffer == nullptr){
+        vertexBuffer = new VertexBuffer;
+    }
     vertexBuffer->setSize(count);
     changeDrawCount(count);
     vertexBuffer->setColor(0,0.3f,0.3f,0.3f,1.0f);

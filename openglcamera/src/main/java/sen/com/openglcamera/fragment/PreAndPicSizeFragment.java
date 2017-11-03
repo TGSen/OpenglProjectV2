@@ -1,6 +1,5 @@
 package sen.com.openglcamera.fragment;
 
-import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.widget.LinearLayoutManager;
@@ -26,17 +25,12 @@ import sen.com.openglcamera.commadapter.SViewHolder;
  */
 
 public class PreAndPicSizeFragment extends BaseFragment {
-    private Context mActivity;
     private int currentIndex;
     private RecyclerView pictureSizeRecyView;
     private RecycleCommonAdapter pictureAdapter;
     public RecyclerView.RecycledViewPool pool ;
 
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        mActivity =context;
-    }
+
 
     @Override
     protected void onLoadData() {

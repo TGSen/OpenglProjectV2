@@ -23,6 +23,7 @@ public:
     glm::mat4 mModelMatrix;
     glm::mat4 mViewMatrix;
     glm::mat4 mProjectionMatrix;
+    float shapeSize ;
     //初始化矩阵 ,加上virtual 成为虚函数，这样子类，可以调用各自的方法
     virtual void initMVP( float width,float height,glm::vec3 carmeaPos);
     //初始化顶点

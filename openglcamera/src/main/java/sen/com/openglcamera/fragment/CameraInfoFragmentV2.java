@@ -10,21 +10,22 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.hardware.Camera;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.design.widget.TabLayout;
 import android.support.v13.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewStub;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.TextView;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -33,9 +34,7 @@ import java.util.List;
 import sen.com.openglcamera.R;
 import sen.com.openglcamera.bean.CameraSettingInfo;
 import sen.com.openglcamera.bean.CurrentCameInfo;
-import sen.com.openglcamera.bean.FilterInfo;
 import sen.com.openglcamera.bean.ItemCameraSetting;
-import sen.com.openglcamera.commadapter.RecycleCommonAdapter;
 
 
 /**
@@ -52,6 +51,7 @@ import sen.com.openglcamera.commadapter.RecycleCommonAdapter;
  */
 
 public class CameraInfoFragmentV2 extends DialogFragment implements OnClickListener {
+    private static final int INIT_FINISH_DATA = 0;
     private Activity mActivity;
     private Dialog dialog;
     //设置RecyclerView.RecycledViewPool 让RecyclerView 共用一个view 池 提高性能
@@ -72,24 +72,27 @@ public class CameraInfoFragmentV2 extends DialogFragment implements OnClickListe
             return "ViewPool in adapter " + Integer.toHexString(hashCode());
         }
     };
-    private RecycleCommonAdapter pictureAdapter;
-    private RecycleCommonAdapter preViewAdapter;
-    private RecycleCommonAdapter filterAdapter;
     private CurrentCameInfo oldCurrentCameInfo;
     private CurrentCameInfo newCurrentCameInfo;
     private List<ItemCameraSetting> picList;
     private List<ItemCameraSetting> preList;
-    private List<FilterInfo> filterList;
-    private TextView tvSaveSetting;
     private OnSettingChangeLinstener mLinstener;
-    private ViewStub viewStubRGB;
-    private View layoutView;
-    private TextView tv_adjust_info;
-    private int currentFilter;
     private TabLayout mTablayout;
     private ViewPager mViewPager;
     private String mTiltes[] = {"形色","滤镜","PreViewSize","PictureSize"};
     private List<Fragment> fragments;
+    private Handler mHander = new Handler(){
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            switch (msg.what){
+                case INIT_FINISH_DATA:
+                    initFragmentData();
+                    break;
+            }
+        }
+    };
+    private Thread thread;
 
     public interface OnSettingChangeLinstener {
         void onSettingChange(CurrentCameInfo currentCameInfo);
@@ -98,7 +101,13 @@ public class CameraInfoFragmentV2 extends DialogFragment implements OnClickListe
     public void setOnSettingChangeLinstener(OnSettingChangeLinstener linstener) {
         mLinstener = linstener;
     }
+    //有些手机走这个
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        mActivity =  activity;
 
+    }
     @Override
     public void onAttach(Context activity) {
         super.onAttach(activity);
@@ -133,7 +142,31 @@ public class CameraInfoFragmentV2 extends DialogFragment implements OnClickListe
             mTablayout.addTab(mTablayout.newTab().setText(mTiltes[i]));
         }
         fragments = new ArrayList<>();
-        initFragmentData();
+        initViewPagerData();
+
+    }
+
+    private void initFragmentData() {
+        fragments.add(new ShapeFragment());
+        fragments.add(new FilterFragment());
+        PreAndPicSizeFragment preViewSize = new PreAndPicSizeFragment();
+        Bundle bundle = new Bundle();
+        ArrayList list = new ArrayList();
+        list.add(preList);
+        bundle.putParcelableArrayList("PreViewInfo", list);
+        bundle.putInt("CurrentCameInfo", newCurrentCameInfo.getPreIndex());
+        preViewSize.setArguments(bundle);
+        fragments.add(preViewSize);
+
+        PreAndPicSizeFragment picSize = new PreAndPicSizeFragment();
+        Bundle bundlePic = new Bundle();
+        list.clear();
+        list.add(picList);
+        bundlePic.putParcelableArrayList("PreViewInfo", list);
+        bundlePic.putInt("CurrentCameInfo", newCurrentCameInfo.getPicIndex());
+        picSize.setArguments(bundlePic);
+        fragments.add(picSize);
+
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getChildFragmentManager(), mTiltes, fragments);
         //tablayout 和viewpager 联动
         mViewPager.setAdapter(viewPagerAdapter);
@@ -159,29 +192,6 @@ public class CameraInfoFragmentV2 extends DialogFragment implements OnClickListe
         mViewPager.setCurrentItem(0);
     }
 
-    private void initFragmentData() {
-        initViewPagerData();
-        fragments.add(new ShapeFragment());
-        fragments.add(new FilterFragment());
-        PreAndPicSizeFragment preViewSize = new PreAndPicSizeFragment();
-        Bundle bundle = new Bundle();
-        ArrayList list = new ArrayList();
-        list.add(preList);
-        bundle.putParcelableArrayList("PreViewInfo", list);
-        bundle.putInt("CurrentCameInfo", newCurrentCameInfo.getPreIndex());
-        preViewSize.setArguments(bundle);
-        fragments.add(preViewSize);
-
-        PreAndPicSizeFragment picSize = new PreAndPicSizeFragment();
-        Bundle bundlePic = new Bundle();
-        list.clear();
-        list.add(picList);
-        bundlePic.putParcelableArrayList("PreViewInfo", list);
-        bundlePic.putInt("CurrentCameInfo", newCurrentCameInfo.getPicIndex());
-        picSize.setArguments(bundlePic);
-        fragments.add(picSize);
-    }
-
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
         setStyle(DialogFragment.STYLE_NORMAL, android.R.style.Theme_Light_NoTitleBar);
@@ -192,32 +202,40 @@ public class CameraInfoFragmentV2 extends DialogFragment implements OnClickListe
     private void initViewPagerData() {
         // // 获取数据
         Bundle bundle = getArguments();
-        CameraSettingInfo cameraSettingInfos = (CameraSettingInfo) bundle.getSerializable("CameraSettingInfo");
+        final CameraSettingInfo cameraSettingInfos = (CameraSettingInfo) bundle.getSerializable("CameraSettingInfo");
         oldCurrentCameInfo = (CurrentCameInfo) bundle.getSerializable("CurrentCameInfo");
         newCurrentCameInfo = (CurrentCameInfo) oldCurrentCameInfo.clone();
-        Iterator<Camera.Size> picIterator = cameraSettingInfos.getSupportedPictureSize().iterator();
-        picList = new ArrayList<>();
-        int index = 0;
-        while (picIterator.hasNext()) {
-            Camera.Size next = picIterator.next();
-            ItemCameraSetting setting = new ItemCameraSetting(next.width, next.height);
-            setting.name = next.width + "x" + next.height;
-            setting.index = index;
-            index++;
-            picList.add(setting);
-        }
-        Iterator<Camera.Size> preIterator = cameraSettingInfos.getSupportedPreviewSizes().iterator();
-        preList = new ArrayList<>();
-        index = 0;
-        while (preIterator.hasNext()) {
-            Camera.Size next = preIterator.next();
-            ItemCameraSetting setting = new ItemCameraSetting(next.width, next.height);
-            setting.name = next.width + "x" + next.height;
-            setting.index = index;
-            index++;
-            preList.add(setting);
-        }
+        thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                Iterator<Camera.Size> picIterator = cameraSettingInfos.getSupportedPictureSize().iterator();
+                picList = new ArrayList<>();
+                int index = 0;
+                while (picIterator.hasNext()) {
+                    Camera.Size next = picIterator.next();
+                    ItemCameraSetting setting = new ItemCameraSetting(next.width, next.height);
+                    setting.name = next.width + "x" + next.height;
+                    setting.index = index;
+                    index++;
+                    picList.add(setting);
+                }
+                Iterator<Camera.Size> preIterator = cameraSettingInfos.getSupportedPreviewSizes().iterator();
+                preList = new ArrayList<>();
+                index = 0;
+                while (preIterator.hasNext()) {
+                    Camera.Size next = preIterator.next();
+                    ItemCameraSetting setting = new ItemCameraSetting(next.width, next.height);
+                    setting.name = next.width + "x" + next.height;
+                    setting.index = index;
+                    index++;
+                    preList.add(setting);
+                }
+                Log.e("sen_","run");
+                mHander.sendEmptyMessage(INIT_FINISH_DATA);
 
+            }
+        });
+        thread.start();
     }
 
 
@@ -292,7 +310,12 @@ public class CameraInfoFragmentV2 extends DialogFragment implements OnClickListe
         }
     }
 
-
-
-
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        if(thread.isAlive()){
+            thread.interrupt();
+        }
+        mHander.removeCallbacksAndMessages(null);
+    }
 }

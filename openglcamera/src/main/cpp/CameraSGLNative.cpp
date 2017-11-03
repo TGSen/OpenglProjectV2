@@ -53,7 +53,6 @@ JNIEXPORT void JNICALL Java_sen_com_openglcamera_natives_CameraSGLNative_onSurfa
 
 JNIEXPORT void JNICALL Java_sen_com_openglcamera_natives_CameraSGLNative_onSurfaceChanged
         (JNIEnv *env, jclass clzss, jint width, jint height) {
-    LOGE("onSurfaceChanged %f*%f",width,height);
     setViewPortSize((float)width,(float) height);
 
 
@@ -160,7 +159,7 @@ JNIEXPORT void JNICALL
 Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeShapeCount(JNIEnv *env, jclass type,
                                                                    jint count) {
     //组成一个面至少3个顶点
-    if(count>=3 ){
+    if(count>=4 ){
         camera->changeShapeDrawCount(count);
     }
 

@@ -25,6 +25,6 @@ void main(){
   float blendColorG = dot(colorBase.g,U_MultipleFilter.y);
   float blendColorB = dot(colorBase.b,U_MultipleFilter.z);
   //float blendColorA = dot(colorBase.a,U_MultipleFilter.w);
-   gl_FragColor = vec4(blendColorR, blendColorG, blendColorB, 1.0f);
+   gl_FragColor = vec4(blendColorR, blendColorG, blendColorB, 1.0);
 
 }

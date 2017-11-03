@@ -117,7 +117,7 @@ public class ShapeFragment extends BaseFragment implements CompoundButton.OnChec
                 break;
             case R.id.btnMultiple:
                 setSeekBarView(true,true);
-                CameraSGLNative.onChangeShape(CameraSGLNative.CameraShape.Multiple.getValue(), 6);
+                CameraSGLNative.onChangeShape(CameraSGLNative.CameraShape.Multiple.getValue(), 4);
                 break;
         }
     }

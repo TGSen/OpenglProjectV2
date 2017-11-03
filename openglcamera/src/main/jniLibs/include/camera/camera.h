@@ -28,6 +28,8 @@ public:
 
     bool isChangeVSFS;//检查是否更改了vs 和fs
     bool isChangeShape;
+    bool isInitFinish; //如果在运行过程中，变化顶点的话，那就等变化完毕后才能操作
+    std::map<ShapeType,CameraShape *> mShapeTypeMap;
     enum ShapeType currentShap;
     char* vsPath;
     char* fsPath;
@@ -48,7 +50,7 @@ public:
     //修改 vs shader ,和fs shader
     void changeVSFS(const char* vsPath, const char*fsPath);
     //修改 shape 形状
-    void changeShape(int shape, int count);
+    bool changeShape(int shape, int count);
     //修改要画的顶点个数
     void changeShapeDrawCount(int count);
 

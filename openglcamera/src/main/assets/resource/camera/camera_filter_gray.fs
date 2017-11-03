@@ -24,7 +24,7 @@ void main(){
     //混合之后的效果
     //这个有点模糊了，不应该将透明度加上的，欧了
    // float blendColor = (colorBase.r+colorBase.g+colorBase.b+colorBase.a)/4.0f;
-    float blendColor = (colorBase.r+colorBase.g+colorBase.b)/3.0f;
-     gl_FragColor = vec4(blendColor, blendColor, blendColor, 1.0f);
+    float blendColor = (colorBase.r+colorBase.g+colorBase.b)/3.0;
+     gl_FragColor = vec4(blendColor, blendColor, blendColor, 1.0);
 
 }

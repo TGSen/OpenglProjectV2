@@ -17,17 +17,20 @@ MultipleShape::~MultipleShape(){
 void MultipleShape::initMVP( float width,float height,glm::vec3 carmeaPos){
     LOGE("MultipleShapeV::initMVP");
     mViewMatrix = glm::lookAt(carmeaPos,glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,1.0f));
-    mProjectionMatrix= glm::perspective(60.0f,width/height,0.1f,1000.0f);
+    mProjectionMatrix= glm::perspective(60.0f,width/height,0.0f,100.0f);
     //初始化为单位矩阵
     mModelMatrix = glm::rotate(glm::mat4(1.0f),90.0f,glm::vec3(0.0f,0.0f,1.0f));
 
 }
 //初始化顶点 ,假如多边形为200 为圆形
-void MultipleShape::initShapeData(float x,float y,float z,int count, float shapeSize){
+void MultipleShape::initShapeData(float x,float y,float z,int count, float size){
     LOGE("MultipleShapeV::initShapeData %d -- %f",count,shapeSize);
     mModelMatrix = glm::translate(x,y,z);
-    vertexBuffer = new VertexBuffer;
+    if(vertexBuffer == nullptr){
+        vertexBuffer = new VertexBuffer;
+    }
     //默认产生200个
+    shapeSize = size;
     vertexBuffer->setSize(count);
     //实质要画的，这里我偷个懒，如果要改变形状，只是改变要画的顶点数，要不又要重新生成顶点(这个方案已放弃，先保留想法)
     changeDrawCount(count);
