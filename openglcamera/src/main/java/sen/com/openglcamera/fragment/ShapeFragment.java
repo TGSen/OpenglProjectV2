@@ -92,6 +92,8 @@ public class ShapeFragment extends BaseFragment implements CompoundButton.OnChec
         seekBarSize.setOnSeekBarChangeListener(this);
         seekBarSize.setMax(100);
         seekBarCount.setMax(50);
+        btnBlack.setChecked(true);
+        btnNormal.setChecked(true);
     }
 
     @Override

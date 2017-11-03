@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import java.io.File;
 
@@ -116,8 +117,12 @@ public class CameraMainActivity extends AppCompatActivity implements View.OnClic
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.takePicture:
-                if (mCamera != null)
+                if (mCamera != null){
+                    //简单的提示一下，图片保存在那个地方，以后应该在改
+                    Toast.makeText(CameraMainActivity.this,"保存在/sdcard/",Toast.LENGTH_SHORT).show();
                     mCamera.takePhoto();
+                }
+
                 break;
         }
 

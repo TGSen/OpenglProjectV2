@@ -213,11 +213,13 @@ public class CameraOldVersion {
             @Override
             public void onPictureTaken(final byte[] data, Camera camera) {
                 camera.startPreview();
+
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
                         BitmapUtils.saveBitmap(rootPicPath,data);
                         takePicture =false;
+
                     }
                 }).start();
             }
