@@ -250,8 +250,7 @@ public class CameraInfoFragmentV2 extends DialogFragment implements OnClickListe
         WindowManager.LayoutParams lp = window.getAttributes();
         lp.gravity = Gravity.BOTTOM; // 紧贴底部
         lp.width = WindowManager.LayoutParams.MATCH_PARENT; // 宽度持平
-        lp.height = getActivity().getWindowManager().getDefaultDisplay()
-                .getHeight() * 2 / 3;
+        lp.height = mActivity.getResources().getDisplayMetrics().heightPixels * 2 / 3;
         lp.dimAmount = 0.0f;
         window.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND);
         window.setAttributes(lp);

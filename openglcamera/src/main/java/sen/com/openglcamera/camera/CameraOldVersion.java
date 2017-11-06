@@ -1,16 +1,19 @@
 package sen.com.openglcamera.camera;
 
 import android.app.Activity;
+import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.util.Log;
 import android.view.Surface;
+import android.view.SurfaceHolder;
 
 import java.io.IOException;
 import java.util.List;
 
 import sen.com.openglcamera.bean.CameraSettingInfo;
 import sen.com.openglcamera.bean.CurrentCameInfo;
+import sen.com.openglcamera.mediacodec.VideoRecoder;
 import sen.com.openglcamera.utils.BitmapUtils;
 
 /**
@@ -20,7 +23,7 @@ import sen.com.openglcamera.utils.BitmapUtils;
  * 目前在NDK 层做了加载Asseset/Res 的加载GLSL 代码，和图片bmp
  */
 
-public class CameraOldVersion {
+public class CameraOldVersion implements Camera.PreviewCallback {
     private Activity mActivity;
     private int mCameraId;
     private Camera mCamera;
@@ -34,6 +37,10 @@ public class CameraOldVersion {
     private String rootPicPath;
     private CameraSettingInfo cameraSettingInfo;
     private CurrentCameInfo currentCameInfo;
+
+    private boolean isRecoder ;
+    private VideoRecoder videoRecoder;
+    private byte[] callbackBuffer;
 
     //获取所有CameInfo
     public CameraSettingInfo getCameraSettingInfo(){
@@ -96,11 +103,16 @@ public class CameraOldVersion {
             mCamera = Camera.open(mCameraId);
             Camera.Parameters parameters = mCamera.getParameters();
             parameters.set("orientation", "portrait");
+            parameters.setPreviewFormat(ImageFormat.NV21); //YUV 预览图像的像素格式
             parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
             setPreviewOrientation(parameters);
             setPreviewSize( parameters);
             setPictureSize(parameters);
             mCamera.setParameters(parameters);
+            mCamera.setPreviewCallbackWithBuffer(this);
+            int bitsPerPixel = ImageFormat.getBitsPerPixel(ImageFormat.NV21);
+            callbackBuffer = new byte[currentCameInfo.getPreWith()*currentCameInfo.getPreHeigth()*bitsPerPixel/8];
+            mCamera.addCallbackBuffer(callbackBuffer);
         } catch (Exception e) {
             Log.e(LTag,e.getMessage());
             e.printStackTrace();
@@ -189,6 +201,17 @@ public class CameraOldVersion {
         }
     }
 
+    //设置Camera setPreviewHolder
+    public void setPreviewHolder(SurfaceHolder holder) {
+        if (mCamera != null) {
+            try {
+                mCamera.setPreviewDisplay(holder);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+    }
+
     public void releaseCamera() {
         if (mCamera != null) {
             mCamera.stopPreview();
@@ -227,4 +250,28 @@ public class CameraOldVersion {
     }
 
 
+    public void setVideoRecoder(VideoRecoder videoRecoder) {
+        this.videoRecoder = videoRecoder;
+        videoRecoder.setFrameBuffer(callbackBuffer);
+    }
+
+    public void startRecoder() {
+        isRecoder = true;
+    }
+
+    public void stopRecoder(){
+        isRecoder =false;
+    }
+
+    @Override
+    public void onPreviewFrame(byte[] data, Camera camera) {
+
+        if(isRecoder && videoRecoder!=null){
+
+            videoRecoder.encodeData(data);
+        }
+        if(mCamera!=null) {
+            mCamera.addCallbackBuffer(callbackBuffer);
+        }
+    }
 }
