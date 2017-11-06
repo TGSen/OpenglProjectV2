@@ -16,10 +16,13 @@ MultipleShape::~MultipleShape(){
 //初始化矩阵
 void MultipleShape::initMVP( float width,float height,glm::vec3 carmeaPos){
     LOGE("MultipleShapeV::initMVP");
-    mViewMatrix = glm::lookAt(carmeaPos,glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,1.0f));
-    mProjectionMatrix= glm::perspective(60.0f,width/height,0.0f,100.0f);
-    //初始化为单位矩阵
+//    mViewMatrix = glm::lookAt(carmeaPos,glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,1.0f));
+//    mProjectionMatrix= glm::perspective(60.0f,width/height,0.1f,100.0f);
     mModelMatrix = glm::rotate(glm::mat4(1.0f),90.0f,glm::vec3(0.0f,0.0f,1.0f));
+    mProjectionMatrix =glm::ortho(-1.0f, 1.0f, - height / width,  height / width, 5.0f, 7.0f);
+    mViewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 6.0f),
+                       glm::vec3(0.0f, 0.0f, 0.0f),
+                       glm::vec3(0.0f, 1.0f, 0.0f));
 
 }
 //初始化顶点 ,假如多边形为200 为圆形

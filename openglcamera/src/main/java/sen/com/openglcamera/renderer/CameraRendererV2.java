@@ -1,6 +1,5 @@
 package sen.com.openglcamera.renderer;
 
-import android.content.Context;
 import android.graphics.SurfaceTexture;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
@@ -8,9 +7,9 @@ import android.util.Log;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import sen.com.openglcamera.camera.CameraOldVersion;
+import sen.com.openglcamera.camera.CameraNewVersion;
 import sen.com.openglcamera.natives.CameraSGLNative;
-import sen.com.openglcamera.view.CameraSGLSurfaceView;
+import sen.com.openglcamera.view.CameraSGLSurfaceViewV2;
 
 /**
  * Author : 唐家森
@@ -19,13 +18,12 @@ import sen.com.openglcamera.view.CameraSGLSurfaceView;
  * Des    :
  */
 
-public class CameraRenderer implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener {
+public class CameraRendererV2 implements GLSurfaceView.Renderer, SurfaceTexture.OnFrameAvailableListener {
     GLSurfaceView mGLSurfaceView;
-    private Context mContext;
-    private CameraOldVersion mCamera;
+    private CameraNewVersion mCamera;
     private SurfaceTexture mSurfaceTexture;
 
-    public CameraRenderer(CameraSGLSurfaceView cameraSGLSurfaceView) {
+    public CameraRendererV2(CameraSGLSurfaceViewV2 cameraSGLSurfaceView) {
         mGLSurfaceView = cameraSGLSurfaceView;
 
     }
@@ -37,9 +35,8 @@ public class CameraRenderer implements GLSurfaceView.Renderer, SurfaceTexture.On
             Log.e("sen_","mSurfaceTexture is not null");
             mSurfaceTexture.setOnFrameAvailableListener(this);
         }
-        mCamera.setPreviewTexture(mSurfaceTexture);
-        mCamera.startPreview();
-
+        mCamera.setSurfaceTexture(mSurfaceTexture);
+        mCamera.onResume();
         CameraSGLNative.onSurfaceCreated();
     }
 
@@ -54,21 +51,18 @@ public class CameraRenderer implements GLSurfaceView.Renderer, SurfaceTexture.On
             mSurfaceTexture.updateTexImage();
 
             CameraSGLNative.onDrawFrame();
-        }else {
-            mCamera.stopPreview();
-            Log.e("sen_","java stop");
         }
 
     }
 
-    public void init(CameraOldVersion camera) {
+    public void init(CameraSGLSurfaceViewV2 cameraSGLSurfaceView, CameraNewVersion camera) {
+        mGLSurfaceView = cameraSGLSurfaceView;
         mCamera = camera;
     }
 
     @Override
     public void onFrameAvailable(SurfaceTexture surfaceTexture) {
         if(!CameraSGLNative.isStop) {
-            Log.e("sen_","onFrameAvailable");
             mGLSurfaceView.requestRender();
         }
 

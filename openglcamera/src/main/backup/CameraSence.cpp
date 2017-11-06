@@ -41,7 +41,7 @@ void draw() {
     glClearColor(mCamera->mBgColor.r,mCamera->mBgColor.g,mCamera->mBgColor.b,mCamera->mBgColor.a);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     //好像这个发方法用来坑锯齿，但是里面的参数有待验证
-    glHint(GL_GENERATE_MIPMAP_HINT, GL_LINEAR_MIPMAP_NEAREST);
+    glHint(GL_NEAREST_MIPMAP_LINEAR, GL_NEAREST);
     mCamera->draw();
     //绘制粒子
    // particleSystem->draw(mViewMatrix, mProjectionMatrix);
@@ -53,5 +53,4 @@ void draw() {
     //良好习惯，当绘制完毕后，将程序置为0 号程序
     glUseProgram(0);
 //    LOGE("draw usetime %f",time);
-
 }

@@ -131,9 +131,14 @@ void Camera::initShapeData(float x, float y, float z, int count, float shapSize)
 void Camera::createSurfaceTextureObject(JNIEnv *env) {
     glGenTextures(1, &textureId);
     glBindTexture(GL_TEXTURE_EXTERNAL_OES, textureId);
+    //解析来自http://blog.csdn.net/junzia/article/details/53861519
+    //设置环绕方向S，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
     glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    //设置环绕方向T，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
     glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    //设置缩小过滤为使用纹理中坐标最接近的一个像素的颜色作为需要绘制的像素颜色
+    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //设置放大过滤为使用纹理中坐标最接近的若干个颜色，通过加权平均算法得到需要绘制的像素颜色
     glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     //创建 java SurfaceTexture 并绑定textureId
     const char *stClassPath = "android/graphics/SurfaceTexture";
@@ -176,6 +181,8 @@ void Camera::draw() {
         mShader->setUiformVec4("U_MultipleFilter",0.2f,0.2f,1.0f,1.0f);
         delete vsPath;
         delete fsPath;
+        vsPath = nullptr;
+        fsPath = nullptr;
         isChangeVSFS = false;
     }
 
