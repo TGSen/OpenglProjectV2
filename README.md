@@ -59,8 +59,8 @@
  <img src="https://github.com/TGSen/OpenglProjectV2/blob/master/openglcamera/captures/Screenshot_2017-11-02-23-16-37.png" width = "180" height = "280" alt="8" align=center />
  
 </div>
-<br>
-  ##### 2017-11-6 更新
+
+##### 2017-11-6 更新<br>
   1.Camera2的应用，不过后续开发还是接着Camera1，等完善到差不多再来封装Camera1和2 <br>
   2.加入android 6.0权限管理 <br>
 
