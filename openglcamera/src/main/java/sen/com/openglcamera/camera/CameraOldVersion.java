@@ -110,8 +110,9 @@ public class CameraOldVersion implements Camera.PreviewCallback {
             setPictureSize(parameters);
             mCamera.setParameters(parameters);
             mCamera.setPreviewCallbackWithBuffer(this);
-            int bitsPerPixel = ImageFormat.getBitsPerPixel(ImageFormat.NV21);
-            callbackBuffer = new byte[currentCameInfo.getPreWith()*currentCameInfo.getPreHeigth()*bitsPerPixel/8];
+            //int bitsPerPixel = ImageFormat.getBitsPerPixel(ImageFormat.NV21);
+           // callbackBuffer = new byte[currentCameInfo.getPreWith()*currentCameInfo.getPreHeigth()*bitsPerPixel/8];
+            callbackBuffer = new byte[currentCameInfo.getPreWith()*currentCameInfo.getPreHeigth()*3/2];
             mCamera.addCallbackBuffer(callbackBuffer);
         } catch (Exception e) {
             Log.e(LTag,e.getMessage());
@@ -252,7 +253,6 @@ public class CameraOldVersion implements Camera.PreviewCallback {
 
     public void setVideoRecoder(VideoRecoder videoRecoder) {
         this.videoRecoder = videoRecoder;
-        videoRecoder.setFrameBuffer(callbackBuffer);
     }
 
     public void startRecoder() {

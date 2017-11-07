@@ -63,6 +63,9 @@
 ##### 2017-11-6 更新<br>
   1.Camera2的应用，不过后续开发还是接着Camera1，等完善到差不多再来封装Camera1和2 <br>
   2.加入android 6.0权限管理 <br>
-  3.MediaCodec h264硬编码+ MediaMuxer成MP4文件(目前只有video)
-  4.写了个bug ,就是录出来的视频颜色不对，估计是MediaFormat color 配不对，明天在研究
+  3.MediaCodec h264硬编码+ MediaMuxer成MP4文件(目前只有video)<br>
+
+##### 2017-11-7 更新<br>
+  1.yv12->i420 这两个UV 整列兑换就行了，效率更高，基本0-2ms，可是录制出来有花屏情况，所以nv21->i420  在jni 来转换<br>
+  2.nv21->i420  在jni 来转换，基本上4-8ms,如果java 转的需要20-60ms<br>
 

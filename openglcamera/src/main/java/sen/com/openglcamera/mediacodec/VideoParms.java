@@ -14,6 +14,7 @@ public class VideoParms {
     private int bitRate = 512 * 1024; // 512 kbps maybe better，码流
     private int frameRate = 32; // 32帧率
     private int iframeInterval = 1; // 1s 时间间隔的关键帧，google/grafika IFRAME_INTERVAL =5
+    // API 21 新加入了MediaCodec的所有硬件解码都支持的 COLOR_FormatYUV420Flexible 格式。它并不是一种确定的 YUV420 格式
     private int colorFormat = MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible;
     private int width = 720;
     private int height = 1280;
