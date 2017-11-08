@@ -16,6 +16,8 @@ public interface BaseRecoder {
 
     void releseRecoder();
 
+    void startRecoder();
+
     public interface OnRecoderListener {
         void onStarRecoder();
 

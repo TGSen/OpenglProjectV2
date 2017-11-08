@@ -250,6 +250,10 @@ public class CameraOldVersion implements Camera.PreviewCallback {
         });
     }
 
+    public boolean getCameraTakePicStuta(){
+        return takePicture;
+    }
+
 
     public void setVideoRecoder(VideoRecoder videoRecoder) {
         this.videoRecoder = videoRecoder;
@@ -257,10 +261,16 @@ public class CameraOldVersion implements Camera.PreviewCallback {
 
     public void startRecoder() {
         isRecoder = true;
+        if(videoRecoder!=null){
+            videoRecoder.startRecoder();
+        }
     }
 
     public void stopRecoder(){
         isRecoder =false;
+        if(videoRecoder!=null){
+            videoRecoder.stopRecoder();
+        }
     }
 
     @Override

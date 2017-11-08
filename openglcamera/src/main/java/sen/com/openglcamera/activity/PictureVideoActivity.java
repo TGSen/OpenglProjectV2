@@ -9,6 +9,8 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.CompoundButton;
+import android.widget.RadioButton;
 
 import java.io.File;
 
@@ -17,25 +19,22 @@ import sen.com.openglcamera.bean.CameraSettingInfo;
 import sen.com.openglcamera.bean.CurrentCameInfo;
 import sen.com.openglcamera.camera.CameraOldVersion;
 import sen.com.openglcamera.fragment.CameraInfoFragmentV2;
-import sen.com.openglcamera.mediacodec.VideoParms;
-import sen.com.openglcamera.mediacodec.VideoRecoder;
 import sen.com.openglcamera.natives.CameraSGLNative;
 import sen.com.openglcamera.view.CameraButtonView;
 import sen.com.openglcamera.view.CameraSGLSurfaceView;
 
-public class VideoRecoderActivity extends AppCompatActivity implements View.OnClickListener, CameraInfoFragmentV2.OnSettingChangeLinstener {
+import static sen.com.openglcamera.R.id.takePicture;
+
+public class PictureVideoActivity extends AppCompatActivity implements View.OnClickListener, CameraInfoFragmentV2.OnSettingChangeLinstener, CompoundButton.OnCheckedChangeListener {
     CameraSGLSurfaceView mSGlSurfaceView;
     private int mCameraId;
     private CameraOldVersion mCamera;
-    private CameraButtonView takePicture;
+    private CameraButtonView cameraButtonView;
     private final String LTag = "sen_";
     private View rootView;
-    private VideoRecoder videoRecoder;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         getWindow().setBackgroundDrawable(null);
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -57,10 +56,14 @@ public class VideoRecoderActivity extends AppCompatActivity implements View.OnCl
         mCamera.setTakePicturePath(path);
         if (mCamera.openCamera(mCameraId)) {
             mSGlSurfaceView.init(mCamera);
-            takePicture = (CameraButtonView) findViewById(R.id.takePicture);
-            takePicture.setOnClickListener(this);
+            cameraButtonView = (CameraButtonView) findViewById(takePicture);
+            cameraButtonView.setCameraInstence(mCamera);
         }
-
+        RadioButton recoderPicture = (RadioButton) findViewById(R.id.recoderPicture);
+        RadioButton recoderVideo = (RadioButton) findViewById(R.id.recoderVideo);
+        recoderPicture.setOnCheckedChangeListener(this);
+        recoderPicture.setChecked(true);
+        recoderVideo.setOnCheckedChangeListener(this);
     }
     //对button需要做多次点击才行，要不会弹出多个
     //对camera setting
@@ -120,32 +123,30 @@ public class VideoRecoderActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.takePicture:
-//                if (mCamera != null)
-//                    mCamera.takePhoto();
-                if(videoRecoder ==null) {
-                    VideoParms videoParms = new VideoParms();
-                    videoParms.setWidth(mCamera.getCurrentSettingInfo().getPreWith());
-                    videoParms.setHeight(mCamera.getCurrentSettingInfo().getPreHeigth());
-                    String path = Environment.getExternalStorageDirectory() + File.separator + System.currentTimeMillis() + ".mp4";
-                    videoParms.setOutFilePath(path);
-                    videoRecoder = new VideoRecoder(videoParms);
-                    videoRecoder.initRecoder();
-                    mCamera.setVideoRecoder(videoRecoder);
-                    mCamera.startRecoder();
-                }else {
-                    mCamera.startRecoder();
-                }
-                break;
-        }
+
 
     }
 
     @Override
     public void onSettingChange(CurrentCameInfo currentCameInfo) {
         mCamera.setCameraInfo(currentCameInfo);
-//        Log.e("sen_",currentCameInfo.toString());
+    }
+
+
+
+    @Override
+    public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+        if (!isChecked) {
+            return;
+        }
+        switch (buttonView.getId()) {
+            case R.id.recoderVideo:
+                cameraButtonView.setChangeStuats(CameraButtonView.MODE_VIDEO);
+                break;
+            case R.id.recoderPicture:
+                cameraButtonView.setChangeStuats(CameraButtonView.MODE_PICTRUE);
+                break;
+        }
     }
 }
 

@@ -118,7 +118,7 @@ public class SplashActivity extends AppCompatActivity implements EasyPermissions
     }
 
     private void hasPaermissions() {
-        Intent intent = new Intent(this,VideoRecoderActivity.class);
+        Intent intent = new Intent(this,PictureVideoActivity.class);
         startActivity(intent);
         overridePendingTransition(0,0);
         finish();

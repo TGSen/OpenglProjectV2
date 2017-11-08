@@ -18,14 +18,14 @@ public class VideoParms {
     private int colorFormat = MediaCodecInfo.CodecCapabilities.COLOR_FormatYUV420Flexible;
     private int width = 720;
     private int height = 1280;
-    private String outFilePath;
+    private String rootPath ;
 
-    public String getOutFilePath() {
-        return outFilePath;
+    public String getRootPath() {
+        return rootPath;
     }
 
-    public void setOutFilePath(String outFilePath) {
-        this.outFilePath = outFilePath;
+    public void setRootPath(String rootPath) {
+        this.rootPath = rootPath;
     }
 
     public String getMimeType() {

@@ -42,6 +42,7 @@ public class VideoRecoder implements BaseRecoder {
 
     private BaseRecoder.OnRecoderListener listener;
     private static final int ERROR_CODER_INIT = 0; //initRecoder() 初始化时出错
+    private static final int ERROR_MEDIAMUXER_INIT =1 ; //MEDIAMUXER初始化时出错
 
     public void setVideoRecoderError(BaseRecoder.OnRecoderListener listener) {
         this.listener = listener;
@@ -78,7 +79,7 @@ public class VideoRecoder implements BaseRecoder {
             mediaCodec.start();
             isReadyEncoder = true;
 
-            mediaMuxer = new MediaMuxer(videoParms.getOutFilePath(), MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
+
             mI420Data = new byte[videoParms.getWidth() * videoParms.getHeight() * 3 / 2];
             Log.e(Tag, "video encoder init finish");
 
@@ -92,7 +93,7 @@ public class VideoRecoder implements BaseRecoder {
     @Override
     public void encodeData(byte[] data) {
 
-        if (mediaCodec == null) {
+        if (mediaCodec == null || mediaMuxer ==null) {
             Log.e(Tag, "encodeData but mediaCodec is init error");
             return;
         }
@@ -190,7 +191,7 @@ public class VideoRecoder implements BaseRecoder {
 
     }
 
-    //该方法执行时间大概在0-2毫秒，在了解两者之间 UV 排列，yv12->I420 更有优势
+    //该方法执行时间大概在0-2毫秒，在了解两者之间 UV 排列，yv12->I420 更有优势，目前在我的手机有花屏情况：这算法有错吗
     // I420: YYYYYYYY UU VV
    // YV12: YYYYYYYY VV UU    =>YUV420P
     public void yV12toI420SemiPlanar(byte[] yv21, byte[] i420, int width, int height) {
@@ -206,7 +207,17 @@ public class VideoRecoder implements BaseRecoder {
 
     @Override
     public void stopRecoder() {
+        if (mediaCodec != null) {
+            mediaCodec.stop();
+            mediaCodec.release();
+            mediaCodec = null;
+        }
 
+        if (mediaMuxer != null) {
+            mediaMuxer.stop();
+            mediaMuxer.release();
+            mediaMuxer = null;
+        }
     }
 
     @Override
@@ -223,6 +234,18 @@ public class VideoRecoder implements BaseRecoder {
             mediaMuxer = null;
         }
     }
+
+    @Override
+    public void startRecoder() {
+        try {
+            mediaMuxer = new MediaMuxer(videoParms.getRootPath()+System.currentTimeMillis()+".mp4", MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
+        } catch (IOException e) {
+            e.printStackTrace();
+            showError(ERROR_MEDIAMUXER_INIT,"startRecoder new MediaMuxer error");
+        }
+    }
+
+
 }
 
 

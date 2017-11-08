@@ -47,6 +47,12 @@
     <item name="android:textColor">@drawable/selector_radio_text</item>
 </style>
 
+    <style name="RadioNoBGStytle" parent="Widget.AppCompat.CompoundButton.RadioButton">
+        <item name="android:button">@null</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@drawable/selector_radiotext_falsewhile</item>
+    </style>
+
     <style name="CircleRadioStytle" parent="Widget.AppCompat.CompoundButton.RadioButton">
         <item name="android:button">@null</item>
         <item name="android:gravity">center</item>

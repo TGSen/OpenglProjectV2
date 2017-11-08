@@ -4,12 +4,42 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <sen.com.openglcamera.view.CameraSGLSurfaceView
-        android:id="@+id/camera_glview"
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-         />
+        android:layout_weight="1">
+
+        <sen.com.openglcamera.view.CameraSGLSurfaceView
+            android:id="@+id/camera_glview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+
+        <RadioGroup
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_gravity="bottom"
+            android:layout_marginLeft="16dp"
+            android:layout_marginRight="16dp"
+            android:background="@android:color/transparent"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/recoderPicture"
+                style="@style/RadioNoBGStytle"
+                android:layout_width="72dp"
+                android:layout_height="match_parent"
+                android:text="拍照" />
+
+            <RadioButton
+                android:id="@+id/recoderVideo"
+                style="@style/RadioNoBGStytle"
+                android:layout_width="72dp"
+                android:layout_height="match_parent"
+                android:text="摄像" />
+        </RadioGroup>
+    </FrameLayout>
+
 
     <RelativeLayout
         android:layout_width="match_parent"
@@ -39,8 +69,6 @@
             android:onClick="settingView"
             android:layout_marginRight="16dp"
              />
-
-
     </RelativeLayout>
 
 
