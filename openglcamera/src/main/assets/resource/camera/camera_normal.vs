@@ -8,8 +8,10 @@ uniform mat4 ProjectionMatrix;
 varying vec4 V_Normal;
 varying vec4 V_color;
 varying vec2 V_textcoord;
+varying vec4 V_poistion;
 void main(){
     V_color = color;
      V_textcoord = textcoord.xy;
     gl_Position = ProjectionMatrix*ModelMatrix*ViewMatrix*poistion;
+     V_poistion =poistion;
 }

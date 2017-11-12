@@ -24,6 +24,7 @@ public:
     glm::vec4 mBgColor;
     float mWidth;
     float mHeight;
+    float mFilterZoom;
     int mMultipleCount;
 
     bool isChangeVSFS;//检查是否更改了vs 和fs
@@ -56,6 +57,8 @@ public:
 
     //修改size
     void changeShapeSize(float size);
+    //修改滤镜区域
+    void changeFileterZoom(float zoom);
 };
 
 

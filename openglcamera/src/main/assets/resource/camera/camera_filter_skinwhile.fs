@@ -10,7 +10,10 @@ varying vec4 V_color;
 varying vec4 V_Normal;
 varying vec4 V_WorldPos;
 uniform vec4 U_MultipleFilter;
+varying vec4 FileterZoom;
 void main(){
+//这个是第一版本，测试成功后修改V2 版本了
+
     //增加一些滤镜效果
  //美白
  float lightRatio = 0.25; //亮度

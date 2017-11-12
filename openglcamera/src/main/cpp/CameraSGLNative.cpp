@@ -164,3 +164,21 @@ Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeShapeCount(JNIEnv *env
     }
 
 }
+
+
+JNIEXPORT void JNICALL
+Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeFileterZoom(JNIEnv *env, jclass type,
+                                                                      jint current, jint max) {
+
+    if(current>=0 && max>0){
+        //将中间设置为0
+        if(current ==max/2){
+            current =0;
+        } else{
+            current -=max;
+        }
+        float temp =float(current)/float(max);
+
+        camera->changeFileterZoom(temp);
+    }
+}

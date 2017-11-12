@@ -84,6 +84,11 @@ Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeShapeSize(JNIEnv *, jc
 
 JNIEXPORT void JNICALL
 Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeShapeCount(JNIEnv *, jclass , jint );
+
+
+JNIEXPORT void JNICALL
+Java_sen_com_openglcamera_natives_CameraSGLNative_onChangeFileterZoom(JNIEnv *, jclass ,
+                                                                      jint i, jint);
 #ifdef __cplusplus
 }
 #endif

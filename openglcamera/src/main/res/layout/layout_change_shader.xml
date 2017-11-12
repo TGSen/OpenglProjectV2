@@ -2,10 +2,19 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-
     android:gravity="bottom"
     android:orientation="vertical">
-    <SeekBar
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/alphagray"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+
+        <SeekBar
         android:id="@+id/seekBarSize"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -87,4 +96,5 @@
             android:text="白色" />
 
     </RadioGroup>
+    </LinearLayout>
 </LinearLayout>

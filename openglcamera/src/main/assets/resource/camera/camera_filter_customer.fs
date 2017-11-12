@@ -10,6 +10,8 @@ varying vec4 V_color;
 varying vec4 V_Normal;
 varying vec4 V_WorldPos;
 uniform vec4 U_MultipleFilter;
+varying vec4 V_poistion;
+uniform vec4 FileterZoom;
 void main(){
     //增加一些滤镜效果
     // gl_FragColor =color;
@@ -20,11 +22,14 @@ void main(){
 
  //黑白滤镜
   vec4 colorBase = texture2D(U_Texture, V_textcoord.xy);
-  //混合之后的效果
-  float blendColorR = dot(colorBase.r,U_MultipleFilter.x);
-  float blendColorG = dot(colorBase.g,U_MultipleFilter.y);
-  float blendColorB = dot(colorBase.b,U_MultipleFilter.z);
-  //float blendColorA = dot(colorBase.a,U_MultipleFilter.w);
-   gl_FragColor = vec4(blendColorR, blendColorG, blendColorB, 1.0);
-
+  if((FileterZoom.z==1.0 && V_poistion.y>=FileterZoom.y)||(FileterZoom.z==0.0 &&V_poistion.x<=FileterZoom.x)){
+          //混合之后的效果
+          float blendColorR = dot(colorBase.r,U_MultipleFilter.x);
+          float blendColorG = dot(colorBase.g,U_MultipleFilter.y);
+          float blendColorB = dot(colorBase.b,U_MultipleFilter.z);
+          //float blendColorA = dot(colorBase.a,U_MultipleFilter.w);
+           gl_FragColor = vec4(blendColorR, blendColorG, blendColorB, 1.0);
+    } else{
+           gl_FragColor = colorBase;
+    }
 }

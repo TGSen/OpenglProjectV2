@@ -67,6 +67,8 @@ public class CameraSGLNative {
     public static native void onChangeBgColor(float r, float g, float b, float a);
     //修改形状的大小
     public static native void onChangeShapeSize(int size,int max) ;
-    //修改及几遍行
+    //修改及几遍形
     public static native void onChangeShapeCount(int count) ;
+    //修改要渲染的区域
+    public static native void onChangeFileterZoom(int i, int max) ;
 }

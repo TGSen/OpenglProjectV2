@@ -19,7 +19,7 @@ import static android.media.MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED;
  * Des    : 视频录制
  */
 
-public class VideoRecoder implements BaseRecoder, Runnable {
+public class VideoRecoderV2 implements BaseRecoder {
     private static final String Tag = "sen_";
     //用来标志，编码器是否初始成功
     private boolean isReadyEncoder = false;
@@ -32,23 +32,20 @@ public class VideoRecoder implements BaseRecoder, Runnable {
     private MediaMuxer mediaMuxer;
     private boolean mMuxerStarted;
     private MediaFormat mediaFormat;
-    private byte[] newData;
-    private boolean hasData;
-    private Thread enCodeThread;
 
 
-    public VideoRecoder(VideoParms videoParms) {
+    public VideoRecoderV2(VideoParms videoParms) {
         this.videoParms = videoParms;
         //4个y对应一个U 和一个V
         mBufferInfo = new MediaCodec.BufferInfo();
 
     }
 
-    private BaseRecoder.OnRecoderListener listener;
+    private OnRecoderListener listener;
     private static final int ERROR_CODER_INIT = 0; //initRecoder() 初始化时出错
     private static final int ERROR_MEDIAMUXER_INIT =1 ; //MEDIAMUXER初始化时出错
 
-    public void setVideoRecoderError(BaseRecoder.OnRecoderListener listener) {
+    public void setVideoRecoderError(OnRecoderListener listener) {
         this.listener = listener;
     }
 
@@ -80,12 +77,11 @@ public class VideoRecoder implements BaseRecoder, Runnable {
             mediaFormat.setInteger(MediaFormat.KEY_COLOR_FORMAT, videoParms.getColorFormat());
             //设置给mediaCodec
 
+            isReadyEncoder = true;
+
 
             mI420Data = new byte[videoParms.getWidth() * videoParms.getHeight() * 3 / 2];
             Log.e(Tag, "video encoder init finish");
-            enCodeThread = new Thread(this);
-
-            isReadyEncoder = true;
 
         } catch (IOException e) {
             e.printStackTrace();
@@ -100,14 +96,94 @@ public class VideoRecoder implements BaseRecoder, Runnable {
      * 有可能往编码器输入了几次数据，编码器都没有准备好输出数据，那么编码器将不会输出数据，
      * 有的时候编码器把之前没有处理好的数据，在这一次输出数据的时候，
      * 又会输出多次数据，所以这里用了while，在结束的时候去查询是否编码器的还有数据没有输出来。
-     *
      * @param data
      */
 
     @Override
     public void encodeData(byte[] data) {
-        newData = data;
-        hasData = true;
+
+        if (mediaCodec == null || mediaMuxer ==null) {
+            Log.e(Tag, "encodeData but mediaCodec is init error");
+            return;
+        }
+        //先转格式
+      mI420Data = NativeSwapYUV.nV21ToI420(data,videoParms.getWidth(),videoParms.getHeight(),data.length);
+//        NV21toI420SemiPlanar(data, mI420Data, videoParms.getWidth(), videoParms.getHeight());
+        // dequeueInputBuffer方法提取出要处理的部分（也就是一个ByteBuffer数据流）把这一部分放到缓存区。
+        //返回要用有效数据填充的输入缓冲区的索引。
+        int inputBufferIndex = mediaCodec.dequeueInputBuffer(timeoutUs);
+        //获得一个ByteBuffer的数组，(准备处理的数据)
+        ByteBuffer inputBuffers;
+        ByteBuffer outputBuffers;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            inputBuffers = mediaCodec.getInputBuffer(inputBufferIndex);
+        } else {
+            inputBuffers = mediaCodec.getInputBuffers()[inputBufferIndex];
+        }
+        if (inputBufferIndex >= 0) {
+            inputBuffers.clear();
+            inputBuffers.put(mI420Data);
+            //调用queueInputBuffer把这个ByteBuffer放回到队列中，这样才能正确释放缓存区
+            mediaCodec.queueInputBuffer(inputBufferIndex, 0, mI420Data.length, System.nanoTime() / 1000, 0);
+        } else {
+        }
+        //返回已成功输出的缓冲区的索引,mBufferInfo 信息将充满缓存元数据。
+        int encoderStatus = mediaCodec.dequeueOutputBuffer(mBufferInfo, timeoutUs);
+        while (encoderStatus >= 0) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                Log.e(Tag, "Build.VERSION.SDK_INT");
+                outputBuffers = mediaCodec.getOutputBuffer(encoderStatus);
+            } else {
+                outputBuffers = mediaCodec.getOutputBuffers()[encoderStatus];
+            }
+            if (encoderStatus == MediaCodec.INFO_TRY_AGAIN_LATER) {
+                Log.e(Tag, "out buffer not available");
+            } else if (encoderStatus == INFO_OUTPUT_BUFFERS_CHANGED) {
+                Log.d(TAG, "encoder output buffers changed");
+            } else if (encoderStatus == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
+                //
+                MediaFormat outputFormat = mediaCodec.getOutputFormat();
+                mTrackIndex = mediaMuxer.addTrack(outputFormat);
+                mediaMuxer.start();
+                mMuxerStarted = true;
+            } else if (encoderStatus < 0) {
+                Log.d(TAG, "encoderStatus < 0 忽略");
+            } else {
+                //encoding
+                if (outputBuffers == null) {
+                    Log.d(TAG, "outPutBuffer is null");
+                } else {
+                    if ((mBufferInfo.flags & MediaCodec.BUFFER_FLAG_CODEC_CONFIG) != 0) {
+                        // The codec config data was pulled out and fed to the muxer when we got
+                        // the INFO_OUTPUT_FORMAT_CHANGED status.  Ignore it.
+                        mBufferInfo.size = 0;
+                    }
+                    if (mBufferInfo.size != 0) {
+                        if (!mMuxerStarted) {
+                            MediaFormat newFormat = mediaCodec.getOutputFormat();
+                            mTrackIndex = mediaMuxer.addTrack(newFormat);
+                            mediaMuxer.start();
+                            mMuxerStarted = true;
+                        }
+
+//                       可以写到文件 也可以rtmp 发送
+//					byte[] outData = new byte[bufferInfo.size];
+//					outputBuffer.get(outData);
+//					outputBuffer.position(bufferInfo.offset);
+
+//
+                        outputBuffers.position(mBufferInfo.offset);
+                        outputBuffers.limit(mBufferInfo.offset + mBufferInfo.size);
+                        mediaMuxer.writeSampleData(mTrackIndex, outputBuffers, mBufferInfo);
+                    }
+                }
+                //完成了缓冲区，请使用此调用将缓冲区返回到编解码器
+                mediaCodec.releaseOutputBuffer(encoderStatus, false);
+            }
+            encoderStatus = mediaCodec.dequeueOutputBuffer(mBufferInfo, timeoutUs);
+
+        }
+
     }
 
     //该方法执行时间大概在20-毫秒到60之间，得优化
@@ -140,10 +216,10 @@ public class VideoRecoder implements BaseRecoder, Runnable {
 
     @Override
     public void stopRecoder() {
-      //  hasData = false;
         if (mediaCodec != null) {
             mediaCodec.stop();
         }
+
         if (mediaMuxer != null) {
             mediaMuxer.stop();
             mediaMuxer.release();
@@ -169,16 +245,16 @@ public class VideoRecoder implements BaseRecoder, Runnable {
     @Override
     public void startRecoder() {
         try {
-            if (mediaCodec != null && isReadyEncoder) {
+
+            if (mediaCodec!=null && isReadyEncoder){
                 //每次录制都要重新设置，可以看官方的流程图，stop 状态->Uninitialzed状态  然后在configure函数后->Configured状态，才可以start
                 mediaCodec.configure(mediaFormat, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
                 mediaCodec.start();
                 //重新录制mp4
-                mediaMuxer = new MediaMuxer(videoParms.getRootPath() + System.currentTimeMillis() + ".mp4", MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
+                mediaMuxer = new MediaMuxer(videoParms.getRootPath()+System.currentTimeMillis()+".mp4", MediaMuxer.OutputFormat.MUXER_OUTPUT_MPEG_4);
                 mTrackIndex = -1;
                 mMuxerStarted = false;
-                //开始线程
-                enCodeThread.start();
+
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -187,96 +263,6 @@ public class VideoRecoder implements BaseRecoder, Runnable {
     }
 
 
-    @Override
-    public void run() {
-        while (isReadyEncoder) {
-            if (mediaCodec == null || mediaMuxer == null) {
-                Log.e(Tag, "encodeData but mediaCodec is init error");
-                return;
-            }
-            if (newData == null ) {
-                Log.e(Tag, "hasNewData is false");
-                continue;
-            }
-            Log.e(Tag, "encodeData ing");
-            //先转格式
-            mI420Data = NativeSwapYUV.nV21ToI420(newData, videoParms.getWidth(), videoParms.getHeight(), newData.length);
-// NV21toI420SemiPlanar(data, mI420Data, videoParms.getWidth(), videoParms.getHeight());
-            // dequeueInputBuffer方法提取出要处理的部分（也就是一个ByteBuffer数据流）把这一部分放到缓存区。
-            //返回要用有效数据填充的输入缓冲区的索引。
-            int inputBufferIndex = mediaCodec.dequeueInputBuffer(timeoutUs);
-            //获得一个ByteBuffer的数组，(准备处理的数据)
-            ByteBuffer inputBuffers;
-            ByteBuffer outputBuffers;
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                inputBuffers = mediaCodec.getInputBuffer(inputBufferIndex);
-            } else {
-                inputBuffers = mediaCodec.getInputBuffers()[inputBufferIndex];
-            }
-            if (inputBufferIndex >= 0) {
-                inputBuffers.clear();
-                inputBuffers.put(mI420Data);
-                //调用queueInputBuffer把这个ByteBuffer放回到队列中，这样才能正确释放缓存区
-                mediaCodec.queueInputBuffer(inputBufferIndex, 0, mI420Data.length, System.nanoTime() / 1000, 0);
-            } else {
-            }
-            //返回已成功输出的缓冲区的索引,mBufferInfo 信息将充满缓存元数据。
-            int encoderStatus = mediaCodec.dequeueOutputBuffer(mBufferInfo, timeoutUs);
-            while (encoderStatus >= 0) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    Log.e(Tag, "Build.VERSION.SDK_INT");
-                    outputBuffers = mediaCodec.getOutputBuffer(encoderStatus);
-                } else {
-                    outputBuffers = mediaCodec.getOutputBuffers()[encoderStatus];
-                }
-                if (encoderStatus == MediaCodec.INFO_TRY_AGAIN_LATER) {
-                    Log.e(Tag, "out buffer not available");
-                } else if (encoderStatus == INFO_OUTPUT_BUFFERS_CHANGED) {
-                    Log.d(TAG, "encoder output buffers changed");
-                } else if (encoderStatus == MediaCodec.INFO_OUTPUT_FORMAT_CHANGED) {
-                    //
-                    MediaFormat outputFormat = mediaCodec.getOutputFormat();
-                    mTrackIndex = mediaMuxer.addTrack(outputFormat);
-                    mediaMuxer.start();
-                    mMuxerStarted = true;
-                } else if (encoderStatus < 0) {
-                    Log.d(TAG, "encoderStatus < 0 忽略");
-                } else {
-                    //encoding
-                    if (outputBuffers == null) {
-                        Log.d(TAG, "outPutBuffer is null");
-                    } else {
-                        if ((mBufferInfo.flags & MediaCodec.BUFFER_FLAG_CODEC_CONFIG) != 0) {
-                            // The codec config data was pulled out and fed to the muxer when we got
-                            // the INFO_OUTPUT_FORMAT_CHANGED status.  Ignore it.
-                            mBufferInfo.size = 0;
-                        }
-                        if (mBufferInfo.size != 0) {
-                            if (!mMuxerStarted) {
-                                MediaFormat newFormat = mediaCodec.getOutputFormat();
-                                mTrackIndex = mediaMuxer.addTrack(newFormat);
-                                mediaMuxer.start();
-                                mMuxerStarted = true;
-                            }
-
-//                       可以写到文件 也可以rtmp 发送
-//					byte[] outData = new byte[bufferInfo.size];
-//					outputBuffer.get(outData);
-//					outputBuffer.position(bufferInfo.offset);
-
-//
-                            outputBuffers.position(mBufferInfo.offset);
-                            outputBuffers.limit(mBufferInfo.offset + mBufferInfo.size);
-                            mediaMuxer.writeSampleData(mTrackIndex, outputBuffers, mBufferInfo);
-                        }
-                    }
-                    //完成了缓冲区，请使用此调用将缓冲区返回到编解码器
-                    mediaCodec.releaseOutputBuffer(encoderStatus, false);
-                }
-                encoderStatus = mediaCodec.dequeueOutputBuffer(mBufferInfo, timeoutUs);
-            }
-        }
-    }
 }
 
 

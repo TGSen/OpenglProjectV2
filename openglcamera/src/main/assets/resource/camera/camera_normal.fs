@@ -4,6 +4,8 @@ precision mediump float;
 #endif
 uniform samplerExternalOES  U_Texture;//纹理贴图
 varying vec2 V_textcoord;
+varying vec4 V_poistion;
+uniform vec4 FileterZoom;
 void main(){
     //增加一些滤镜效果
     // gl_FragColor =color;

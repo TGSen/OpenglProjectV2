@@ -2,6 +2,7 @@ package sen.com.openglcamera.renderer;
 
 import android.content.Context;
 import android.graphics.SurfaceTexture;
+import android.opengl.GLES20;
 import android.opengl.GLSurfaceView;
 import android.util.Log;
 
@@ -45,6 +46,15 @@ public class CameraRenderer implements GLSurfaceView.Renderer, SurfaceTexture.On
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
+        GLES20.glEnable(GL10.GL_POINT_SMOOTH);
+        GLES20.glHint(GL10.GL_POINT_SMOOTH_HINT, GL10.GL_NICEST);
+        GLES20.glEnable(GL10.GL_LINE_SMOOTH);
+        GLES20.glHint(GL10.GL_LINE_SMOOTH_HINT, GL10.GL_NICEST);
+        GLES20.glEnable(GL10.GL_MULTISAMPLE);
+        gl.glMatrixMode(GL10.GL_PROJECTION);
+        gl.glLoadIdentity();
+        float ritio = (float)width/(float)height;
+        gl.glFrustumf(-ritio, ritio,-1f,1f,3f,7f);
         CameraSGLNative.onSurfaceChanged(width, height);
     }
 

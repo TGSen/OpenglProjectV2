@@ -18,6 +18,7 @@ Camera::Camera (){
     cameraShape = nullptr;
      mWidth=0;
      mHeight=0;
+    mFilterZoom =0;
     mMultipleCount = 4;
     currentShap = Normal;
     //初始化为黑色
@@ -171,6 +172,8 @@ void Camera::draw() {
         LOGE("camera->mShapSize %f",mShapSize);
         initShapeData(0.0f,0.0f,0.0f,mMultipleCount,mShapSize);
         cameraShape->initMVP(mWidth,mHeight,mCameraPos);
+
+
         isChangeShape = false;
     }
 
@@ -179,11 +182,14 @@ void Camera::draw() {
         LOGE("chang fs vs");
         mShader->init(vsPath,fsPath);
         mShader->setUiformVec4("U_MultipleFilter",0.2f,0.2f,1.0f,1.0f);
+        //修改文件同时修改filterZoom ,一般从上次改变的开始
+        changeFileterZoom(0.0f);
         delete vsPath;
         delete fsPath;
         vsPath = nullptr;
         fsPath = nullptr;
         isChangeVSFS = false;
+        
     }
 
     //OpenGl设定
@@ -204,7 +210,6 @@ void Camera::draw() {
 //修改 shader 变量参数
 void Camera::changeFilter(float cr,float cg, float cb , float ca){
     mShader->setUiformVec4("U_MultipleFilter",cr,cg,cb,ca);
-
 }
 
 //修改 vs shader ,和fs shader
@@ -220,6 +225,7 @@ void Camera::changeVSFS(const char* vspath, const char*fspath){
     memset(fsPath, 0, fsSize + 1);
     memcpy(fsPath, fspath, fsSize);
     LOGE("changeVSFS:%s,%s",vsPath,fsPath);
+
     isChangeVSFS = true;
 }
 
@@ -250,6 +256,20 @@ void Camera::changeShapeDrawCount(int count){
 void Camera::changeShapeSize(float size){
     mShapSize =size;
     cameraShape->changeShapeSize(size);
+}
+//修改路径的区域
+void Camera::changeFileterZoom(float zoom){
+    //以后还得封装一个参数的才行
+    if(currentShap == Normal){
+        LOGE("temp x %f",zoom);
+        mShader->setUiformVec4("FileterZoom",1.0f,0.0f,0.0f,0.0f);
+    }else{
+        LOGE("temp y %f",zoom);
+        mShader->setUiformVec4("FileterZoom",0.0f,zoom,1.0f,1.0f);
+    }
+
+ //  mFilterZoom = zoom;
+
 }
 
 

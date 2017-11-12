@@ -5,6 +5,13 @@
     android:gravity="bottom"
     android:orientation="vertical">
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/alphagray"
+        android:gravity="bottom"
+        android:orientation="vertical"
+        android:padding="8dp">
     <SeekBar
         android:id="@+id/seekBarOne"
         android:layout_width="match_parent"
@@ -48,6 +55,7 @@
         android:paddingBottom="16dp"
         android:showDividers="middle">
 
+
         <android.support.v7.widget.AppCompatRadioButton
             android:id="@+id/btnNormal"
             style="@style/CircleRadioStytle"
@@ -78,7 +86,43 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="16dp"
             android:text="自定义" />
+
+
     </RadioGroup>
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="16dp"
+            android:orientation="horizontal"
+            android:paddingBottom="16dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/shape_selected"
+                android:paddingBottom="6dp"
+                android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+                android:paddingTop="6dp"
+                android:text="滤镜区域:"
+                android:textColor="@color/white"
+                android:textSize="14sp" />
+
+            <SeekBar
+                android:id="@+id/seekFilterZoom"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="8dp"
+                android:maxHeight="2dp"
+                android:progressDrawable="@drawable/seekbar_style"
+                android:thumb="@drawable/seekbar_thumb" />
+        </LinearLayout>
+
+
+    </LinearLayout>
 
 </LinearLayout>

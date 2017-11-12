@@ -13,7 +13,7 @@ import java.util.List;
 
 import sen.com.openglcamera.bean.CameraSettingInfo;
 import sen.com.openglcamera.bean.CurrentCameInfo;
-import sen.com.openglcamera.mediacodec.VideoRecoder;
+import sen.com.openglcamera.mediacodec.VideoRecoderV2;
 import sen.com.openglcamera.utils.BitmapUtils;
 
 /**
@@ -39,8 +39,9 @@ public class CameraOldVersion implements Camera.PreviewCallback {
     private CurrentCameInfo currentCameInfo;
 
     private boolean isRecoder ;
-    private VideoRecoder videoRecoder;
+    private VideoRecoderV2 videoRecoder;
     private byte[] callbackBuffer;
+    private SurfaceTexture surfaceTexture;
 
     //获取所有CameInfo
     public CameraSettingInfo getCameraSettingInfo(){
@@ -108,6 +109,10 @@ public class CameraOldVersion implements Camera.PreviewCallback {
             setPreviewOrientation(parameters);
             setPreviewSize( parameters);
             setPictureSize(parameters);
+            List<String> focusModes = parameters.getSupportedFocusModes();
+            if (focusModes.contains("continuous-video")) {
+                parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
+            }
             mCamera.setParameters(parameters);
             mCamera.setPreviewCallbackWithBuffer(this);
             //int bitsPerPixel = ImageFormat.getBitsPerPixel(ImageFormat.NV21);
@@ -195,6 +200,7 @@ public class CameraOldVersion implements Camera.PreviewCallback {
     public void setPreviewTexture(SurfaceTexture surfaceTexture) {
         if (mCamera != null) {
             try {
+                this.surfaceTexture = surfaceTexture;
                 mCamera.setPreviewTexture(surfaceTexture);
             } catch (IOException e) {
                 e.printStackTrace();
@@ -255,7 +261,7 @@ public class CameraOldVersion implements Camera.PreviewCallback {
     }
 
 
-    public void setVideoRecoder(VideoRecoder videoRecoder) {
+    public void setVideoRecoder(VideoRecoderV2 videoRecoder) {
         this.videoRecoder = videoRecoder;
     }
 

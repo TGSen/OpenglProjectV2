@@ -18,15 +18,17 @@ import java.io.File;
 import sen.com.openglcamera.R;
 import sen.com.openglcamera.camera.CameraOldVersion;
 import sen.com.openglcamera.mediacodec.VideoParms;
-import sen.com.openglcamera.mediacodec.VideoRecoder;
+import sen.com.openglcamera.mediacodec.VideoRecoderV2;
 
 /**
  * Created by Administrator on 2017/7/24.
  * 将Camera 所有操作的功能，就集在这里
+ * VideoRecoder 在子线程 ，还有点问题
+ * VideoRecoderV2 就是没在子线程
  */
 
 public class CameraButtonView extends View implements View.OnClickListener {
-    private VideoRecoder videoRecoder;
+    private VideoRecoderV2 videoRecoder;
     private String rootPath = Environment.getExternalStorageDirectory() + File.separator;
     private Paint mPaint;
     private Path bigCirclePath;
@@ -65,7 +67,7 @@ public class CameraButtonView extends View implements View.OnClickListener {
                         videoParms.setWidth(mCamera.getCurrentSettingInfo().getPreWith());
                         videoParms.setHeight(mCamera.getCurrentSettingInfo().getPreHeigth());
                         videoParms.setRootPath(rootPath);
-                        videoRecoder = new VideoRecoder(videoParms);
+                        videoRecoder = new VideoRecoderV2(videoParms);
                         videoRecoder.initRecoder();
                         mCamera.setVideoRecoder(videoRecoder);
                         mCamera.startRecoder();

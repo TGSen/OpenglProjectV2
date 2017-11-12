@@ -15,6 +15,7 @@ import sen.com.openglcamera.R;
 import sen.com.openglcamera.bean.FilterInfo;
 import sen.com.openglcamera.natives.CameraSGLNative;
 
+
 /**
  * Author : 唐家森
  * Version: 1.0
@@ -26,7 +27,7 @@ import sen.com.openglcamera.natives.CameraSGLNative;
 
 public class FilterFragment extends BaseFragment implements CompoundButton.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener {
 
-    private SeekBar seekBarOne,seekBarTwo,seekBarThree;
+    private SeekBar seekBarOne,seekBarTwo,seekBarThree,seekFilterZoom;
     private List<FilterInfo> filterList;
     private double currentIndex;
 
@@ -43,6 +44,10 @@ public class FilterFragment extends BaseFragment implements CompoundButton.OnChe
 
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+        if(seekBar.getId()==R.id.seekFilterZoom){
+            CameraSGLNative.onChangeFileterZoom(seekFilterZoom.getProgress(), seekFilterZoom.getMax());
+            return;
+        }
         //只要seekBar有变化，都全部获取当前的进度
         //说明一点，如果当前，为美白效果的话，seekBarOne ，seekBarTwo 分别代表亮度，和对比度
         //如果为自定义效果，那么就为分别为红绿蓝
@@ -51,10 +56,10 @@ public class FilterFragment extends BaseFragment implements CompoundButton.OnChe
         int three = seekBarThree.getProgress();
 
         //处理数据
-        if(currentIndex ==3){
+        if (currentIndex == 3) {
             //自定义
             CameraSGLNative.onChangeFileter(one,two,three,1,seekBarOne.getMax());
-        }else if(currentIndex ==2){
+        } else if (currentIndex == 2) {
             //只需要，处理一下，不必要变化很大
             CameraSGLNative.onChangeFileter(one/5,two/5,1,1,seekBarOne.getMax());
         }
@@ -89,16 +94,20 @@ public class FilterFragment extends BaseFragment implements CompoundButton.OnChe
         seekBarOne = (SeekBar) view.findViewById(R.id.seekBarOne);
         seekBarTwo = (SeekBar) view.findViewById(R.id.seekBarTwo);
         seekBarThree = (SeekBar) view.findViewById(R.id.seekBarThree);
+        seekFilterZoom = (SeekBar) view.findViewById(R.id.seekFilterZoom);
 
         setSeekBarView(false,false,false);
         seekBarOne.setOnSeekBarChangeListener(this);
         seekBarTwo.setOnSeekBarChangeListener(this);
         seekBarThree.setOnSeekBarChangeListener(this);
+        seekFilterZoom.setOnSeekBarChangeListener(this);
         seekBarOne.setMax(100);
         seekBarTwo.setMax(100);
         seekBarThree.setMax(100);
-        btnNormal.setChecked(true);
-        CameraSGLNative.onChangeVSFS(filterList.get(0).getVsPath(),filterList.get(0).getFsPath());
+        seekFilterZoom.setMax(100);
+        //滤镜的区域大小
+//        seekFilterZoom.setProgress(50);
+//        CameraSGLNative.onChangeFileterZoom(seekFilterZoom.getProgress(), seekFilterZoom.getMax());
     }
 
     @Override
@@ -106,26 +115,29 @@ public class FilterFragment extends BaseFragment implements CompoundButton.OnChe
         if(!isChecked)
             return;
         switch (buttonView.getId()) {
+
             case R.id.btnNormal:
                 setSeekBarView(false,false,false);
-                currentIndex =0;
+                currentIndex = 0;
                 CameraSGLNative.onChangeVSFS(filterList.get(0).getVsPath(),filterList.get(0).getFsPath());
                 break;
             case R.id.btnGray:
-                currentIndex =1;
+                currentIndex = 1;
                 setSeekBarView(false,false,false);
                 CameraSGLNative.onChangeVSFS(filterList.get(1).getVsPath(),filterList.get(1).getFsPath());
                 break;
             case R.id.btnSkinWhile:
-                currentIndex =2;
+                currentIndex = 2;
                 setSeekBarView(true,true,false);
                 CameraSGLNative.onChangeVSFS(filterList.get(2).getVsPath(),filterList.get(2).getFsPath());
                 break;
             case R.id.btnCustomer:
-                currentIndex =3;
+                currentIndex = 3;
                 setSeekBarView(true,true,true);
                 CameraSGLNative.onChangeVSFS(filterList.get(3).getVsPath(),filterList.get(3).getFsPath());
                 break;
+
+
         }
     }
 
