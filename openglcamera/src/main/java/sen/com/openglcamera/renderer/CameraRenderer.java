@@ -84,7 +84,9 @@ public class CameraRenderer implements GLSurfaceView.Renderer, SurfaceTexture.On
     }
 
 
-
-
-
+    public void requestCameraFocus() {
+        if(mCamera!=null){
+            mCamera.requestCameraFocus();
+        }
+    }
 }

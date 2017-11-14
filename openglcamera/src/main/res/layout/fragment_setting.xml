@@ -2,7 +2,6 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
     <sen.com.openglcamera.view.CustomerViewPager
@@ -12,51 +11,5 @@
         android:layout_weight="1"
         android:background="@android:color/transparent" />
 
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:orientation="horizontal"
-        android:paddingBottom="16dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:paddingTop="16dp">
-
-        <ImageButton
-            android:id="@+id/btnClose"
-            android:layout_width="48dp"
-            android:layout_height="64dp"
-            android:layout_gravity="center"
-            android:background="@android:color/transparent"
-            android:padding="4dp"
-            android:src="@drawable/ic_close" />
-
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tabLayout"
-            android:layout_width="0dp"
-            android:layout_gravity="center"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:divider="@drawable/bg_divider"
-            android:background="@android:color/transparent"
-            app:tabBackground="@drawable/selector_tab_bg"
-            app:tabGravity="fill"
-            app:tabIndicatorHeight="0dp"
-            app:tabMode="scrollable"
-            app:tabSelectedTextColor="@color/white"
-            app:tabTextColor="@color/colorPrimary">
-            <!--app:tabGravity="fill" app:tabMode="fixed" 如果比较少的情况下会居中的，这里就设置scrollable-->
-
-        </android.support.design.widget.TabLayout>
-
-        <ImageButton
-            android:id="@+id/btnSave"
-            android:layout_width="48dp"
-            android:layout_height="64dp"
-            android:layout_gravity="center"
-            android:background="@android:color/transparent"
-            android:padding="4dp"
-            android:src="@drawable/ic_right" />
-
-    </LinearLayout>
+    <include layout="@layout/layout_buttom_opstions" />
 </LinearLayout>

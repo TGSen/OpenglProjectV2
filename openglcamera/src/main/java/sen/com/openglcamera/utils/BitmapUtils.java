@@ -54,4 +54,37 @@ public class BitmapUtils {
         }
         return returnBm;
     }
+
+
+    public static Bitmap decodeFile(String path,int reqWidth, int reqHeight) {
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        // 先将inJustDecodeBounds属性设置为true,解码避免内存分配
+        options.inJustDecodeBounds = true;
+        // 将图片传入选择器中
+        BitmapFactory.decodeFile(path, options);
+        // 对图片进行指定比例的压缩
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeFile(path, options);
+    }
+
+    // 计算图片的压缩比例
+    public static int calculateInSampleSize(BitmapFactory.Options option,
+                                            int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = option.outHeight;
+        final int width = option.outWidth;
+        int inSampleSize = 1;
+
+        if (height > reqHeight || width > reqWidth) {
+
+            final int heightRatio = Math.round((float) height
+                    / (float) reqHeight);
+            final int widthRatio = Math.round((float) width / (float) reqWidth);
+            // 选择长宽高较小的比例，成为压缩比例  
+            inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
+        }
+        return inSampleSize;
+    }
+
 }

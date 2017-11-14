@@ -3,6 +3,7 @@ package sen.com.openglcamera.view;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
+import android.view.MotionEvent;
 
 import sen.com.openglcamera.camera.CameraOldVersion;
 import sen.com.openglcamera.renderer.CameraRenderer;
@@ -33,7 +34,16 @@ public class CameraSGLSurfaceView extends GLSurfaceView {
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
     }
 
-
+    //点击屏幕对焦
+    @Override
+    public boolean onTouchEvent(MotionEvent event) {
+        if (event.getAction() ==MotionEvent.ACTION_DOWN){
+            if (readyRenderer!=null){
+                readyRenderer.requestCameraFocus();
+            }
+        }
+        return super.onTouchEvent(event);
+    }
 
 
 

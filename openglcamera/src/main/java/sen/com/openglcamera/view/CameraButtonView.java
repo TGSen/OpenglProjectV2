@@ -9,6 +9,7 @@ import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v4.content.ContextCompat;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Toast;
@@ -27,7 +28,7 @@ import sen.com.openglcamera.mediacodec.VideoRecoderV2;
  * VideoRecoderV2 就是没在子线程
  */
 
-public class CameraButtonView extends View implements View.OnClickListener {
+public class CameraButtonView extends View  {
     private VideoRecoderV2 videoRecoder;
     private String rootPath = Environment.getExternalStorageDirectory() + File.separator;
     private Paint mPaint;
@@ -47,8 +48,9 @@ public class CameraButtonView extends View implements View.OnClickListener {
     private int mCurrentMode = MODE_PICTRUE;
     private CameraOldVersion mCamera;//保持这个引用吧，操作比较方便,虽然耦合性比较高，后续优化
 
-    @Override
-    public void onClick(View v) {
+    public void handleClick(){
+        if(mCamera==null)
+            return;
         //先分camera 的状态
         switch (cameraState) {
             case STATE_IDLE:
@@ -90,19 +92,11 @@ public class CameraButtonView extends View implements View.OnClickListener {
         }
         postInvalidate();
     }
-    //这些方法还没调用
-//    public interface CameraEnventListener {
-//        void onStartTakePicture();
-//
-//        void onStartRecodeVideo();
-//
-//        void onStopRecodeVideo();
-//    }
+
 
 
     public void setCameraInstence(CameraOldVersion mCamera) {
         this.mCamera = mCamera;
-        this.setOnClickListener(this);
     }
     public CameraButtonView(Context context) {
         this(context, null);
@@ -166,14 +160,14 @@ public class CameraButtonView extends View implements View.OnClickListener {
 
     }
 
-    public void drawBigCircle(Canvas canvas, int color) {
+    private void drawBigCircle(Canvas canvas, int color) {
         mPaint.setColor(color);
         mPaint.setStyle(Paint.Style.STROKE);
         mPaint.setStrokeWidth(2);
         canvas.drawPath(bigCirclePath, mPaint);
     }
 
-    public void drawSmallPath(Canvas canvas, int color, boolean isCircle) {
+    private void drawSmallPath(Canvas canvas, int color, boolean isCircle) {
 //        mPaint.setColor(ContextCompat.getColor(getContext(), R.color.colorPrimary));
         mPaint.setColor(color);
         mPaint.setStrokeWidth(0);

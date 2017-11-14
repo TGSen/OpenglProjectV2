@@ -29,6 +29,13 @@ find_library( # Sets the name of the path variable.
               # Specifies the name of the NDK library that
               # you want CMake to locate.
               log )
+ find_library( # Sets the name of the path variable.
+               jnigraphics-lib
+
+
+               # Specifies the name of the NDK library that
+               # you want CMake to locate.
+               jnigraphics)
 
 #设置编译指令
 set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
@@ -56,6 +63,7 @@ target_link_libraries( # Specifies the target library.
                        # Links the target library to the log library
                        # included in the NDK.
                        ${log-lib}
+                       ${jnigraphics-lib}
                        ${OPENGL_LIB}
                         android
                         EGL)

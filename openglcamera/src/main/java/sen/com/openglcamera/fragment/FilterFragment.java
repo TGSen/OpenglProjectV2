@@ -80,7 +80,7 @@ public class FilterFragment extends BaseFragment implements CompoundButton.OnChe
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        filterList = FilterInfo.getFilterInfos();
+        filterList = FilterInfo.getFilterInfos(FilterInfo.CAMERA_DATA_TYPE);
         RadioButton btnNormal = (RadioButton) view.findViewById(R.id.btnNormal);
         RadioButton btnGray = (RadioButton) view.findViewById(R.id.btnGray);
         RadioButton btnSkinWhile = (RadioButton) view.findViewById(R.id.btnSkinWhile);

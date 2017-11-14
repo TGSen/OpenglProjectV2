@@ -21,7 +21,6 @@ void main(){
  // gl_FragColor = texture2D(U_Texture, V_textcoord.xy);
     vec4 colorBase = texture2D(U_Texture, V_textcoord.xy);
     //使用第三个数作为标记，因为多边形被旋转了，所以就画y ,否则画x
-     if((FileterZoom.z==1.0 && V_poistion.y>=FileterZoom.y)||(FileterZoom.z==0.0 &&V_poistion.x<=FileterZoom.x)){
          //画y 轴
             //在这个区域才处理
             //黑白滤镜
@@ -31,8 +30,5 @@ void main(){
            // float blendColor = (colorBase.r+colorBase.g+colorBase.b+colorBase.a)/4.0f;
             float blendColor = (colorBase.r+colorBase.g+colorBase.b)/3.0;
             gl_FragColor = vec4(blendColor, blendColor, blendColor, 1.0);
-    }else {
-         gl_FragColor =colorBase;
-    }
 
 }

@@ -96,49 +96,91 @@ public class FilterInfo {
     /**
      * circle_normal.vs 使用同一份
      * fs 就不是
+     * 0代表的是camera 1代表的是图片的数据
      */
-    public static List<FilterInfo> getFilterInfos (){
+    public  final static int CAMERA_DATA_TYPE = 0;
+    public final static int PICTURE_DATA_TYPE = 1;
+    public static List<FilterInfo> getFilterInfos (int type){
         List<FilterInfo> filterInfos = new ArrayList<>();
-        FilterInfo info0= new FilterInfo();
-        info0.setFilterId(0);
-        info0.setFilterName("无滤镜");
-        info0.setVsPath("resource/camera/camera_normal.vs");
-        info0.setFsPath("resource/camera/camera_normal.fs");
-        info0.setShowSeekbar(false);
-        filterInfos.add(info0);
+        if(type ==CAMERA_DATA_TYPE) {
+            FilterInfo info0 = new FilterInfo();
+            info0.setFilterId(0);
+            info0.setFilterName("无滤镜");
+            info0.setVsPath("resource/camera/camera_normal.vs");
+            info0.setFsPath("resource/camera/camera_normal.fs");
+            info0.setShowSeekbar(false);
+            filterInfos.add(info0);
 
 
-        FilterInfo info1= new FilterInfo();
-        info1.setFilterId(1);
-        info1.setFilterName("灰色");
-        info1.setVsPath("resource/camera/camera_normal.vs");
-        info1.setFsPath("resource/camera/camera_filter_gray.fs");
-        info1.setShowSeekbar(false);
-        filterInfos.add(info1);
+            FilterInfo info1 = new FilterInfo();
+            info1.setFilterId(1);
+            info1.setFilterName("灰色");
+            info1.setVsPath("resource/camera/camera_normal.vs");
+            info1.setFsPath("resource/camera/camera_filter_gray.fs");
+            info1.setShowSeekbar(false);
+            filterInfos.add(info1);
 
-        FilterInfo info2= new FilterInfo();
-        info2.setFilterId(1);
-        info2.setFilterName("美白");
-        info2.setVsPath("resource/camera/camera_normal.vs");
-        info2.setFsPath("resource/camera/camera_filter_skinwhile_v2.fs");
-        info2.setShowSeekbar(true);
-        info2.setSeekbarHalf(true);
-        info2.setCountSeekBar(2);
-        info2.setInfo("分别调节亮度,对比度");
-        filterInfos.add(info2);
+            FilterInfo info2 = new FilterInfo();
+            info2.setFilterId(1);
+            info2.setFilterName("美白");
+            info2.setVsPath("resource/camera/camera_normal.vs");
+            info2.setFsPath("resource/camera/camera_filter_skinwhile_v2.fs");
+            info2.setShowSeekbar(true);
+            info2.setSeekbarHalf(true);
+            info2.setCountSeekBar(2);
+            info2.setInfo("分别调节亮度,对比度");
+            filterInfos.add(info2);
 
 
+            FilterInfo info3 = new FilterInfo();
+            info3.setFilterId(3);
+            info3.setFilterName("自定义");
+            info3.setVsPath("resource/camera/camera_normal.vs");
+            info3.setFsPath("resource/camera/camera_filter_customer.fs");
+            info3.setShowSeekbar(true);
+            info3.setCountSeekBar(4);
+            info3.setInfo("分别调节RGBA");
+            filterInfos.add(info3);
+        }else{
+            FilterInfo info0 = new FilterInfo();
+            info0.setFilterId(0);
+            info0.setFilterName("无滤镜");
+            info0.setVsPath("resource/camera/picture_normal.vs");
+            info0.setFsPath("resource/camera/picture_normal.fs");
+            info0.setShowSeekbar(false);
+            filterInfos.add(info0);
 
-        FilterInfo info3= new FilterInfo();
-        info3.setFilterId(3);
-        info3.setFilterName("自定义");
-        info3.setVsPath("resource/camera/camera_normal.vs");
-        info3.setFsPath("resource/camera/camera_filter_customer.fs");
-        info3.setShowSeekbar(true);
-        info3.setCountSeekBar(4);
-        info3.setInfo("分别调节RGBA");
-        filterInfos.add(info3);
 
+            FilterInfo info1 = new FilterInfo();
+            info1.setFilterId(1);
+            info1.setFilterName("灰色");
+            info1.setVsPath("resource/camera/picture_normal.vs");
+            info1.setFsPath("resource/camera/picture_filter_gray.fs");
+            info1.setShowSeekbar(false);
+            filterInfos.add(info1);
+
+            FilterInfo info2 = new FilterInfo();
+            info2.setFilterId(1);
+            info2.setFilterName("美白");
+            info2.setVsPath("resource/camera/picture_normal.vs");
+            info2.setFsPath("resource/camera/picture_filter_skinwhile_v2.fs");
+            info2.setShowSeekbar(true);
+            info2.setSeekbarHalf(true);
+            info2.setCountSeekBar(2);
+            info2.setInfo("分别调节亮度,对比度");
+            filterInfos.add(info2);
+
+
+            FilterInfo info3 = new FilterInfo();
+            info3.setFilterId(3);
+            info3.setFilterName("自定义");
+            info3.setVsPath("resource/camera/picture_normal.vs");
+            info3.setFsPath("resource/camera/picture_filter_customer.fs");
+            info3.setShowSeekbar(true);
+            info3.setCountSeekBar(4);
+            info3.setInfo("分别调节RGBA");
+            filterInfos.add(info3);
+        }
         return filterInfos;
     }
 }

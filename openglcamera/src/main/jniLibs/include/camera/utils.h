@@ -25,16 +25,21 @@ float getTime();
 unsigned char* decodeBmp(unsigned char* bmpFileData,int &width, int & height);
 
 //创建纹理对象，返回是纹理标识符，参数：像素数据起始位置，最后一个是Rgb 还是RGBA
-GLuint createTexture2D(unsigned char* piexlData,int width,int height,GLenum type);
+GLuint createTexture2D( char* piexlData,int width,int height,GLenum type);
 
 //封装bmp 位图创建纹理对象
 GLuint crateTexture2dFromBmp(const char* bmpPath);
+
+//通过ndk bitmap 获取像素 来创建纹理
+//如果opengl需要文字纹理，可以让java 通过写文字（字体可以定义）来创建bitmap 提供纹理
+GLuint createTexture2dFromBitmap(JNIEnv *env, jobject bitmap);
 
 //封装
 GLuint createBufferObj(GLenum bufferType,GLsizeiptr size,GLenum usage, void *data);
 
 GLuint createProcedureTexture(int size);
 
+float checkData(float data);
 
 
 

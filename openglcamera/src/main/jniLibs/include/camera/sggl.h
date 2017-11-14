@@ -6,6 +6,7 @@
 #include <jni.h>
 #include "android/asset_manager.h"
 #include "android/asset_manager_jni.h"
+#include "android/bitmap.h"
 #include "GLES2/gl2.h"
 #include "GLES2/gl2ext.h"
 #include "EGL/egl.h"

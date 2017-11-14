@@ -1,11 +1,17 @@
 package sen.com.openglcamera.activity;
 
+import android.Manifest;
+import android.content.Intent;
 import android.content.pm.ActivityInfo;
+import android.content.pm.PackageManager;
 import android.hardware.Camera;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.provider.Settings;
+import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -20,6 +26,7 @@ import sen.com.openglcamera.bean.CurrentCameInfo;
 import sen.com.openglcamera.camera.CameraOldVersion;
 import sen.com.openglcamera.fragment.CameraInfoFragmentV2;
 import sen.com.openglcamera.natives.CameraSGLNative;
+import sen.com.openglcamera.utils.PermissionsUitls;
 import sen.com.openglcamera.view.CameraButtonView;
 import sen.com.openglcamera.view.CameraSGLSurfaceView;
 
@@ -32,6 +39,11 @@ public class PictureVideoActivity extends AppCompatActivity implements View.OnCl
     private CameraButtonView cameraButtonView;
     private final String LTag = "sen_";
     private View rootView;
+    String[] mPermissions = {Manifest.permission.CAMERA,Manifest.permission.WRITE_EXTERNAL_STORAGE};
+    private static final int REQUEST_CAMERA_WRITE_CODE = 2;
+    private static final int APP_SETTINGS_CODE = 0x002;
+    private int requestPermissions;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -58,6 +70,7 @@ public class PictureVideoActivity extends AppCompatActivity implements View.OnCl
             mSGlSurfaceView.init(mCamera);
             cameraButtonView = (CameraButtonView) findViewById(takePicture);
             cameraButtonView.setCameraInstence(mCamera);
+            cameraButtonView.setOnClickListener(this);
         }
         RadioButton recoderPicture = (RadioButton) findViewById(R.id.recoderPicture);
         RadioButton recoderVideo = (RadioButton) findViewById(R.id.recoderVideo);
@@ -83,10 +96,16 @@ public class PictureVideoActivity extends AppCompatActivity implements View.OnCl
     @Override
     protected void onResume() {
         super.onResume();
-
-        if (mCamera != null) {
-            mCamera.startPreview();
+        if(PermissionsUitls.hasPermissions(this,mPermissions)){
+            if (mCamera != null) {
+                mCamera.startPreview();
+            }
+        }else{
+            ActivityCompat.requestPermissions(PictureVideoActivity.this,
+                    mPermissions,
+                    REQUEST_CAMERA_WRITE_CODE);
         }
+
     }
 
     @Override
@@ -110,20 +129,21 @@ public class PictureVideoActivity extends AppCompatActivity implements View.OnCl
         super.onDestroy();
 
     }
-    //点击屏幕对焦
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() ==MotionEvent.ACTION_DOWN){
-            if (mCamera!=null){
-                mCamera.requestCameraFocus();
-            }
-        }
-        return super.onTouchEvent(event);
-    }
+
 
     @Override
     public void onClick(View v) {
-
+       switch (v.getId()){
+           case R.id.takePicture:
+               if (PermissionsUitls.hasPermissions(this, mPermissions)) {
+                   cameraButtonView.handleClick();
+               } else {
+                   ActivityCompat.requestPermissions(PictureVideoActivity.this,
+                           mPermissions,
+                           REQUEST_CAMERA_WRITE_CODE);
+               }
+            break;
+       }
 
     }
 
@@ -146,6 +166,68 @@ public class PictureVideoActivity extends AppCompatActivity implements View.OnCl
             case R.id.recoderPicture:
                 cameraButtonView.setChangeStuats(CameraButtonView.MODE_PICTRUE);
                 break;
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (REQUEST_CAMERA_WRITE_CODE == requestCode) {
+            if (grantResults.length > 1  && grantResults[0] == PackageManager.PERMISSION_GRANTED
+                    && grantResults[1] == PackageManager.PERMISSION_GRANTED) {
+                //保证camera 和写入权限都有，这种情况下肯定camera 有的
+               // cameraButtonView.handleClick();
+            } else {
+                requestPermissions++;
+                if (requestPermissions >= 2) {
+                    //被拒两次后就去设置，这种情况有可能是禁止后不再询问
+                    Snackbar.make(rootView, "请设置Camera,存储权限",
+                            Snackbar.LENGTH_INDEFINITE)
+                            .setAction("设置", new View.OnClickListener() {
+                                @Override
+                                public void onClick(View view) {
+                                    startActivityForResult(
+                                            new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                                                    .setData(Uri.fromParts("package", getPackageName(), null)),
+                                            APP_SETTINGS_CODE);
+                                }
+                            })
+                            .show();
+                } else {
+                    //再次尝试申请一次
+                    ActivityCompat.requestPermissions(PictureVideoActivity.this,
+                            mPermissions,
+                            REQUEST_CAMERA_WRITE_CODE);
+
+                }
+            }
+        }
+    }
+
+
+
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == APP_SETTINGS_CODE) {
+            //当去设置camera camera 有可能被取消了
+            if (PermissionsUitls.hasPermissions(this, mPermissions)) {
+
+            } else {
+                Snackbar.make(rootView, "请设置必要权限",
+                        Snackbar.LENGTH_INDEFINITE)
+                        .setAction("设置", new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                startActivityForResult(
+                                        new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                                                .setData(Uri.fromParts("package", getPackageName(), null)),
+                                        APP_SETTINGS_CODE);
+                            }
+                        })
+                        .show();
+            }
         }
     }
 }

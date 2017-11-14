@@ -22,7 +22,6 @@ float checkFloat(float tempColorR){
 void main(){
      vec4 colorBase = texture2D(U_Texture, V_textcoord.xy);
 
-     if((FileterZoom.z==1.0 && V_poistion.y>=FileterZoom.y)||(FileterZoom.z==0.0 &&V_poistion.x<=FileterZoom.x)){
             //增加一些滤镜效果
          //美白
          float lightRatio = U_MultipleFilter.x; //亮度 取第一个数作为亮度
@@ -57,7 +56,5 @@ void main(){
            colorG = checkFloat(tempColorG);
            colorB = checkFloat(tempColorB);
            gl_FragColor = vec4(colorR, colorG, colorB, colorA);
-          }else{
-             gl_FragColor = colorBase;
-          }
+
 }

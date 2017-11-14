@@ -161,7 +161,7 @@ void SShader::setUiformVec4(const char *name, float x, float y, float z, float w
 }
 
 
-void SShader::setTexture(char * name,GLuint texture){
+void SShader::setTexture(const char * name,GLuint texture){
     auto iterators = uniformTextures.find(name);
     if (iterators ==uniformTextures.end()){
         //找不到就创建

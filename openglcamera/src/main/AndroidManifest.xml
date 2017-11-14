@@ -30,7 +30,9 @@
             android:screenOrientation="portrait"
             android:launchMode="singleTop"/>
 
-
+        <activity android:name=".activity.PictureHandleActivity"
+            android:screenOrientation="portrait"
+            android:launchMode="singleTop"/>
     </application>
 
 </manifest>
