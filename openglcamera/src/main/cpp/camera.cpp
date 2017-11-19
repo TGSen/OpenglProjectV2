@@ -271,4 +271,8 @@ void Camera::changeFileterZoom(float zoom){
 
 }
 
+void Camera::changeBgColor(glm::vec4 bgcolor){
+    mBgColor = bgcolor;
+}
+
 

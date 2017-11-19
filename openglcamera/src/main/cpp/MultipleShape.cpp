@@ -15,14 +15,18 @@ MultipleShape::~MultipleShape(){
 //初始化矩阵
 void MultipleShape::initMVP( float width,float height,glm::vec3 carmeaPos){
     LOGE("MultipleShapeV::initMVP");
-//    mViewMatrix = glm::lookAt(carmeaPos,glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,1.0f));
-//    mProjectionMatrix= glm::perspective(60.0f,width/height,0.1f,100.0f);
-    mModelMatrix = glm::rotate(glm::mat4(1.0f),90.0f,glm::vec3(0.0f,0.0f,1.0f));
-    mProjectionMatrix =glm::ortho(-1.0f, 1.0f, - height / width,  height / width, 5.0f, 7.0f);
-    mViewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 6.0f),
-                       glm::vec3(0.0f, 0.0f, 0.0f),
-                       glm::vec3(0.0f, 1.0f, 0.0f));
+    mViewMatrix = glm::lookAt(carmeaPos,glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
+    mModelMatrix = glm::mat4(1.0f);
+   mModelMatrix = glm::rotate(glm::mat4(1.0f),90.0f,glm::vec3(0.0f,0.0f,1.0f));
+    float ratio= width > height ? (float)width / height : (float)height / width;
+//    mProjectionMatrix= glm::perspective(60.0f,ratio,0.1f,100.0f);
+    if (width > height) {
+        // 横屏
+        mProjectionMatrix =    glm::ortho(  -ratio, ratio, -1.0f, 1.0f,  1.0f, 10.0f);
 
+    } else {
+        mProjectionMatrix =  glm::ortho(  -1.0f, 1.0f, -ratio, ratio, 1.0f, 10.0f);
+    }
 }
 //初始化顶点 ,假如多边形为200 为圆形
 void MultipleShape::initShapeData(float x,float y,float z,int count, float size){

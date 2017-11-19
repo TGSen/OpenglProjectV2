@@ -21,6 +21,16 @@ void NormalShape::initMVP( float width,float height,glm::vec3 carmeaPos){
     mProjectionMatrix =glm::mat4(1.0f);
     mViewMatrix =glm::mat4(1.0f);
     mModelMatrix =glm::mat4(1.0f);
+   // glm::ortho(-1, radio, -1, 1, 4, 10);
+//    glm::frustum(-radio, radio, -1.0f, 1.0f, 4.0f, 10.0f);
+    // 根据屏幕方向设置投影矩阵
+//    float ratio= width > height ? (float)width / height : (float)height / width;
+//    if (width > height) {
+//        // 横屏
+//        mProjectionMatrix= glm::ortho(  -ratio, ratio, -1.0f, 1.0f, 0.0f, 5.0f);
+//    } else {
+//        mProjectionMatrix= glm::ortho(  -1.0f, 1.0f, -ratio, ratio, 0.0f, 5.0f);
+//    }
 }
 //初始化顶点 ,normal 是4个顶点，
 void NormalShape::initShapeData(float x,float y,float z,int count, float shapeSize){

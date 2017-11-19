@@ -78,7 +78,8 @@ public class ShapeFragment extends BaseFragment implements CompoundButton.OnChec
         RadioButton btnNormal = (RadioButton) view.findViewById(R.id.btnNormal);
         RadioButton btnCircle = (RadioButton) view.findViewById(R.id.btnCircle);
         RadioButton btnMultiple = (RadioButton) view.findViewById(R.id.btnMultiple);
-
+//        RadioGroup radiogroud_bg = view.findViewById(R.id.radiogroud_bg);
+//        radiogroud_bg.setVisibility(View.GONE);
         btnBlack.setOnCheckedChangeListener(this);
         btnWhile.setOnCheckedChangeListener(this);
         btnNormal.setOnCheckedChangeListener(this);
@@ -93,7 +94,7 @@ public class ShapeFragment extends BaseFragment implements CompoundButton.OnChec
         seekBarSize.setOnSeekBarChangeListener(this);
         seekBarSize.setMax(100);
         seekBarCount.setMax(50);
-        btnBlack.setChecked(true);
+        btnWhile.setChecked(true);
         btnNormal.setChecked(true);
     }
 

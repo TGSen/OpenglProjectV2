@@ -177,17 +177,18 @@ void Picture::changeVSFS(const char* vspath, const char*fspath){
 }
 
 bool Picture::changeShape(int shape, int count) {
-    if (!isInitFinish) {
-        LOGE("changeShape.....last not finish");
-        return false;
-    }
     if (currentShap != shape) {
+        if (!isInitFinish) {
+            LOGE("changeShape.....last not finish");
+            return false;
+        }
         LOGE("changeShape.....ing");
         currentShap = (ShapeType) shape;
         mMultipleCount = count;
         isChangeShape = true;
         return true;
     }
+    return false;
 
 }
 

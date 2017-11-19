@@ -54,7 +54,8 @@ public:
     bool changeShape(int shape, int count);
     //修改要画的顶点个数
     void changeShapeDrawCount(int count);
-
+    //修改背景
+    void changeBgColor(glm::vec4 bgcolor);
     //修改size
     void changeShapeSize(float size);
     //修改滤镜区域

@@ -35,3 +35,5 @@ void  BaseSences::changeShapeSize(float size) {}
 void  BaseSences::changeShapeDrawCount(int count) {}
 
 void  BaseSences::changeFileterZoom(float temp) {}
+
+jobject BaseSences::getSurfaceTexture() {}

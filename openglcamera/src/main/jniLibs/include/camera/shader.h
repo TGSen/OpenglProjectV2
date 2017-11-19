@@ -7,6 +7,15 @@
 #ifndef OPENGLSTUDYV1_SHADER_H
 #define OPENGLSTUDYV1_SHADER_H
 
+struct UniformTextureCube{
+    GLint mLocation;
+    GLuint mTexture;
+    UniformTextureCube(){
+        mLocation =-1;
+        mTexture = 0;
+    }
+};
+
 //贴图结构体
 struct UniformTexture{
     GLint mLocation;
@@ -31,6 +40,7 @@ public:
 //    UniformTexture uniformTexture;
     std::map<std::string,UniformTexture *> uniformTextures;
     std::map<std::string,UniformVec4 *> uniformVec4s;
+    std::map<std::string,UniformTextureCube *> uniformTexCubes;
     GLint positionLocation, colorLocation, texcoordLocation, normalLocation;
     GLint projectionMatrixLocation, modelMatrixLocation, viewMatrixLocation;
 public:
@@ -41,6 +51,8 @@ public:
     void setTexture(const char* name , const char* imagePath);
     //设置贴图，通过opengl 程序的贴图
     void setTexture(const char * name,GLuint texture);
+    //设置texturecude 贴图
+    GLuint setTextureCube(const char * name,GLuint texture);
     //设置UniformVec4
     void setUiformVec4(const char* name , float x,float y, float z,float w);
 

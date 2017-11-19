@@ -2,21 +2,17 @@
  * 
  * Author : 唐家森
  * Version: 1.0
- * On     : 2017/11/13 18:05
- * Des    : 
+ * On     : 2017/11/13 13:59
+ * Des    : 每个场景都可以画 很多东西，目前只画picture
  */
 //
-
-#ifndef OPENGLPROJECTV2_BASESENCES_H
-#define OPENGLPROJECTV2_BASESENCES_H
-
+#pragma once
 #include "sggl.h"
-class BaseSences {
+#include "BaseSences.h"
+class CameraSence:public BaseSences{
 public:
-    BaseSences();
-    virtual ~BaseSences();
-
-
+    CameraSence();
+    virtual ~CameraSence();
     //增加一个方法，这个方法在onSurfaceCreated 之前调用
     virtual void onBeforeSurfaceCreated(JNIEnv *env, jobject bitmapObj);
 
@@ -41,7 +37,6 @@ public:
     virtual void changeShapeDrawCount(int count);
 
     virtual void changeFileterZoom(float temp);
-
     virtual jobject getSurfaceTexture();
 };
-#endif //OPENGLPROJECTV2_BASESENCES_H
+

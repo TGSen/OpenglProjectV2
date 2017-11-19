@@ -10,7 +10,7 @@
 #include <camera/PictureSence.h>
 #include <camera/utils.h>
 #include "camera/sggl.h"
-#include "camera/CameraSGLNative.h"
+#include "camera/CameraSence.h"
 #include "camera/BaseGLNative.h"
 
 
@@ -62,8 +62,9 @@ Java_sen_com_openglcamera_natives_BaseGLNative_onBeforeSurfaceCreated(JNIEnv *en
 
 void JNICALL Java_sen_com_openglcamera_natives_BaseGLNative_initAssetManager
         (JNIEnv *env, jclass clzss, jobject assetManager) {
-    mBaseSences = new PictureSence;
-    // baseGLNative->onBeforeSurfaceCreated(env, nullptr);
+    mBaseSences = new CameraSence;
+    //camera 需要调用的
+    mBaseSences->onBeforeSurfaceCreated(env, nullptr);
     aAssetManager = AAssetManager_fromJava(env, assetManager);
     LOGE("BaseGLNative_initAssetManager");
 };
@@ -202,3 +203,15 @@ Java_sen_com_openglcamera_natives_BaseGLNative_onChangeShape(JNIEnv *env, jclass
             mBaseSences->changeFileterZoom(temp);
         }
     }
+
+JNIEXPORT jobject JNICALL Java_sen_com_openglcamera_natives_CameraSGLNative_getSurfaceTexture
+        (JNIEnv *env, jclass jcla){
+    LOGE("mBaseSences >getSurfaceTexture()");
+    if(mBaseSences->getSurfaceTexture()){
+        LOGE("mBaseSences >getSurfaceTexture()");
+    }else{
+        LOGE("mBaseSences >getSurfaceTexture null()");
+    }
+    return mBaseSences->getSurfaceTexture();
+
+}

@@ -125,6 +125,14 @@ JNIEXPORT void JNICALL
 Java_sen_com_openglcamera_natives_BaseGLNative_onChangeFileterZoom(JNIEnv *, jclass,
                                                                    jint i, jint);
 
+/*
+ * Class:     sen_com_openglcamera_natives_CameraSGLNative
+ * Method:    getSurfaceTexture
+ * Signature: ()V
+ */
+JNIEXPORT jobject JNICALL Java_sen_com_openglcamera_natives_CameraSGLNative_getSurfaceTexture
+        (JNIEnv *, jclass);
+
 #ifdef __cplusplus
 }
 #endif

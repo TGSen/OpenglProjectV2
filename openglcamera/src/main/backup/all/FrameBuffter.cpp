@@ -6,7 +6,7 @@
  * Des    : 
  */
 //
-#include "camera/FrameBuffter.h"
+#include "camera/FrameBuffer.h"
 FrameBuffter::FrameBuffter() {
 
 }

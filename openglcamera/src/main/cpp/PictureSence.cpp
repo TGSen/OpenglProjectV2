@@ -8,36 +8,52 @@
 //
 #include "camera/PictureSence.h"
 #include "camera/Picture.h"
+#include "camera/Model3D.h"
 
-glm::vec3 carmeaPoss(0.0f, 0.0f, 2.6f);
+//glm::vec3 carmeaPoss(0.0f, 0.0f, 6.0f);
+glm::vec3 carmeaModelPos(4.0f, 3.0f, 4.0f);
 Picture *mPicture;
+Model *model;
+glm::mat4 mModelViewMatrix;
+glm::mat4 mModelProjectionMatrix;
 
 PictureSence::PictureSence() {}
 
 PictureSence::~PictureSence() {}
 
 void PictureSence::onBeforeSurfaceCreated(JNIEnv *env, jobject bitmapObj) {
-    mPicture = new Picture;
-    mPicture->textureId = createTexture2dFromBitmap(env, bitmapObj);
+   // mPicture = new Picture;
+    model = new Model;
+
+   // mPicture->textureId = createTexture2dFromBitmap(env, bitmapObj);
+
 }
 
 void PictureSence::onSurfaceCreated() {
-    LOGE("  mPicture-> init ");
-    mPicture->initVertex(0.0f, 0.0f, 0.0f, 4);
+  //  mPicture->initVertex(0.0f, 0.0f, 0.0f, 4);
+    model->initModel("resource/model/Cube.obj");
+    model->setModelPosition(0.0f,0.0f,0.0f);
+    model->mShader->init("resource/model/shader/rgbcube.vs","resource/model/shader/rgbcube.fs");
+    mModelViewMatrix = glm::lookAt(carmeaModelPos,glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
 }
 
 void PictureSence::onSurfaceChanged(float width, float height) {
-    glViewport(0, 0, width, height);
-    mPicture->initMVP(width, height, carmeaPoss);
+//    glViewport(0, 0, width, height);
+    //mPicture->initMVP(width, height, carmeaPoss);
+    mModelProjectionMatrix = glm::perspective(50.0f,width/height,0.1f,100.0f);
 }
 
 //绘制场景
 void PictureSence::onDrawFrame() {
     float time = getTime();
-    glClearColor(mPicture->mBgColor.r, mPicture->mBgColor.g, mPicture->mBgColor.b,
-                 mPicture->mBgColor.a);
+//    glClearColor(mPicture->mBgColor.r, mPicture->mBgColor.g, mPicture->mBgColor.b,
+//                 mPicture->mBgColor.a);
+    glClearColor(0.0f,0.0f,0.0f,0.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    mPicture->draw();
+   // mPicture->draw();
+    LOGE("sen ------");
+    model->drawModel(mModelViewMatrix,mModelProjectionMatrix,carmeaModelPos.x,carmeaModelPos.y,carmeaModelPos.z);
+    LOGE("sen ------1");
     //良好习惯，当绘制完毕后，将程序置为0 号程序
     glUseProgram(0);
 }
@@ -48,30 +64,45 @@ void PictureSence::releaseNative(JNIEnv *env) {
 }
 
 void PictureSence::changeFilter(jint r, jint g, jint b, jint a) {
-   // mPicture->changeFilter(r,g,b,a);
+    if (mPicture)
+        mPicture->changeFilter(r, g, b, a);
 }
 
 void PictureSence::changeVSFS(const char *vs, const char *fs) {
-    mPicture->changeVSFS(vs,fs);
+    if (mPicture)
+        mPicture->changeVSFS(vs, fs);
+
 }
 
 void PictureSence::changeShape(int cameraShape, int count) {
-   // mPicture->changeShape(cameraShape,count);
+    if (mPicture) {
+        mPicture->changeShape(cameraShape, count);
+    }
+
 }
 
 void PictureSence::changeBgColor(glm::vec4 bgcolor) {
-   // mPicture->changeBgColor( bgcolor);
+    if (mPicture) {
+        mPicture->changeBgColor(bgcolor);
+    }
 }
 
 void PictureSence::changeShapeSize(float size) {
-  //  mPicture->changeShapeSize(size);
+    if (mPicture) {
+        mPicture->changeShapeSize(size);
+    }
+    //
 }
 
 void PictureSence::changeShapeDrawCount(int count) {
-    //mPicture->changeShapeDrawCount(count);
+    if (mPicture) {
+        mPicture->changeShapeDrawCount(count);
+    }
 }
 
 void PictureSence::changeFileterZoom(float temp) {
-  //  changeFileterZoom(temp);
+    if (mPicture) {
+        mPicture->changeFileterZoom(temp);
+    }
 }
 
