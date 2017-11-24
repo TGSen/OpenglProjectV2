@@ -128,7 +128,7 @@ public class FilterFragment extends BaseFragment implements CompoundButton.OnChe
                 break;
             case R.id.btnSkinWhile:
                 currentIndex = 2;
-                setSeekBarView(true,true,false);
+                setSeekBarView(false,false,false);
                 CameraSGLNative.onChangeVSFS(filterList.get(2).getVsPath(),filterList.get(2).getFsPath());
                 break;
             case R.id.btnCustomer:

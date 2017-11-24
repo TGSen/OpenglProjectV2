@@ -27,6 +27,7 @@ unsigned char* decodeBmp(unsigned char* bmpFileData,int &width, int & height);
 //创建纹理对象，返回是纹理标识符，参数：像素数据起始位置，最后一个是Rgb 还是RGBA
 GLuint createTexture2D( char* piexlData,int width,int height,GLenum type);
 
+void createTexture2DByData( GLuint textureId,unsigned char *piexlData, int width, int height, GLenum type);
 //封装bmp 位图创建纹理对象
 GLuint crateTexture2dFromBmp(const char* bmpPath);
 

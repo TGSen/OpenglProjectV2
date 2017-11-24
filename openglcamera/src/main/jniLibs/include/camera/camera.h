@@ -36,12 +36,14 @@ public:
     char* fsPath;
     //初始化shader 顶点
     void initVertex(float x,float y,float z, int count);
+    //初始纹理id
+    void initTextureId();
     //初始化形状数据顶点,和形状大小
     void initShapeData(float x, float y, float z, int count, float shapeSize);
     //初始化矩阵
     void initMVP( float width,float height,glm::vec3 carmeaPos);
     //画
-    void draw();
+    void draw(const void * data,int width,int height);
     //Java 中SurfaceTexture
     jobject javaSurfaceTextureObj;
     jobject getSurfaceTextureObject();

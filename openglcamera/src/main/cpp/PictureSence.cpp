@@ -44,7 +44,7 @@ void PictureSence::onSurfaceChanged(float width, float height) {
 }
 
 //绘制场景
-void PictureSence::onDrawFrame() {
+void PictureSence::onDrawFrame(unsigned char* data) {
     float time = getTime();
 //    glClearColor(mPicture->mBgColor.r, mPicture->mBgColor.g, mPicture->mBgColor.b,
 //                 mPicture->mBgColor.a);

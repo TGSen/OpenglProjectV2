@@ -2,6 +2,15 @@
 // Created by Administrator on 2017/10/20.
 //
 
+/**
+ *
+ * Author : 唐家森
+ * Version: 1.0
+ * On     : 2017/10/20
+ * Des    : 修改版本，由于要升级opengl3.0 GL_TEXTURE_EXTERNAL_OES 在3.0里没有
+ *           修改成GL_TEXTURE_2D
+ */
+
 #include <camera/sggl.h>
 #include "camera/camera.h"
 #include <camera/NormalShape.h>
@@ -51,6 +60,20 @@ jobject Camera::getSurfaceTextureObject() {
         return NULL;
     }
     return javaSurfaceTextureObj;
+}
+void Camera::initTextureId(){
+    glGenTextures(1, &textureId);
+    glBindTexture(GL_TEXTURE_2D, textureId);
+    //解析来自http://blog.csdn.net/junzia/article/details/53861519
+    //设置环绕方向S，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    //设置环绕方向T，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    //设置缩小过滤为使用纹理中坐标最接近的一个像素的颜色作为需要绘制的像素颜色
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //设置放大过滤为使用纹理中坐标最接近的若干个颜色，通过加权平均算法得到需要绘制的像素颜色
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, 0);
 }
 
 void Camera::initVertex(float x, float y, float z, int count) {
@@ -131,16 +154,30 @@ void Camera::initShapeData(float x, float y, float z, int count, float shapSize)
 
 void Camera::createSurfaceTextureObject(JNIEnv *env) {
     glGenTextures(1, &textureId);
-    glBindTexture(GL_TEXTURE_EXTERNAL_OES, textureId);
+
+//    glBindTexture(GL_TEXTURE_EXTERNAL_OES, textureId);
+//    //解析来自http://blog.csdn.net/junzia/article/details/53861519
+//    //设置环绕方向S，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
+//    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//    //设置环绕方向T，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
+//    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//    //设置缩小过滤为使用纹理中坐标最接近的一个像素的颜色作为需要绘制的像素颜色
+//    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+//    //设置放大过滤为使用纹理中坐标最接近的若干个颜色，通过加权平均算法得到需要绘制的像素颜色
+//    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+
+    glBindTexture(GL_TEXTURE_2D, textureId);
     //解析来自http://blog.csdn.net/junzia/article/details/53861519
     //设置环绕方向S，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
-    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     //设置环绕方向T，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
-    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     //设置缩小过滤为使用纹理中坐标最接近的一个像素的颜色作为需要绘制的像素颜色
-    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     //设置放大过滤为使用纹理中坐标最接近的若干个颜色，通过加权平均算法得到需要绘制的像素颜色
-    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, 0);
     //创建 java SurfaceTexture 并绑定textureId
     const char *stClassPath = "android/graphics/SurfaceTexture";
     const jclass surfaceTextureClass = env->FindClass(stClassPath);
@@ -166,7 +203,7 @@ void Camera::initMVP(float width, float height, glm::vec3 carmeaPos) {
     cameraShape->initMVP(width, height, carmeaPos);
 
 }
-void Camera::draw() {
+void Camera::draw(const void * data,int width,int height) {
     //画之前看看有没有更改了滤镜形状
     if (isChangeShape) {
         LOGE("camera->mShapSize %f",mShapSize);
@@ -202,7 +239,6 @@ void Camera::draw() {
     mShader->bind(glm::value_ptr(cameraShape->mModelMatrix),
                   glm::value_ptr(cameraShape->mViewMatrix),
                   glm::value_ptr(cameraShape->mProjectionMatrix));
-
     glDrawArrays(GL_TRIANGLE_FAN, 0, cameraShape->getDrawCount());
     cameraShape->vertexBuffer->unBind();
 }
@@ -229,6 +265,7 @@ void Camera::changeVSFS(const char* vspath, const char*fspath){
 }
 
 bool Camera::changeShape(int shape, int count) {
+    LOGE("changeShape.....shape");
     if (!isInitFinish) {
         LOGE("changeShape.....last not finish");
         return false;
@@ -240,7 +277,7 @@ bool Camera::changeShape(int shape, int count) {
         isChangeShape = true;
         return true;
     }
-
+    return false;
 }
 
 void Camera::changeShapeDrawCount(int count){

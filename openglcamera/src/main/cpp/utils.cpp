@@ -80,6 +80,20 @@ unsigned char *decodeBmp(unsigned char *bmpFileData, int &width, int &height) {
     return nullptr;
 }
 
+void createTexture2DByData(const char *name, unsigned char *piexlData, int width, int height, GLenum type) {
+    //创建一个纹理对象
+    GLuint textureId;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textureId);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, type, width, height, 0, type, GL_UNSIGNED_BYTE, piexlData);
+    //上面已经生成了texture,这里置为0，避免被其他程序修改，良好习惯
+    //glUniform1i(glGetUniformLocation())
+}
+
 
 GLuint createTexture2D(unsigned char *piexlData, int width, int height, GLenum type) {
     GLuint textureId;

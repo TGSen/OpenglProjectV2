@@ -14,7 +14,7 @@
 #include "camera/BaseGLNative.h"
 
 
-BaseSences *mBaseSences;
+CameraSence *mBaseSences;
 AAssetManager *aAssetManager;
 
 BaseGLNative::BaseGLNative() {
@@ -56,14 +56,12 @@ void BaseGLNative::changeFileterZoom(float temp) {}
 void JNICALL
 Java_sen_com_openglcamera_natives_BaseGLNative_onBeforeSurfaceCreated(JNIEnv *env, jclass clzss,
                                                                       jobject jobj) {
-    if (jobj)
         mBaseSences->onBeforeSurfaceCreated(env, jobj);
 }
 
 void JNICALL Java_sen_com_openglcamera_natives_BaseGLNative_initAssetManager
         (JNIEnv *env, jclass clzss, jobject assetManager) {
     mBaseSences = new CameraSence;
-    //camera 需要调用的
     mBaseSences->onBeforeSurfaceCreated(env, nullptr);
     aAssetManager = AAssetManager_fromJava(env, assetManager);
     LOGE("BaseGLNative_initAssetManager");
@@ -94,7 +92,6 @@ unsigned char *loadFile(const char *path, int &fileSize) {
 
 JNIEXPORT void JNICALL Java_sen_com_openglcamera_natives_BaseGLNative_onSurfaceCreated
         (JNIEnv *env, jclass clzss) {
-
     mBaseSences->onSurfaceCreated();
 };
 
@@ -106,8 +103,16 @@ JNIEXPORT void JNICALL Java_sen_com_openglcamera_natives_BaseGLNative_onSurfaceC
 };
 
 JNIEXPORT void JNICALL Java_sen_com_openglcamera_natives_BaseGLNative_onDrawFrame
-        (JNIEnv *env, jclass clzss) {
-    mBaseSences->onDrawFrame();
+        (JNIEnv *env, jclass clzss,jbyteArray data,jint width,jint height) {
+    if(data){
+        LOGE("BaseGLNative_onDrawFrame1");
+        jbyte *cameraData = env->GetByteArrayElements(data, NULL);
+        mBaseSences->onDrawFrame(cameraData,width,height);
+        env->ReleaseByteArrayElements(data,cameraData,0);
+    }else{
+        LOGE("BaseGLNative_onDrawFrame");
+    }
+
 
 };
 
@@ -162,7 +167,6 @@ Java_sen_com_openglcamera_natives_BaseGLNative_onChangeShape(JNIEnv *env, jclass
         g = checkData(g);
         b = checkData(b);
         a = checkData(a);
-
         mBaseSences->changeBgColor(glm::vec4(r, g, b, a));
     }
 
@@ -206,12 +210,6 @@ Java_sen_com_openglcamera_natives_BaseGLNative_onChangeShape(JNIEnv *env, jclass
 
 JNIEXPORT jobject JNICALL Java_sen_com_openglcamera_natives_CameraSGLNative_getSurfaceTexture
         (JNIEnv *env, jclass jcla){
-    LOGE("mBaseSences >getSurfaceTexture()");
-    if(mBaseSences->getSurfaceTexture()){
-        LOGE("mBaseSences >getSurfaceTexture()");
-    }else{
-        LOGE("mBaseSences >getSurfaceTexture null()");
-    }
     return mBaseSences->getSurfaceTexture();
 
 }

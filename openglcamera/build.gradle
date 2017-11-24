@@ -14,13 +14,8 @@ android {
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         externalNativeBuild {
             cmake {
-                cppFlags "-std=c++11 -fno-rtti -fno-exceptions"
-                arguments '-DANDROID_TOOLCHAIN=clang',
-                        '-DANDROID_PLATFORM=android-19',
-                        '-DANDROID_STL=gnustl_static',
-                        '-DANDROID_ARM_NEON=TRUE',
-                        '-DANDROID_CPP_FEATURES=exceptions rtti'
-                abiFilters 'armeabi'
+                cppFlags "-std=c++11 -frtti -fexceptions"
+                abiFilters 'armeabi-v7a'
             }
         }
     }

@@ -20,7 +20,7 @@ public:
 
     virtual void onSurfaceChanged(float width, float height);
 
-    virtual void onDrawFrame();
+    virtual void onDrawFrame(const void* data,int width,int height);
 
     virtual void releaseNative(JNIEnv *env);
 

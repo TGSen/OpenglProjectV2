@@ -16,7 +16,7 @@ void BaseSences::onBeforeSurfaceCreated(JNIEnv *env, jobject bitmapObj) {};
 
 void BaseSences::onSurfaceChanged(float width, float height) {}
 
-void BaseSences::onDrawFrame() {}
+void BaseSences::onDrawFrame(const void * data) {}
 
 void BaseSences::releaseNative(JNIEnv *env) {
 

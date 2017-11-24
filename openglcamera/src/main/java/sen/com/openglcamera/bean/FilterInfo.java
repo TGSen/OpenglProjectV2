@@ -121,12 +121,12 @@ public class FilterInfo {
             filterInfos.add(info1);
 
             FilterInfo info2 = new FilterInfo();
-            info2.setFilterId(1);
+            info2.setFilterId(2);
             info2.setFilterName("美白");
             info2.setVsPath("resource/camera/camera_normal.vs");
             info2.setFsPath("resource/camera/camera_filter_skinwhile_v2.fs");
-            info2.setShowSeekbar(true);
-            info2.setSeekbarHalf(true);
+            info2.setShowSeekbar(false);
+            info2.setSeekbarHalf(false);
             info2.setCountSeekBar(2);
             info2.setInfo("分别调节亮度,对比度");
             filterInfos.add(info2);
@@ -164,8 +164,8 @@ public class FilterInfo {
             info2.setFilterName("美白");
             info2.setVsPath("resource/camera/picture_normal.vs");
             info2.setFsPath("resource/camera/picture_filter_skinwhile_v2.fs");
-            info2.setShowSeekbar(true);
-            info2.setSeekbarHalf(true);
+            info2.setShowSeekbar(false);
+            info2.setSeekbarHalf(false);
             info2.setCountSeekBar(2);
             info2.setInfo("分别调节亮度,对比度");
             filterInfos.add(info2);

@@ -45,7 +45,7 @@ public class BaseGLNative {
 
     public static native void onSurfaceChanged(int width, int height);
     //更新一帧画面
-    public static native void onDrawFrame();
+    public static native void onDrawFrame(byte[] currentData,int width,int height);
 
     //稀放
     public static native void releaseNative();

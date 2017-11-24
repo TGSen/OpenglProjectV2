@@ -3,7 +3,6 @@ package sen.com.openglcamera.renderer;
 import android.graphics.Bitmap;
 import android.opengl.GLSurfaceView;
 import android.os.Environment;
-import android.util.Log;
 
 import java.io.File;
 
@@ -43,7 +42,7 @@ public class PictureRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        PictureSGLNativie.onDrawFrame();
+       // PictureSGLNativie.onDrawFrame(mCamera.getCurrentData());
     }
 
 }

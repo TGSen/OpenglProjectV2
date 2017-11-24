@@ -87,7 +87,7 @@ JNIEXPORT void JNICALL Java_sen_com_openglcamera_natives_BaseGLNative_onSurfaceC
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_sen_com_openglcamera_natives_BaseGLNative_onDrawFrame
-        (JNIEnv *, jclass);
+        (JNIEnv *, jclass,jbyteArray ,jint ,jint );
 
 
 JNIEXPORT void JNICALL

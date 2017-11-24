@@ -61,7 +61,7 @@ void FrameBuffer::finish() {
         }
         glBindFramebuffer(GL_FRAMEBUFFER,mFrameBufferObj);
         //opengl3.0 的方法
-       // glDrawBuffers(count,buffers);
+        glDrawBuffers(count,buffers);
         glBindFramebuffer(GL_FRAMEBUFFER,0);
     }
 }

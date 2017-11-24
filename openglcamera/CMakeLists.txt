@@ -37,9 +37,24 @@ find_library( # Sets the name of the path variable.
                # you want CMake to locate.
                jnigraphics)
 
+  add_library(
+               libopencv_java3
+               SHARED
+               IMPORTED)
+   set_target_properties(
+               libopencv_java3
+               PROPERTIES IMPORTED_LOCATION
+                ${LibDir}/libopencv_java3.so)
+
 #设置编译指令
-set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -Wall")
-set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=c++11 -fno-rtti -fno-exceptions -Wall")
+
+#set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11")
+#判断编译器类型,如果是gcc编译器,则在编译选项中加入c++11支持
+if(CMAKE_COMPILER_IS_GNUCXX)
+    set(CMAKE_CXX_FLAGS "-std=c++11 ${CMAKE_CXX_FLAGS}")
+    message(STATUS "optional:-std=c++11")
+endif(CMAKE_COMPILER_IS_GNUCXX)
+
 #如果当前系统版本过低设置拒绝编译
 if (${ANDROID_PLATFORM_LEVEL} LESS 11)
   message(FATAL_ERROR "OpenGL 2 is not supported before API level 11 (currently using ${ANDROID_PLATFORM_LEVEL}).")
@@ -64,6 +79,7 @@ target_link_libraries( # Specifies the target library.
                        # included in the NDK.
                        ${log-lib}
                        ${jnigraphics-lib}
+                       libopencv_java3
                        ${OPENGL_LIB}
                         android
                         EGL)

@@ -1,7 +1,6 @@
 package sen.com.openglcamera.camera;
 
 import android.app.Activity;
-import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
 import android.util.Log;
@@ -42,6 +41,11 @@ public class CameraOldVersion implements Camera.PreviewCallback {
     private VideoRecoderV2 videoRecoder;
     private byte[] callbackBuffer;
     private SurfaceTexture surfaceTexture;
+    private byte[] currentData;
+
+    public Camera.Size getPreViewSize (){
+        return mCamera.getParameters().getPreviewSize();
+    }
 
     //获取所有CameInfo
     public CameraSettingInfo getCameraSettingInfo(){
@@ -104,8 +108,7 @@ public class CameraOldVersion implements Camera.PreviewCallback {
             mCamera = Camera.open(mCameraId);
             Camera.Parameters parameters = mCamera.getParameters();
             parameters.set("orientation", "portrait");
-            parameters.setPreviewFormat(ImageFormat.NV21); //YUV 预览图像的像素格式
-            parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_PICTURE);
+          //  parameters.setPreviewFormat(ImageFormat.JPEG); //YUV 预览图像的像素格式
             setPreviewOrientation(parameters);
             setPreviewSize( parameters);
             setPictureSize(parameters);
@@ -114,11 +117,12 @@ public class CameraOldVersion implements Camera.PreviewCallback {
                 parameters.setFocusMode(Camera.Parameters.FOCUS_MODE_CONTINUOUS_VIDEO);
             }
             mCamera.setParameters(parameters);
+
             mCamera.setPreviewCallbackWithBuffer(this);
-            //int bitsPerPixel = ImageFormat.getBitsPerPixel(ImageFormat.NV21);
-           // callbackBuffer = new byte[currentCameInfo.getPreWith()*currentCameInfo.getPreHeigth()*bitsPerPixel/8];
-            callbackBuffer = new byte[currentCameInfo.getPreWith()*currentCameInfo.getPreHeigth()*3/2];
+            callbackBuffer = new byte[getPreViewSize ().width*getPreViewSize ().height*3/2];
             mCamera.addCallbackBuffer(callbackBuffer);
+          //  mCamera.addCallbackBuffer(new byte[getPreViewSize ().width*getPreViewSize ().height*3/2]);
+         //   mCamera.addCallbackBuffer(new byte[getPreViewSize ().width*getPreViewSize ().height*3/2]);
         } catch (Exception e) {
             Log.e(LTag,e.getMessage());
             e.printStackTrace();
@@ -273,21 +277,28 @@ public class CameraOldVersion implements Camera.PreviewCallback {
     }
 
     public void stopRecoder(){
-        isRecoder =false;
-        if(videoRecoder!=null){
-            videoRecoder.stopRecoder();
+//        isRecoder =false;
+//        if(videoRecoder!=null){
+//            videoRecoder.stopRecoder();
+//        }
+    }
+
+    public byte[] getCurrentData() {
+        synchronized (CameraOldVersion.class){
+            return currentData;
         }
     }
 
     @Override
     public void onPreviewFrame(byte[] data, Camera camera) {
-
         if(isRecoder && videoRecoder!=null){
 
             videoRecoder.encodeData(data);
         }
-        if(mCamera!=null) {
-            mCamera.addCallbackBuffer(callbackBuffer);
-        }
+
+    }
+
+    public Camera getCameraInstance() {
+        return mCamera;
     }
 }

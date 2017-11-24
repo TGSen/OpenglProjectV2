@@ -50,7 +50,7 @@ public class CameraRendererV2 implements GLSurfaceView.Renderer, SurfaceTexture.
         if (mSurfaceTexture != null &&!CameraSGLNative.isStop) {
             mSurfaceTexture.updateTexImage();
 
-            CameraSGLNative.onDrawFrame();
+           // CameraSGLNative.onDrawFrame(mCamera.getCurrentData());
         }
 
     }
