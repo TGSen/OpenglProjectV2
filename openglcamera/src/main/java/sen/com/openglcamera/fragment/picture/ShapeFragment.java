@@ -11,7 +11,7 @@ import android.widget.SeekBar;
 
 import sen.com.openglcamera.R;
 import sen.com.openglcamera.fragment.BaseFragment;
-import sen.com.openglcamera.natives.PictureSGLNativie;
+import sen.com.openglcamera.natives.BaseGLNative;
 
 /**
  * Author : 唐家森
@@ -46,13 +46,13 @@ public class ShapeFragment extends BaseFragment implements CompoundButton.OnChec
             case R.id.seekBarSize:
                 int size = seekBar.getProgress();
                 //更改形状的长度
-                PictureSGLNativie.onChangeShapeSize(size, seekBar.getMax());
+                BaseGLNative.onChangeShapeSize(size, seekBar.getMax());
                 break;
             case R.id.seekBarCount:
                 int count = seekBar.getProgress();
                 if (count >= 3) {
                     //更改多边形边数
-                    PictureSGLNativie.onChangeShapeCount(count);
+                    BaseGLNative.onChangeShapeCount(count);
                 }
                 break;
         }
@@ -104,22 +104,22 @@ public class ShapeFragment extends BaseFragment implements CompoundButton.OnChec
             return;
         switch (buttonView.getId()) {
             case R.id.btnBlack:
-                PictureSGLNativie.onChangeBgColor(0.0f,0.0f,0.0f,0.0f);
+                BaseGLNative.onChangeBgColor(0.0f,0.0f,0.0f,0.0f);
                 break;
             case R.id.btnWhile:
-                PictureSGLNativie.onChangeBgColor(1.0f,1.0f,1.0f,1.0f);
+                BaseGLNative.onChangeBgColor(1.0f,1.0f,1.0f,1.0f);
                 break;
             case R.id.btnNormal:
                 setSeekBarView(false,false);
-                PictureSGLNativie.onChangeShape(PictureSGLNativie.CameraShape.Normal.getValue(), 4);
+                BaseGLNative.onChangeShape(BaseGLNative.CameraShape.Normal.getValue(), 4);
                 break;
             case R.id.btnCircle:
                 setSeekBarView(false,true);
-                PictureSGLNativie.onChangeShape(PictureSGLNativie.CameraShape.Circle.getValue(), 200);
+                BaseGLNative.onChangeShape(BaseGLNative.CameraShape.Circle.getValue(), 200);
                 break;
             case R.id.btnMultiple:
                 setSeekBarView(true,true);
-                PictureSGLNativie.onChangeShape(PictureSGLNativie.CameraShape.Multiple.getValue(), 4);
+                BaseGLNative.onChangeShape(BaseGLNative.CameraShape.Multiple.getValue(), 4);
                 break;
         }
     }

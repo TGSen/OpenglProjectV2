@@ -11,8 +11,11 @@
 #define OPENGLPROJECTV2_BASESENCES_H
 
 #include "sggl.h"
+#include "camera/EyesTracker.h"
 class BaseSences {
 public:
+    EyesTracker *eyesTracker;
+    bool isNeedEyeTracker;
     BaseSences();
     virtual ~BaseSences();
 
@@ -24,7 +27,7 @@ public:
 
     virtual void onSurfaceChanged(float width, float height);
 
-    virtual void onDrawFrame(const void* data);
+    virtual void onDrawFrame( void * data,int width,int height);
 
     virtual void releaseNative(JNIEnv *env);
 
@@ -43,5 +46,6 @@ public:
     virtual void changeFileterZoom(float temp);
 
     virtual jobject getSurfaceTexture();
+    void  initEyeTracker();
 };
 #endif //OPENGLPROJECTV2_BASESENCES_H

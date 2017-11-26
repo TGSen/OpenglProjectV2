@@ -25,7 +25,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sen.com.openglcamera.R;
-import sen.com.openglcamera.natives.PictureSGLNativie;
+import sen.com.openglcamera.natives.BaseGLNative;
 import sen.com.openglcamera.utils.PermissionsUitls;
 import sen.com.openglcamera.view.PictureSGLSurfaceView;
 
@@ -57,7 +57,7 @@ public class PictureHandleActivity extends AppCompatActivity implements View.OnC
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         //初始化AssetManager
-        PictureSGLNativie.initAssetManager(getAssets());
+        BaseGLNative.initAssetManager(getAssets(),BaseGLNative.NATIVE_SENCE_PICTURE);
         rootView = View.inflate(this, R.layout.activity_picture_opengl, null);
         setContentView(rootView);
 
@@ -193,7 +193,7 @@ public class PictureHandleActivity extends AppCompatActivity implements View.OnC
         if (mHandlerThread != null) {
             mHandlerThread.quit();
         }
-        PictureSGLNativie.releaseNative();
+        BaseGLNative.releaseNative(BaseGLNative.NATIVE_SENCE_PICTURE);
         super.onDestroy();
 
     }

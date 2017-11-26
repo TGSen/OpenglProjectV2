@@ -10,6 +10,7 @@
 #include "sggl.h"
 #include "BaseSences.h"
 class CameraSence:public BaseSences{
+
 public:
     CameraSence();
     virtual ~CameraSence();
@@ -20,7 +21,7 @@ public:
 
     virtual void onSurfaceChanged(float width, float height);
 
-    virtual void onDrawFrame(const void* data,int width,int height);
+    virtual void onDrawFrame( void * data,int width,int height);
 
     virtual void releaseNative(JNIEnv *env);
 
@@ -38,5 +39,6 @@ public:
 
     virtual void changeFileterZoom(float temp);
     virtual jobject getSurfaceTexture();
+    void  initEyeTracker();
 };
 

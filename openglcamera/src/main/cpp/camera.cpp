@@ -97,7 +97,7 @@ void Camera::initVertex(float x, float y, float z, int count) {
     //将上面的操作放到一个形状相关的类里 CameraShape ,这样可以方便拓展
     initShapeData(x, y, z, 4,mShapSize);
     mShader = new SShader;
-    mShader->init("resource/camera/camera_normal.vs", "resource/camera/camera_normal.fs");
+  //  mShader->init("resource/camera/camera_normal.vs", "resource/camera/camera_normal.fs");
 //    mShader->init("Res/camera_filter_rgba.vs", "Res/camera_filter_customer.fs");
     //设置滤镜的分量，请查看camera_back&while.fs ,注意的是如果fs vs 没有这个属性不要设置，避免出现黑屏，或者是清屏颜色
     mShader->setUiformVec4("U_MultipleFilter",1.0f,1.0f,1.0f,1.0f);
@@ -203,7 +203,7 @@ void Camera::initMVP(float width, float height, glm::vec3 carmeaPos) {
     cameraShape->initMVP(width, height, carmeaPos);
 
 }
-void Camera::draw(const void * data,int width,int height) {
+void Camera::draw(int width,int height,vector<Rect2f> faces) {
     //画之前看看有没有更改了滤镜形状
     if (isChangeShape) {
         LOGE("camera->mShapSize %f",mShapSize);
@@ -235,10 +235,29 @@ void Camera::draw(const void * data,int width,int height) {
     //深度测试
     glEnable(GL_DEPTH_TEST);
     glHint(GL_NEAREST_MIPMAP_LINEAR,GL_NICEST);
+    //设置眼睛的位置,现在眼睛是0-width,0-height,由于纹理坐标是0-1，需要转化该范围
+    if(!faces.empty()){
+        LOGE("检测到：%f",faces[0].x/width);
+        mShader->setUiformVec4("U_LeftEyePos", faces[0].x/width,faces[0].y/height,0.0f,0.0f);
+        mShader->setUiformVec4("U_RightEyePos", faces[1].x/width,faces[1].y/height,0.0f,0.0f);
+        //放大系数
+        mShader->setUiformVec4("U_ScaleNum", 5.0f,0.0f,0.0f,0.0f);
+    }else{
+        LOGE("未检测到");
+        mShader->setUiformVec4("U_LeftEyePos", 0.0f,0.0f,0.0f,0.0f);
+        mShader->setUiformVec4("U_RightEyePos",0.0f,0.0f,0.0f,0.0f);
+        //放大系数
+        mShader->setUiformVec4("U_ScaleNum", 5.0f,0.0f,0.0f,0.0f);
+    }
+
     cameraShape->vertexBuffer->bind();
     mShader->bind(glm::value_ptr(cameraShape->mModelMatrix),
                   glm::value_ptr(cameraShape->mViewMatrix),
                   glm::value_ptr(cameraShape->mProjectionMatrix));
+
+
+
+
     glDrawArrays(GL_TRIANGLE_FAN, 0, cameraShape->getDrawCount());
     cameraShape->vertexBuffer->unBind();
 }

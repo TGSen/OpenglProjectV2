@@ -1,15 +1,20 @@
 package sen.com.openglcamera.natives;
 
 import android.content.res.AssetManager;
+import android.graphics.SurfaceTexture;
 
 /**
  * Author : 唐家森
  * Version: 1.0
  * On     : 2017/11/13 14:05
- * Des    : 抽取父类
+ * Des    :
  */
 
 public class BaseGLNative {
+    //加载native 的camera 场景
+    public static final int NATIVE_SENCE_CAMERA=0;
+    //加载的是native 的piture 场景
+    public static final int NATIVE_SENCE_PICTURE=1;
     static{
         System.loadLibrary("sgles");
     }
@@ -27,11 +32,19 @@ public class BaseGLNative {
         }
     }
 
+
+
     /**
      * 为了让底层去获取android 资源
      * @param assets
      */
-    public static native void initAssetManager(AssetManager assets);
+    public static native void initAssetManager(AssetManager assets,int senceType);
+
+    /**
+     * JNI 创建SurfaceTexture
+     * @return
+     */
+    public static native SurfaceTexture getSurfaceTexture();
 
     /**
      * 增加一个方法，就是在onSurfaceCreated调用之前作为底层需要参数初始化
@@ -47,8 +60,8 @@ public class BaseGLNative {
     //更新一帧画面
     public static native void onDrawFrame(byte[] currentData,int width,int height);
 
-    //稀放
-    public static native void releaseNative();
+    //稀放带有一个参数，是释放谁的场景
+    public static native void releaseNative(int senceType);
 
     //修改滤镜参数
     public static native void onChangeFileter(int r,int g,int b,int a,int max);

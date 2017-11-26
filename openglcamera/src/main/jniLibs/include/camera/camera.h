@@ -43,7 +43,7 @@ public:
     //初始化矩阵
     void initMVP( float width,float height,glm::vec3 carmeaPos);
     //画
-    void draw(const void * data,int width,int height);
+    void draw(int width,int height,vector<Rect2f> faces);
     //Java 中SurfaceTexture
     jobject javaSurfaceTextureObj;
     jobject getSurfaceTextureObject();

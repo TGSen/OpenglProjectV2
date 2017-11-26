@@ -9,7 +9,7 @@ import java.io.File;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
-import sen.com.openglcamera.natives.PictureSGLNativie;
+import sen.com.openglcamera.natives.BaseGLNative;
 import sen.com.openglcamera.utils.BitmapUtils;
 
 
@@ -31,18 +31,18 @@ public class PictureRenderer implements GLSurfaceView.Renderer {
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
         Bitmap bitmap = BitmapUtils.decodeFile(mRootPath + "test.jpg", 300, 300);
-        PictureSGLNativie.onBeforeSurfaceCreated(bitmap);
-        PictureSGLNativie.onSurfaceCreated();
+        BaseGLNative.onBeforeSurfaceCreated(bitmap);
+        BaseGLNative.onSurfaceCreated();
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-        PictureSGLNativie.onSurfaceChanged(width, height);
+        BaseGLNative.onSurfaceChanged(width, height);
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
-       // PictureSGLNativie.onDrawFrame(mCamera.getCurrentData());
+        BaseGLNative.onDrawFrame(null,0,0);
     }
 
 }

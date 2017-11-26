@@ -12,4 +12,5 @@
 enum ShapeType {Normal,Circle,Multiple};
 
 
+
 #endif //OPENGLPROJECTV2_SHAPETYPE_H

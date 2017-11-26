@@ -6,6 +6,8 @@
 #include <sys/time.h>
 // 第二个参数是作为返回值，返回加载成功后文件多大
 unsigned char * loadFile(const char *path, int &fileSize);
+//将asset 文件写入到SD卡
+void writeFileToSdcard(const char *path, const char *outPath);
 
 /**
  * 编译Shader

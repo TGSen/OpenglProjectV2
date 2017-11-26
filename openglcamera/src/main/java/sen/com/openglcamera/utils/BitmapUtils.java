@@ -18,7 +18,7 @@ import java.io.IOException;
  */
 
 public class BitmapUtils {
-    public static void saveBitmap(String rootPicPath,byte[] data){
+    public static String saveBitmap(String rootPicPath,byte[] data){
         File file = new File(rootPicPath,System.currentTimeMillis()+".png");
         try {
             // 获取当前旋转角度, 并旋转图片
@@ -30,11 +30,13 @@ public class BitmapUtils {
             bos.flush();
             bos.close();
             bitmap.recycle();
+            return file.getAbsolutePath();
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return "";
     }
 
     // 旋转图片

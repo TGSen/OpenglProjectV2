@@ -11,7 +11,6 @@
 #include "sggl.h"
 
 
-#include <jni.h>
 /* Header for class sen_com_openglcamera_natives_BaseGLNative */
 
 #ifndef _Included_sen_com_openglcamera_natives_BaseGLNative
@@ -19,10 +18,10 @@
 #ifdef __cplusplus
 
 class BaseGLNative {
+
 public:
 
     BaseGLNative();
-
     virtual ~BaseGLNative();
 
     AAssetManager *aAssetManager;
@@ -61,7 +60,7 @@ extern "C" {
  * Signature: ()V
  */
 JNIEXPORT void JNICALL Java_sen_com_openglcamera_natives_BaseGLNative_initAssetManager
-        (JNIEnv *, jclass, jobject);
+        (JNIEnv *, jclass, jobject, jint);
 
 JNIEXPORT void JNICALL
 Java_sen_com_openglcamera_natives_BaseGLNative_onBeforeSurfaceCreated(JNIEnv *, jclass, jobject);
@@ -91,7 +90,7 @@ JNIEXPORT void JNICALL Java_sen_com_openglcamera_natives_BaseGLNative_onDrawFram
 
 
 JNIEXPORT void JNICALL
-Java_sen_com_openglcamera_natives_BaseGLNative_releaseNative(JNIEnv *, jclass);
+Java_sen_com_openglcamera_natives_BaseGLNative_releaseNative(JNIEnv *, jclass,jint);
 
 
 JNIEXPORT void JNICALL
@@ -130,7 +129,7 @@ Java_sen_com_openglcamera_natives_BaseGLNative_onChangeFileterZoom(JNIEnv *, jcl
  * Method:    getSurfaceTexture
  * Signature: ()V
  */
-JNIEXPORT jobject JNICALL Java_sen_com_openglcamera_natives_CameraSGLNative_getSurfaceTexture
+JNIEXPORT jobject JNICALL Java_sen_com_openglcamera_natives_BaseGLNative_getSurfaceTexture
         (JNIEnv *, jclass);
 
 #ifdef __cplusplus

@@ -17,7 +17,7 @@ import sen.com.openglcamera.R;
 import sen.com.openglcamera.bean.CurrentCameInfo;
 import sen.com.openglcamera.camera.CameraNewVersion;
 import sen.com.openglcamera.fragment.CameraInfoFragmentV2;
-import sen.com.openglcamera.natives.CameraSGLNative;
+import sen.com.openglcamera.natives.BaseGLNative;
 import sen.com.openglcamera.view.CameraButtonView;
 import sen.com.openglcamera.view.CameraSGLSurfaceViewV2;
 
@@ -37,7 +37,7 @@ public class CameraV2Activity extends AppCompatActivity implements View.OnClickL
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         //初始化AssetManager
-        CameraSGLNative.initAssetManager(getAssets());
+        BaseGLNative.initAssetManager(getAssets(),BaseGLNative.NATIVE_SENCE_CAMERA);
         setContentView(R.layout.activity_camera_opengl);
 
     }
@@ -98,7 +98,7 @@ public class CameraV2Activity extends AppCompatActivity implements View.OnClickL
 //            mCamera.releaseCamera();
             mCamera = null;
         }
-        CameraSGLNative.releaseNative();
+        BaseGLNative.releaseNative(BaseGLNative.NATIVE_SENCE_PICTURE);
         super.onDestroy();
 
     }

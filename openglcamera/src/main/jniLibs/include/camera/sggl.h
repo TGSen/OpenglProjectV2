@@ -19,6 +19,8 @@
 #include <string.h>
 //c++ 的流
 #include <sstream>
+#include <unistd.h>
+#include <fcntl.h>
 //容器
 #include <vector>
 #include <functional>
@@ -26,6 +28,8 @@
 #include "Glm/glm.hpp"
 #include "Glm/ext.hpp"
 #include "android/log.h"
+#include "utils.h"
 #define LOG_TAG    "sen_"
 #define LOGE(...)  __android_log_print(ANDROID_LOG_ERROR,LOG_TAG, __VA_ARGS__)
-
+using namespace std;
+using namespace cv;

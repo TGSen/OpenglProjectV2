@@ -1,8 +1,11 @@
 package sen.com.openglcamera.camera;
 
 import android.app.Activity;
+import android.graphics.ImageFormat;
 import android.graphics.SurfaceTexture;
 import android.hardware.Camera;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.Log;
 import android.view.Surface;
 import android.view.SurfaceHolder;
@@ -42,7 +45,9 @@ public class CameraOldVersion implements Camera.PreviewCallback {
     private byte[] callbackBuffer;
     private SurfaceTexture surfaceTexture;
     private byte[] currentData;
+    private String newFilePath;
 
+    private Handler mHandler = new Handler(Looper.getMainLooper());
     public Camera.Size getPreViewSize (){
         return mCamera.getParameters().getPreviewSize();
     }
@@ -108,7 +113,7 @@ public class CameraOldVersion implements Camera.PreviewCallback {
             mCamera = Camera.open(mCameraId);
             Camera.Parameters parameters = mCamera.getParameters();
             parameters.set("orientation", "portrait");
-          //  parameters.setPreviewFormat(ImageFormat.JPEG); //YUV 预览图像的像素格式
+            parameters.setPreviewFormat(ImageFormat.NV21); //YUV 预览图像的像素格式
             setPreviewOrientation(parameters);
             setPreviewSize( parameters);
             setPictureSize(parameters);
@@ -187,12 +192,24 @@ public class CameraOldVersion implements Camera.PreviewCallback {
         mCamera.setDisplayOrientation(result);
     }
 
+    private CameraStutsChangeListener listener;
+    public interface CameraStutsChangeListener{
+        void getNewFilePicture(String path);
+    }
+
+    public void setCameraStutsChangeListener(CameraStutsChangeListener listener){
+        this.listener = listener;
+    }
 
 
     public void startPreview() {
         if (mCamera != null) {
             mCamera.startPreview();
         }
+    }
+
+    public String getNewFilePath(){
+        return newFilePath;
     }
 
     public void stopPreview() {
@@ -247,13 +264,19 @@ public class CameraOldVersion implements Camera.PreviewCallback {
             @Override
             public void onPictureTaken(final byte[] data, Camera camera) {
                 camera.startPreview();
-
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        BitmapUtils.saveBitmap(rootPicPath,data);
+                        newFilePath = BitmapUtils.saveBitmap(rootPicPath,data);
+                        if (listener!=null){
+                            mHandler.post(new Runnable() {
+                                @Override
+                                public void run() {
+                                   listener.getNewFilePicture(newFilePath);
+                                }
+                            });
+                        }
                         takePicture =false;
-
                     }
                 }).start();
             }

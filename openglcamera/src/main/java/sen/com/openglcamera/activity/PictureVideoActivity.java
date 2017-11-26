@@ -25,14 +25,14 @@ import sen.com.openglcamera.bean.CameraSettingInfo;
 import sen.com.openglcamera.bean.CurrentCameInfo;
 import sen.com.openglcamera.camera.CameraOldVersion;
 import sen.com.openglcamera.fragment.CameraInfoFragmentV2;
-import sen.com.openglcamera.natives.CameraSGLNative;
+import sen.com.openglcamera.natives.BaseGLNative;
 import sen.com.openglcamera.utils.PermissionsUitls;
 import sen.com.openglcamera.view.CameraButtonView;
 import sen.com.openglcamera.view.CameraSGLSurfaceView;
 
 import static sen.com.openglcamera.R.id.takePicture;
 
-public class PictureVideoActivity extends AppCompatActivity implements View.OnClickListener, CameraInfoFragmentV2.OnSettingChangeLinstener, CompoundButton.OnCheckedChangeListener {
+public class PictureVideoActivity extends AppCompatActivity implements View.OnClickListener, CameraInfoFragmentV2.OnSettingChangeLinstener, CompoundButton.OnCheckedChangeListener, CameraOldVersion.CameraStutsChangeListener {
     CameraSGLSurfaceView mSGlSurfaceView;
     private int mCameraId;
     private CameraOldVersion mCamera;
@@ -52,10 +52,9 @@ public class PictureVideoActivity extends AppCompatActivity implements View.OnCl
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         //初始化AssetManager
-        CameraSGLNative.initAssetManager(getAssets());
+        BaseGLNative.initAssetManager(getAssets(),BaseGLNative.NATIVE_SENCE_CAMERA);
         rootView = View.inflate(this, R.layout.activity_camera_opengl,null);
         setContentView(rootView);
-
     }
 
     @Override
@@ -71,6 +70,7 @@ public class PictureVideoActivity extends AppCompatActivity implements View.OnCl
             cameraButtonView = (CameraButtonView) findViewById(takePicture);
             cameraButtonView.setCameraInstence(mCamera);
             cameraButtonView.setOnClickListener(this);
+            mCamera.setCameraStutsChangeListener(this);
         }
         RadioButton recoderPicture = (RadioButton) findViewById(R.id.recoderPicture);
         RadioButton recoderVideo = (RadioButton) findViewById(R.id.recoderVideo);
@@ -92,7 +92,6 @@ public class PictureVideoActivity extends AppCompatActivity implements View.OnCl
         dialog.setArguments(bundle);
         dialog.show(getFragmentManager(), "CameraInfoFragment");
     }
-
     @Override
     protected void onResume() {
         super.onResume();
@@ -125,7 +124,7 @@ public class PictureVideoActivity extends AppCompatActivity implements View.OnCl
             mCamera.releaseCamera();
             mCamera=null;
         }
-        CameraSGLNative.releaseNative();
+        BaseGLNative.releaseNative(BaseGLNative.NATIVE_SENCE_CAMERA);
         super.onDestroy();
 
     }
@@ -229,6 +228,12 @@ public class PictureVideoActivity extends AppCompatActivity implements View.OnCl
                         .show();
             }
         }
+    }
+    //拍照
+    @Override
+    public void getNewFilePicture(String path) {
+        Intent intent = new Intent(PictureVideoActivity.this,PictureHandleActivity.class);
+        startActivity(intent);
     }
 }
 

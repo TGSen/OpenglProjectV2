@@ -8,7 +8,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import sen.com.openglcamera.camera.CameraNewVersion;
-import sen.com.openglcamera.natives.CameraSGLNative;
+import sen.com.openglcamera.natives.BaseGLNative;
 import sen.com.openglcamera.view.CameraSGLSurfaceViewV2;
 
 /**
@@ -30,27 +30,27 @@ public class CameraRendererV2 implements GLSurfaceView.Renderer, SurfaceTexture.
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        mSurfaceTexture = CameraSGLNative.getSurfaceTexture();
+        mSurfaceTexture = BaseGLNative.getSurfaceTexture();
         if(mSurfaceTexture!=null){
             Log.e("sen_","mSurfaceTexture is not null");
             mSurfaceTexture.setOnFrameAvailableListener(this);
         }
         mCamera.setSurfaceTexture(mSurfaceTexture);
         mCamera.onResume();
-        CameraSGLNative.onSurfaceCreated();
+        BaseGLNative.onSurfaceCreated();
     }
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-        CameraSGLNative.onSurfaceChanged(width, height);
+        BaseGLNative.onSurfaceChanged(width, height);
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        if (mSurfaceTexture != null &&!CameraSGLNative.isStop) {
+        if (mSurfaceTexture != null &&!BaseGLNative.isStop) {
             mSurfaceTexture.updateTexImage();
 
-           // CameraSGLNative.onDrawFrame(mCamera.getCurrentData());
+           // BaseGLNative.onDrawFrame(mCamera.getCurrentData());
         }
 
     }
@@ -62,7 +62,7 @@ public class CameraRendererV2 implements GLSurfaceView.Renderer, SurfaceTexture.
 
     @Override
     public void onFrameAvailable(SurfaceTexture surfaceTexture) {
-        if(!CameraSGLNative.isStop) {
+        if(!BaseGLNative.isStop) {
             mGLSurfaceView.requestRender();
         }
 

@@ -10,7 +10,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 import sen.com.openglcamera.camera.CameraOldVersion;
-import sen.com.openglcamera.natives.CameraSGLNative;
+import sen.com.openglcamera.natives.BaseGLNative;
 import sen.com.openglcamera.view.CameraSGLSurfaceView;
 
 /**
@@ -34,7 +34,8 @@ public class CameraRenderer implements GLSurfaceView.Renderer, SurfaceTexture.On
 
     @Override
     public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-        mSurfaceTexture = CameraSGLNative.getSurfaceTexture();
+       // BaseGLNative.onBeforeSurfaceCreated(null);
+        mSurfaceTexture = BaseGLNative.getSurfaceTexture();
         if(mSurfaceTexture!=null){
             mSurfaceTexture.setOnFrameAvailableListener(this);
         }
@@ -42,7 +43,9 @@ public class CameraRenderer implements GLSurfaceView.Renderer, SurfaceTexture.On
         mCamera.startPreview();
         mCamera.getCameraInstance().setPreviewCallback(this);
         callbackBuffer = new byte[mCamera.getPreViewSize ().width*mCamera.getPreViewSize ().height*3/2];
-        CameraSGLNative.onSurfaceCreated();
+       long time =  System.currentTimeMillis();
+        BaseGLNative.onSurfaceCreated();
+        Log.e("sen_","onSurfaceCreated："+(System.currentTimeMillis()-time));
     }
 
     @Override
@@ -56,15 +59,15 @@ public class CameraRenderer implements GLSurfaceView.Renderer, SurfaceTexture.On
 //        gl.glLoadIdentity();
 //        float ritio = (float)width/(float)height;
 //        gl.glFrustumf(-ritio, ritio,-1f,1f,3f,7f);
-        CameraSGLNative.onSurfaceChanged(width, height);
+        BaseGLNative.onSurfaceChanged(width, height);
     }
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        if (mSurfaceTexture != null &&!CameraSGLNative.isStop) {
+        if (mSurfaceTexture != null &&!BaseGLNative.isStop) {
             synchronized (CameraRenderer.class) {
                 mSurfaceTexture.updateTexImage();
-                CameraSGLNative.onDrawFrame(currentData,
+                BaseGLNative.onDrawFrame(currentData,
                         mCamera.getPreViewSize().width,
                         mCamera.getPreViewSize().height);
 
@@ -82,7 +85,7 @@ public class CameraRenderer implements GLSurfaceView.Renderer, SurfaceTexture.On
 
     @Override
     public void onFrameAvailable(SurfaceTexture surfaceTexture) {
-        if(!CameraSGLNative.isStop) {
+        if(!BaseGLNative.isStop) {
             mGLSurfaceView.requestRender();
         }
 

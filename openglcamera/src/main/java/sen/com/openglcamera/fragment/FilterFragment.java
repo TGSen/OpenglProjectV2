@@ -13,7 +13,7 @@ import java.util.List;
 
 import sen.com.openglcamera.R;
 import sen.com.openglcamera.bean.FilterInfo;
-import sen.com.openglcamera.natives.CameraSGLNative;
+import sen.com.openglcamera.natives.BaseGLNative;
 
 
 /**
@@ -45,7 +45,7 @@ public class FilterFragment extends BaseFragment implements CompoundButton.OnChe
     @Override
     public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
         if(seekBar.getId()==R.id.seekFilterZoom){
-            CameraSGLNative.onChangeFileterZoom(seekFilterZoom.getProgress(), seekFilterZoom.getMax());
+            BaseGLNative.onChangeFileterZoom(seekFilterZoom.getProgress(), seekFilterZoom.getMax());
             return;
         }
         //只要seekBar有变化，都全部获取当前的进度
@@ -58,10 +58,10 @@ public class FilterFragment extends BaseFragment implements CompoundButton.OnChe
         //处理数据
         if (currentIndex == 3) {
             //自定义
-            CameraSGLNative.onChangeFileter(one,two,three,1,seekBarOne.getMax());
+            BaseGLNative.onChangeFileter(one,two,three,1,seekBarOne.getMax());
         } else if (currentIndex == 2) {
             //只需要，处理一下，不必要变化很大
-            CameraSGLNative.onChangeFileter(one/5,two/5,1,1,seekBarOne.getMax());
+            BaseGLNative.onChangeFileter(one/5,two/5,1,1,seekBarOne.getMax());
         }
 
 
@@ -107,7 +107,7 @@ public class FilterFragment extends BaseFragment implements CompoundButton.OnChe
         seekFilterZoom.setMax(100);
         //滤镜的区域大小
 //        seekFilterZoom.setProgress(50);
-//        CameraSGLNative.onChangeFileterZoom(seekFilterZoom.getProgress(), seekFilterZoom.getMax());
+//        BaseGLNative.onChangeFileterZoom(seekFilterZoom.getProgress(), seekFilterZoom.getMax());
     }
 
     @Override
@@ -119,22 +119,22 @@ public class FilterFragment extends BaseFragment implements CompoundButton.OnChe
             case R.id.btnNormal:
                 setSeekBarView(false,false,false);
                 currentIndex = 0;
-                CameraSGLNative.onChangeVSFS(filterList.get(0).getVsPath(),filterList.get(0).getFsPath());
+                BaseGLNative.onChangeVSFS(filterList.get(0).getVsPath(),filterList.get(0).getFsPath());
                 break;
             case R.id.btnGray:
                 currentIndex = 1;
                 setSeekBarView(false,false,false);
-                CameraSGLNative.onChangeVSFS(filterList.get(1).getVsPath(),filterList.get(1).getFsPath());
+                BaseGLNative.onChangeVSFS(filterList.get(1).getVsPath(),filterList.get(1).getFsPath());
                 break;
             case R.id.btnSkinWhile:
                 currentIndex = 2;
                 setSeekBarView(false,false,false);
-                CameraSGLNative.onChangeVSFS(filterList.get(2).getVsPath(),filterList.get(2).getFsPath());
+                BaseGLNative.onChangeVSFS(filterList.get(2).getVsPath(),filterList.get(2).getFsPath());
                 break;
             case R.id.btnCustomer:
                 currentIndex = 3;
                 setSeekBarView(true,true,true);
-                CameraSGLNative.onChangeVSFS(filterList.get(3).getVsPath(),filterList.get(3).getFsPath());
+                BaseGLNative.onChangeVSFS(filterList.get(3).getVsPath(),filterList.get(3).getFsPath());
                 break;
 
 
