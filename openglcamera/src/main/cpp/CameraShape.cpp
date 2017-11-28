@@ -32,6 +32,13 @@ CameraShape::~CameraShape(){
 void CameraShape::initMVP( float width,float height,glm::vec3 carmeaPos){
     LOGE("CameraShape::initMVP");
 }
+
+//初始化矩阵
+void CameraShape::initMVPV2( int mOffset,
+                             float left, float right, float bottom, float top,
+                             float near, float far,glm::vec3 carmeaPos){
+    LOGE("CameraShape::initMVP");
+}
 //初始化顶点
 void CameraShape::initShapeData(float x,float y,float z,int count, float shapeSize){
     LOGE("CameraShape::initShapeData");

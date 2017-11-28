@@ -13,7 +13,7 @@ void main(){
         //gl_FragColor = V_color;
   //gl_FragColor = V_color*texture2D(U_Texture, V_textcoord);
     //无滤镜
-    gl_FragColor = texture2D(U_Texture, V_textcoord.xy);
+    gl_FragColor = texture2D(U_Texture, V_textcoord);
 
 
 }

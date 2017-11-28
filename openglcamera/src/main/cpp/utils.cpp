@@ -148,7 +148,7 @@ pixels 指定内存中指向图像数据的指针
 
 }
 
-GLuint createTexture2dFromBitmap(JNIEnv *env, jobject bitmap){
+GLuint createTexture2dFromBitmap(JNIEnv *env,float &reqW,float& reqH, jobject bitmap){
     void* pixel = NULL;
     if(AndroidBitmap_lockPixels(env, bitmap, &pixel)<0){
         LOGE("AndroidBitmap_lockPixels <0");
@@ -157,6 +157,8 @@ GLuint createTexture2dFromBitmap(JNIEnv *env, jobject bitmap){
     }
     AndroidBitmapInfo info ;
     AndroidBitmap_getInfo(env,bitmap,&info);
+    reqW = info.width;
+    reqH = info.height;
     //加载纹理
     GLuint  textId =  createTexture2D((unsigned char *) pixel, info.width, info.height, GL_RGBA);
     AndroidBitmap_unlockPixels(env,bitmap);

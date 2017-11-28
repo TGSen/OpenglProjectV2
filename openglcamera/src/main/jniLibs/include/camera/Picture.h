@@ -28,6 +28,8 @@ class Picture {
         glm::vec4 mBgColor;
         float mWidth;
         float mHeight;
+        float mResWidth ;
+        float mResHeight;
         float mFilterZoom;
         int mMultipleCount;
         bool isChangeVSFS;//检查是否更改了vs 和fs
@@ -42,7 +44,7 @@ class Picture {
         //初始化形状数据顶点,和形状大小
         void initShapeData(float x, float y, float z, int count, float shapeSize);
         //初始化矩阵
-        void initMVP( float width,float height,glm::vec3 carmeaPos);
+        void initMVP( float width,float height,float reqWidth,float reqHeight,glm::vec3 carmeaPos);
         //画
         void draw();
         //修改 shader 变量参数

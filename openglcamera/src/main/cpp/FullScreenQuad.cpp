@@ -25,7 +25,7 @@ void FullScreenQuad::draw() {
             1.0f,0.0f,0.0f,0.0f,
             0.0f,1.0f,0.0f,0.0f,
             0.0f,0.0f,1.0f,0.0f,
-            0.0f,0.0f,0.0f,0.1f,
+            0.0f,0.0f,0.0f,1.0f,
     };
 
     mVertexBuffer->setPosition(0,-1.0f,-1.0f,0.0f);
@@ -45,7 +45,7 @@ void FullScreenQuad::drawToLeftTop() {
             1.0f,0.0f,0.0f,0.0f,
             0.0f,1.0f,0.0f,0.0f,
             0.0f,0.0f,1.0f,0.0f,
-            0.0f,0.0f,0.0f,0.1f,
+            0.0f,0.0f,0.0f,1.0f,
     };
 
     mVertexBuffer->setPosition(0,-1.0f,-0.0f,-1.0f);
@@ -65,7 +65,7 @@ void FullScreenQuad::drawToRightTop() {
             1.0f,0.0f,0.0f,0.0f,
             0.0f,1.0f,0.0f,0.0f,
             0.0f,0.0f,1.0f,0.0f,
-            0.0f,0.0f,0.0f,0.1f,
+            0.0f,0.0f,0.0f,1.0f,
     };
 
     mVertexBuffer->setPosition(0,0.0f,0.0f,-1.0f);
@@ -85,7 +85,7 @@ void FullScreenQuad::drawToLeftBottom() {
             1.0f,0.0f,0.0f,0.0f,
             0.0f,1.0f,0.0f,0.0f,
             0.0f,0.0f,1.0f,0.0f,
-            0.0f,0.0f,0.0f,0.1f,
+            0.0f,0.0f,0.0f,1.0f,
     };
 
     mVertexBuffer->setPosition(0,-1.0f,-1.0f,-1.0f);
@@ -106,7 +106,7 @@ void FullScreenQuad::drawToRightBottom() {
             1.0f,0.0f,0.0f,0.0f,
             0.0f,1.0f,0.0f,0.0f,
             0.0f,0.0f,1.0f,0.0f,
-            0.0f,0.0f,0.0f,0.1f,
+            0.0f,0.0f,0.0f,1.0f,
     };
 
     mVertexBuffer->setPosition(0,0.0f,-1.0f,-1.0f);

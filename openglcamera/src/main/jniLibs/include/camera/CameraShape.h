@@ -26,6 +26,9 @@ public:
     float shapeSize ;
     //初始化矩阵 ,加上virtual 成为虚函数，这样子类，可以调用各自的方法
     virtual void initMVP( float width,float height,glm::vec3 carmeaPos);
+    virtual void initMVPV2(int mOffset,
+                           float left, float right, float bottom, float top,
+                           float near, float far,glm::vec3 carmeaPos);
     //初始化顶点
     virtual void initShapeData(float x,float y,float z,int count, float shapeSize);
     //调用父类方法，不需virtual ，需要在加上

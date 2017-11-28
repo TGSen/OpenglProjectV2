@@ -3,7 +3,6 @@ package sen.com.openglcamera.view;
 import android.content.Context;
 import android.opengl.GLSurfaceView;
 import android.util.AttributeSet;
-
 import sen.com.openglcamera.camera.CameraNewVersion;
 import sen.com.openglcamera.renderer.CameraRendererV2;
 
@@ -34,6 +33,4 @@ public class CameraSGLSurfaceViewV2 extends GLSurfaceView {
         setRenderer(sRenderer);
         setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
     }
-
-
 }

@@ -3,7 +3,7 @@
  * Author : 唐家森
  * Version: 1.0
  * On     : 2017/11/13 17:45
- * Des    : 
+ * Des    :
  */
 //
 
@@ -21,6 +21,8 @@ Picture::Picture (){
     cameraShape = nullptr;
     mWidth=0;
     mHeight=0;
+    mResWidth = 0;
+    mResHeight =0;
     mFilterZoom =0;
     mMultipleCount = 4;
     currentShap = Normal;
@@ -104,14 +106,34 @@ void Picture::initShapeData(float x, float y, float z, int count, float shapSize
 
 }
 
-
-
-
-void Picture::initMVP(float width, float height, glm::vec3 carmeaPos) {
+void Picture::initMVP(float width, float height,float reqWidth,float reqHeight, glm::vec3 carmeaPos) {
     mWidth = width;
     mHeight = height;
     mCameraPos = carmeaPos;
-    cameraShape->initMVP(width, height, carmeaPos);
+    //窗口的宽高比
+    float widthHeight=width/height;
+    //图片的宽高比
+    float reqWidthHeight=reqWidth/reqHeight;
+    LOGE("宽高：%f-%f-%f-%f",width,  height, reqWidth, reqHeight);
+    if(width>height){
+        LOGE("sen width>height");
+        if(reqWidthHeight>widthHeight){
+            LOGE("sen 1");
+            cameraShape->initMVPV2(0, -reqWidthHeight*widthHeight,reqWidthHeight*widthHeight,-1.0f,1.0f, 0.1f, 100.0f, carmeaPos);
+        }else{
+            LOGE("sen 2");
+            cameraShape->initMVPV2(0, -widthHeight/reqWidthHeight,widthHeight/reqWidthHeight,-1.0f,1.0f, 0.1f, 100.0f, carmeaPos);
+        }
+    }else{
+        LOGE("sen width<height");
+        if(reqWidthHeight>widthHeight){
+            LOGE("sen 3");
+            cameraShape->initMVPV2( 0, -1.0f/reqWidthHeight*widthHeight,1.0f/reqWidthHeight*widthHeight,-1.0f, 1.0f, 0.1f, 100.0f,carmeaPos);
+        }else{
+            LOGE("sen 4");
+            cameraShape->initMVPV2( 0, -1.0f, 1.0f,-reqWidthHeight/widthHeight,reqWidthHeight/widthHeight, 0.1f, 100.0f,carmeaPos);
+        }
+    }
 
 }
 void Picture::draw() {
@@ -146,6 +168,8 @@ void Picture::draw() {
     //深度测试
     glEnable(GL_DEPTH_TEST);
     glHint(GL_NEAREST_MIPMAP_LINEAR,GL_NICEST);
+    glClearColor(mBgColor.r, mBgColor.g, mBgColor.b,mBgColor.a);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     cameraShape->vertexBuffer->bind();
     mShader->bind(glm::value_ptr(cameraShape->mModelMatrix),
                   glm::value_ptr(cameraShape->mViewMatrix),

@@ -37,10 +37,6 @@ void PictureSence::onSurfaceCreated() {
     fullScreenQuad->mShader->init("resource/camera/picture_normal.vs",
                                   "resource/camera/picture_normal.fs");
 
-    LOGE(" fullScreenQuad->mShader->init");
-//    fullScreenQuad->mShader->init("resource/effects/fullsrceenfbo.vs",
-//                                  "resource/effects/fullsrceenfbo.fs");
-
 }
 
 void PictureSence::onSurfaceChanged(float width, float height) {
@@ -59,7 +55,7 @@ void PictureSence::onDrawFrame(void *data, int width, int height) {
     glClearColor(0.8f, 0.0f, 0.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     mFrameBuffer->bind();
-    fullScreenQuad->mShader->setTexture("U_Texture", sdcardPicTexurid);
+    mPicture->mShader->setTexture("U_Texture", sdcardPicTexurid);
     fullScreenQuad->draw();
   //  mPicture->draw();
     mFrameBuffer->unBind();

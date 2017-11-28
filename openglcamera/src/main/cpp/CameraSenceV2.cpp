@@ -37,7 +37,7 @@ void CameraSence::onSurfaceCreated() {
     normalSQ = new FullScreenQuad;
     normalSQ->init();
  //   mCamera->mShader->init("resource/camera/camera_normal.vs","resource/effects/effect_scale_eye.fs");
-    mCamera->mShader->init("resource/camera/camera_normal.vs","resource/camera/camera_normal.fs");
+    mCamera->mShader->init("resource/camera/camera_normal.vs","resource/effects/fullsrceenfbo.fs");
     normalSQ->mShader->init("resource/camera/camera_normal.vs","resource/camera/camera_normal.fs");
 }
 
@@ -87,8 +87,8 @@ void CameraSence::onDrawFrame( void * data,int width,int height) {
     normalSQ->draw();
     frameBuffer->unBind();
     mCamera->draw( width, height,eyes);
-    //良好习惯，当绘制完毕后，将程序置为0 号程序
-    glUseProgram(0);
+//    //良好习惯，当绘制完毕后，将程序置为0 号程序
+//    glUseProgram(0);
 //    LOGE("draw usetime %f",time);
 }
 

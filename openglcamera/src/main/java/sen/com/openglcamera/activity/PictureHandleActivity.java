@@ -25,6 +25,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import sen.com.openglcamera.R;
+import sen.com.openglcamera.fragment.picture.FilterFragment;
+import sen.com.openglcamera.fragment.picture.ShapeFragment;
 import sen.com.openglcamera.natives.BaseGLNative;
 import sen.com.openglcamera.utils.PermissionsUitls;
 import sen.com.openglcamera.view.PictureSGLSurfaceView;
@@ -75,9 +77,9 @@ public class PictureHandleActivity extends AppCompatActivity implements View.OnC
             mTablayout.addTab(mTablayout.newTab().setText(mTiltes[i]));
         }
          List<Fragment> fragments = new ArrayList<>();
-//        fragments.add(new ShapeFragment());
-//        fragments.add(new FilterFragment());
-//        fragments.add(new FilterFragment());
+        fragments.add(new ShapeFragment());
+        fragments.add(new FilterFragment());
+        fragments.add(new FilterFragment());
         ViewPagerAdapter viewPagerAdapter = new ViewPagerAdapter(getFragmentManager(), mTiltes, fragments);
         //tablayout 和viewpager 联动
         mViewPager.setAdapter(viewPagerAdapter);

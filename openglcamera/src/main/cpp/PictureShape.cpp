@@ -21,7 +21,22 @@ void PictureShape::initMVP( float width,float height,glm::vec3 carmeaPos){
     mViewMatrix =glm::mat4(1.0f);
     //mModelMatrix =glm::mat4(1.0f);
     mModelMatrix = glm::scale(glm::mat4(1.0f),glm::vec3(0.8f,0.8f,1.0f));
+
+
 }
+
+//初始化矩阵
+void PictureShape::initMVPV2( int mOffset,
+                              float left, float right, float bottom, float top,
+                              float near, float far,glm::vec3 carmeaPos){
+    LOGE("NormalShape::initMVP");
+    mProjectionMatrix =glm::ortho(left,right,bottom,top,near,far);
+    //mModelMatrix =glm::mat4(1.0f);
+    mModelMatrix = glm::scale(glm::mat4(1.0f),glm::vec3(0.8f,0.8f,1.0f));
+    mViewMatrix = glm::lookAt(carmeaPos,glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
+}
+
+
 //初始化顶点 ,normal 是4个顶点，
 void PictureShape::initShapeData(float x,float y,float z,int count, float shapeSize){
     LOGE("NormalShape::initShapeData");
@@ -43,9 +58,9 @@ void PictureShape::initShapeData(float x,float y,float z,int count, float shapeS
 //    vertexBuffer->setTexcoord(3,0.0f, 0.0f);
 
     vertexBuffer->setTexcoord(0,0.0f,1.0f);
-    vertexBuffer->setTexcoord(1,1.0f, 1.0f);
+    vertexBuffer->setTexcoord(1,0.0f, 0.0f);
     vertexBuffer->setTexcoord(2,1.0f, 0.0f);
-    vertexBuffer->setTexcoord(3,0.0f, 0.0f);
+    vertexBuffer->setTexcoord(3,1.0f,1.0f);
 
     vertexBuffer->setPosition(0,-1.0f, 1.0f, 0.0f, 1.0f);
     vertexBuffer->setPosition(1,-1.0f, -1.0f, 0.0f, 1.0f);

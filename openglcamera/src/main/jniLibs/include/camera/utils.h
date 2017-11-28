@@ -35,7 +35,7 @@ GLuint crateTexture2dFromBmp(const char* bmpPath);
 
 //通过ndk bitmap 获取像素 来创建纹理
 //如果opengl需要文字纹理，可以让java 通过写文字（字体可以定义）来创建bitmap 提供纹理
-GLuint createTexture2dFromBitmap(JNIEnv *env, jobject bitmap);
+GLuint createTexture2dFromBitmap(JNIEnv *env,float& reqW,float& reqH, jobject bitmap);
 
 //封装
 GLuint createBufferObj(GLenum bufferType,GLsizeiptr size,GLenum usage, void *data);
