@@ -48,8 +48,21 @@ public class CameraOldVersion implements Camera.PreviewCallback {
     private String newFilePath;
 
     private Handler mHandler = new Handler(Looper.getMainLooper());
+
+    /**
+     * 获取预览的size
+     * @return
+     */
     public Camera.Size getPreViewSize (){
         return mCamera.getParameters().getPreviewSize();
+    }
+
+    /**
+     * 获取设置的picture size
+     * @return
+     */
+    public Camera.Size getPictureSize (){
+        return mCamera.getParameters().getPictureSize();
     }
 
     //获取所有CameInfo
@@ -189,12 +202,13 @@ public class CameraOldVersion implements Camera.PreviewCallback {
         } else { // back-facing
             result = (info.orientation - screen + 360) % 360;
         }
+        Log.e("jsen_","result:"+result);
         mCamera.setDisplayOrientation(result);
     }
 
     private CameraStutsChangeListener listener;
     public interface CameraStutsChangeListener{
-        void getNewFilePicture(String path);
+        void getNewFilePicture(String path, byte[] data);
     }
 
     public void setCameraStutsChangeListener(CameraStutsChangeListener listener){
@@ -262,17 +276,22 @@ public class CameraOldVersion implements Camera.PreviewCallback {
         takePicture = true;
         mCamera.takePicture(null, null, new Camera.PictureCallback() {
             @Override
-            public void onPictureTaken(final byte[] data, Camera camera) {
+            public void onPictureTaken(final byte[] data, final Camera camera) {
                 camera.startPreview();
+                //listener.getNewFilePicture(newFilePath,data);
                 new Thread(new Runnable() {
                     @Override
                     public void run() {
-                        newFilePath = BitmapUtils.saveBitmap(rootPicPath,data);
+
+                        Log.e("jsen_","start :");
+                        long time =  System.currentTimeMillis();
+                         newFilePath = BitmapUtils.saveBitmap(rootPicPath,data);
+                        Log.e("jsen_","time :"+(System.currentTimeMillis()-time));
                         if (listener!=null){
                             mHandler.post(new Runnable() {
                                 @Override
                                 public void run() {
-                                   listener.getNewFilePicture(newFilePath);
+                                   listener.getNewFilePicture(newFilePath,data);
                                 }
                             });
                         }

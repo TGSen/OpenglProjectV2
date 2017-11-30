@@ -22,6 +22,7 @@ public:
     CameraShape * cameraShape;
     glm::vec3 mCameraPos;
     glm::vec4 mBgColor;
+    glm::vec4 mFilterColor;
     float mWidth;
     float mHeight;
     float mFilterZoom;
@@ -29,9 +30,11 @@ public:
 
     bool isChangeVSFS;//检查是否更改了vs 和fs
     bool isChangeShape;
+    bool isChangeFilterColor;
     bool isInitFinish; //如果在运行过程中，变化顶点的话，那就等变化完毕后才能操作
     std::map<ShapeType,CameraShape *> mShapeTypeMap;
     enum ShapeType currentShap;
+
     char* vsPath;
     char* fsPath;
     //初始化shader 顶点
@@ -50,6 +53,7 @@ public:
     void createSurfaceTextureObject(JNIEnv *env);
     //修改 shader 变量参数
     void changeFilter(float cr,float cg, float cb , float ca);
+    void changeFilterColor();
     //修改 vs shader ,和fs shader
     void changeVSFS(const char* vsPath, const char*fsPath);
     //修改 shape 形状

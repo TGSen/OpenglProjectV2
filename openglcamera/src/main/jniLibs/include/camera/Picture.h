@@ -26,6 +26,7 @@ class Picture {
         CameraShape * cameraShape;
         glm::vec3 mCameraPos;
         glm::vec4 mBgColor;
+        glm::vec4 mFilterColor;
         float mWidth;
         float mHeight;
         float mResWidth ;
@@ -34,6 +35,7 @@ class Picture {
         int mMultipleCount;
         bool isChangeVSFS;//检查是否更改了vs 和fs
         bool isChangeShape;
+        bool isChangeFilterColor;
         bool isInitFinish; //如果在运行过程中，变化顶点的话，那就等变化完毕后才能操作
         std::map<ShapeType,CameraShape *> mShapeTypeMap;
         enum ShapeType currentShap;
@@ -42,12 +44,13 @@ class Picture {
         //初始化shader 顶点
         void initVertex(float x,float y,float z, int count);
         //初始化形状数据顶点,和形状大小
-        void initShapeData(float x, float y, float z, int count, float shapeSize);
+        bool initShapeData(float x, float y, float z, int count, float shapeSize);
         //初始化矩阵
         void initMVP( float width,float height,float reqWidth,float reqHeight,glm::vec3 carmeaPos);
         //画
         void draw();
         //修改 shader 变量参数
+        void changeFilterColor();
         void changeFilter(float cr,float cg, float cb , float ca);
         //修改 vs shader ,和fs shader
         void changeVSFS(const char* vsPath, const char*fsPath);

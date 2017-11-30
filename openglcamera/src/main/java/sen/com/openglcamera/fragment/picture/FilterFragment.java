@@ -59,10 +59,10 @@ public class FilterFragment extends BaseFragment implements CompoundButton.OnChe
         //处理数据
         if (currentIndex == 3) {
             //自定义
-            BaseGLNative.onChangeFileter(one,two,three,1,seekBarOne.getMax());
+            BaseGLNative.onChangeFileter(one,two,three,100,seekBarOne.getMax());
         } else if (currentIndex == 2) {
             //只需要，处理一下，不必要变化很大
-            BaseGLNative.onChangeFileter(one/5,two/5,1,1,seekBarOne.getMax());
+            BaseGLNative.onChangeFileter(one/5,two/5,1,100,seekBarOne.getMax());
         }
 
 
@@ -86,11 +86,18 @@ public class FilterFragment extends BaseFragment implements CompoundButton.OnChe
         RadioButton btnGray = (RadioButton) view.findViewById(R.id.btnGray);
         RadioButton btnSkinWhile = (RadioButton) view.findViewById(R.id.btnSkinWhile);
         RadioButton btnCustomer = (RadioButton) view.findViewById(R.id.btnCustomer);
+        RadioButton btnRed = (RadioButton) view.findViewById(R.id.btnRed);
+        RadioButton btnGreen = (RadioButton) view.findViewById(R.id.btnGreen);
+        RadioButton btnBlue = (RadioButton) view.findViewById(R.id.btnBlue);
 
         btnNormal.setOnCheckedChangeListener(this);
         btnGray.setOnCheckedChangeListener(this);
         btnSkinWhile.setOnCheckedChangeListener(this);
         btnCustomer.setOnCheckedChangeListener(this);
+
+        btnRed.setOnCheckedChangeListener(this);
+        btnGreen.setOnCheckedChangeListener(this);
+        btnBlue.setOnCheckedChangeListener(this);
 
         seekBarOne = (SeekBar) view.findViewById(R.id.seekBarOne);
         seekBarTwo = (SeekBar) view.findViewById(R.id.seekBarTwo);
@@ -106,6 +113,8 @@ public class FilterFragment extends BaseFragment implements CompoundButton.OnChe
         seekBarTwo.setMax(100);
         seekBarThree.setMax(100);
         seekFilterZoom.setMax(100);
+
+     //   btnCustomer.setVisibility(View.VISIBLE);
         //滤镜的区域大小
 //        seekFilterZoom.setProgress(50);
 //        BaseGLNative.onChangeFileterZoom(seekFilterZoom.getProgress(), seekFilterZoom.getMax());
@@ -129,13 +138,38 @@ public class FilterFragment extends BaseFragment implements CompoundButton.OnChe
                 break;
             case R.id.btnSkinWhile:
                 currentIndex = 2;
-                setSeekBarView(true,true,false);
+                setSeekBarView(false,false,false);
                 BaseGLNative.onChangeVSFS(filterList.get(2).getVsPath(),filterList.get(2).getFsPath());
                 break;
             case R.id.btnCustomer:
                 currentIndex = 3;
                 setSeekBarView(true,true,true);
                 BaseGLNative.onChangeVSFS(filterList.get(3).getVsPath(),filterList.get(3).getFsPath());
+                break;
+
+            case R.id.btnRed:
+                if( currentIndex != 3){
+                    BaseGLNative.onChangeVSFS(filterList.get(3).getVsPath(),filterList.get(3).getFsPath());
+                    setSeekBarView(false,false,false);
+                }
+                BaseGLNative.onChangeFileter(100,0,0,1,100);
+                currentIndex = 3;
+                break;
+            case R.id.btnGreen:
+                if( currentIndex != 3){
+                    BaseGLNative.onChangeVSFS(filterList.get(3).getVsPath(),filterList.get(3).getFsPath());
+                    setSeekBarView(false,false,false);
+                }
+                BaseGLNative.onChangeFileter(0,100,0,1,100);
+                currentIndex = 3;
+                break;
+            case R.id.btnBlue:
+                if( currentIndex != 3){
+                    BaseGLNative.onChangeVSFS(filterList.get(3).getVsPath(),filterList.get(3).getFsPath());
+                    setSeekBarView(false,false,false);
+                }
+                BaseGLNative.onChangeFileter(0,0,100,1,100);
+                currentIndex = 3;
                 break;
 
 

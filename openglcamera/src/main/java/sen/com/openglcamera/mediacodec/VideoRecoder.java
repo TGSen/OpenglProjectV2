@@ -9,6 +9,8 @@ import android.util.Log;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 
+import sen.com.openglcamera.natives.NativeSwapYUV;
+
 import static android.content.ContentValues.TAG;
 import static android.media.MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED;
 

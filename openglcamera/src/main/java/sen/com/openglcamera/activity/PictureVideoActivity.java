@@ -231,7 +231,7 @@ public class PictureVideoActivity extends AppCompatActivity implements View.OnCl
     }
     //拍照
     @Override
-    public void getNewFilePicture(String path) {
+    public void getNewFilePicture(String path, byte[] data) {
         Intent intent = new Intent(PictureVideoActivity.this,PictureHandleActivity.class);
         startActivity(intent);
     }

@@ -1,4 +1,4 @@
-package sen.com.openglcamera.mediacodec;
+package sen.com.openglcamera.natives;
 
 /**
  * Author : 唐家森

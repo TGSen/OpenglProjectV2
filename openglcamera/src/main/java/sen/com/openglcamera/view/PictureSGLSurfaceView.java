@@ -24,11 +24,16 @@ public class PictureSGLSurfaceView extends GLSurfaceView{
         super(context, attrs);
     }
 
-    public void init() {
+    public PictureRenderer init() {
         readyRenderer = new PictureRenderer();
         setEGLContextClientVersion(2);
         setRenderer(readyRenderer);
-        setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
+        setRenderMode(GLSurfaceView.RENDERMODE_CONTINUOUSLY);
+        return readyRenderer;
+    }
+
+    public PictureRenderer getRenderer(){
+        return readyRenderer;
     }
 
 

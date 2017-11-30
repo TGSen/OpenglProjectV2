@@ -15,6 +15,7 @@
 Picture::Picture (){
     isChangeVSFS = false;
     isChangeShape = false;
+    isChangeFilterColor= false;
     isInitFinish = false;
     fsPath = nullptr;
     vsPath = nullptr;
@@ -28,6 +29,7 @@ Picture::Picture (){
     currentShap = Normal;
     //初始化为白色
     mBgColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
+    mFilterColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
     mShapSize =1.0f;
 }
 
@@ -58,9 +60,10 @@ void Picture::initVertex(float x, float y, float z, int count) {
     mShader->setTexture("U_Texture", textureId);
 }
 
-void Picture::initShapeData(float x, float y, float z, int count, float shapSize) {
+bool Picture::initShapeData(float x, float y, float z, int count, float shapSize) {
     //没次进来都要这样，外部调用时都要更新
     isInitFinish = false;
+    bool  isNeedReInitMvp = false;
     auto iterators = mShapeTypeMap.find(currentShap);
     if (iterators == mShapeTypeMap.end()) {
         LOGE("cameraShape->initShapeData,没有该形状，new");
@@ -72,38 +75,41 @@ void Picture::initShapeData(float x, float y, float z, int count, float shapSize
                 shape->initShapeData(x, y, z, mMultipleCount, shapSize);
                 break;
             case Circle:
-                shape = new MultipleShape;
-                shape->initShapeData(x, y, z, 200, shapSize);
+                shape = new MultipleShape(0.0f,1);
+                shape->initShapeData(x, y, z, 300, shapSize);
                 break;
             case Multiple:
-                shape = new MultipleShape;
+                shape = new MultipleShape(0.0f,1);
                 shape->initShapeData(x, y, z, mMultipleCount, shapSize);
                 break;
 
         }
         cameraShape = shape;
+        isNeedReInitMvp= true;
         mShapeTypeMap.insert(std::pair<ShapeType, CameraShape *>(currentShap, shape));
         LOGE("cameraShape->mShapeTypeMap.insert");
     } else {
         //重新赋值
         LOGE("cameraShape->initShapeData,有该形状");
         cameraShape = iterators->second;
+        isNeedReInitMvp= false;
         if (cameraShape->vertexBuffer->mVertexCount != count) {
             //如果边数不等于的话重建
             LOGE("cameraShape->initShapeData ，形状不一样");
             cameraShape->initShapeData(x, y, z, mMultipleCount, shapSize);
         } else {
-            //边数相等，看大小有没相等
-            if (cameraShape->shapeSize != shapSize) {
+            //边数相等，看大小有没相等,normal就不需要检查了
+            if (cameraShape->shapeSize != shapSize && currentShap!=Normal) {
                 LOGE("cameraShape->changeShapeSize(shapSize)");
                 cameraShape->changeShapeSize(shapSize);
             }
 
         }
+
     }
 
     isInitFinish = true;
-
+    return isNeedReInitMvp;
 }
 
 void Picture::initMVP(float width, float height,float reqWidth,float reqHeight, glm::vec3 carmeaPos) {
@@ -140,9 +146,11 @@ void Picture::draw() {
     //画之前看看有没有更改了滤镜形状
     if (isChangeShape) {
         LOGE("camera->mShapSize %f",mShapSize);
-        initShapeData(0.0f,0.0f,0.0f,mMultipleCount,mShapSize);
-        cameraShape->initMVP(mWidth,mHeight,mCameraPos);
-
+        //一般如果存在Shape 都不会变mvp 的
+       bool isNeedChangeMvp= initShapeData(0.0f,0.0f,0.0f,mMultipleCount,mShapSize);
+        if(isNeedChangeMvp){
+            cameraShape->initMVP(mWidth,mHeight,mCameraPos);
+        }
         isChangeShape = false;
     }
 
@@ -159,6 +167,11 @@ void Picture::draw() {
         fsPath = nullptr;
         isChangeVSFS = false;
 
+    }
+
+    if(isChangeFilterColor){
+        changeFilterColor();
+        isChangeFilterColor = false;
     }
 
     //OpenGl设定
@@ -180,7 +193,14 @@ void Picture::draw() {
 }
 //修改 shader 变量参数
 void Picture::changeFilter(float cr,float cg, float cb , float ca){
-    mShader->setUiformVec4("U_MultipleFilter",cr,cg,cb,ca);
+    isChangeFilterColor = true;
+    mFilterColor = glm::vec4(cr,cg,cb,ca);
+}
+
+//修改 shader 变量参数
+void Picture::changeFilterColor(){
+    mShader->setUiformVec4("U_MultipleFilter",mFilterColor.r,mFilterColor.g,mFilterColor.b,mFilterColor.a);
+
 }
 
 //修改 vs shader ,和fs shader

@@ -9,6 +9,8 @@
  * On     : 2017/10/20
  * Des    : 修改版本，由于要升级opengl3.0 GL_TEXTURE_EXTERNAL_OES 在3.0里没有
  *           修改成GL_TEXTURE_2D
+ *
+ *           camera 需要旋转90 picture 不需要
  */
 
 #include <camera/sggl.h>
@@ -22,6 +24,7 @@ Camera::Camera (){
     isChangeVSFS = false;
     isChangeShape = false;
     isInitFinish = false;
+    isChangeFilterColor = false;
     fsPath = nullptr;
     vsPath = nullptr;
     cameraShape = nullptr;
@@ -32,6 +35,7 @@ Camera::Camera (){
     currentShap = Normal;
     //初始化为黑色
     mBgColor = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
+    mFilterColor = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
     mShapSize =1.0f;
 }
 
@@ -117,11 +121,11 @@ void Camera::initShapeData(float x, float y, float z, int count, float shapSize)
                 shape->initShapeData(x, y, z, mMultipleCount, shapSize);
                 break;
             case Circle:
-                shape = new MultipleShape;
-                shape->initShapeData(x, y, z, 200, shapSize);
+                shape = new MultipleShape(90.0f,-1);
+                shape->initShapeData(x, y, z, 300, shapSize);
                 break;
             case Multiple:
-                shape = new MultipleShape;
+                shape = new MultipleShape(90.0f,-1);
                 shape->initShapeData(x, y, z, mMultipleCount, shapSize);
                 break;
 
@@ -228,6 +232,11 @@ void Camera::draw(int width,int height,vector<Rect2f> faces) {
         
     }
 
+    if(isChangeFilterColor){
+        changeFilterColor();
+        isChangeFilterColor = false;
+    }
+
     //OpenGl设定
 //    glEnable(GL_BLEND);             //启用混合功能，将图形颜色同周围颜色相混合
 //    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
@@ -263,7 +272,14 @@ void Camera::draw(int width,int height,vector<Rect2f> faces) {
 }
 //修改 shader 变量参数
 void Camera::changeFilter(float cr,float cg, float cb , float ca){
-    mShader->setUiformVec4("U_MultipleFilter",cr,cg,cb,ca);
+    isChangeFilterColor = true;
+    mFilterColor = glm::vec4(cr,cg,cb,ca);
+}
+
+//修改 shader 变量参数
+void Camera::changeFilterColor(){
+    mShader->setUiformVec4("U_MultipleFilter",mFilterColor.r,mFilterColor.g,mFilterColor.b,mFilterColor.a);
+
 }
 
 //修改 vs shader ,和fs shader

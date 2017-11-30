@@ -123,7 +123,7 @@ public class SplashActivity extends AppCompatActivity {
     }
 
     private void hasPaermissions() {
-        Intent intent = new Intent(this,PictureVideoActivity.class);
+        Intent intent = new Intent(this,PictureHandleActivity.class);
         startActivity(intent);
         overridePendingTransition(0,0);
         finish();

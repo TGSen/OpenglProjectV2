@@ -8,7 +8,6 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/alphagray"
         android:gravity="bottom"
         android:orientation="vertical"
         android:padding="8dp">
@@ -45,56 +44,87 @@
         android:progressDrawable="@drawable/seekbar_style"
         android:thumb="@drawable/seekbar_thumb" />
 
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
-        android:paddingBottom="16dp"
-        android:showDividers="middle">
-
-
-        <android.support.v7.widget.AppCompatRadioButton
-            android:id="@+id/btnNormal"
-            style="@style/CircleRadioStytle"
-            android:layout_width="wrap_content"
+        <HorizontalScrollView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="无滤镜" />
+            android:scrollbars="none">
 
-        <android.support.v7.widget.AppCompatRadioButton
-            android:id="@+id/btnGray"
-            style="@style/CircleRadioStytle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:text="灰色" />
-
-        <android.support.v7.widget.AppCompatRadioButton
-            android:id="@+id/btnSkinWhile"
-            style="@style/CircleRadioStytle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:text="美白" />
-
-        <android.support.v7.widget.AppCompatRadioButton
-            android:id="@+id/btnCustomer"
-            style="@style/CircleRadioStytle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:text="自定义" />
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:paddingRight="20dp"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp"
+                android:showDividers="middle">
 
 
-    </RadioGroup>
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/btnNormal"
+                    style="@style/CircleRadioStytle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="无滤镜" />
 
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/btnGray"
+                    style="@style/CircleRadioStytle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:text="灰色" />
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/btnSkinWhile"
+                    style="@style/CircleRadioStytle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:text="美白" />
+
+
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/btnRed"
+                    style="@style/CircleRadioStytle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:text="红调" />
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/btnGreen"
+                    style="@style/CircleRadioStytle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:text="绿调" />
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/btnBlue"
+                    style="@style/CircleRadioStytle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:text="蓝调" />
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/btnCustomer"
+                    style="@style/CircleRadioStytle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:visibility="gone"
+                    android:text="自定义" />
+            </RadioGroup>
+        </HorizontalScrollView>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
             android:layout_marginLeft="16dp"
+            android:visibility="gone"
             android:orientation="horizontal"
             android:paddingBottom="16dp">
 

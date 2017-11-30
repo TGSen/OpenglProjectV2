@@ -3,7 +3,8 @@ package sen.com.openglcamera.renderer;
 import android.graphics.Bitmap;
 import android.opengl.GLSurfaceView;
 import android.os.Environment;
-import android.util.Log;
+import android.os.Handler;
+import android.os.Looper;
 
 import java.io.File;
 
@@ -24,8 +25,32 @@ import sen.com.openglcamera.utils.BitmapUtils;
 public class PictureRenderer implements GLSurfaceView.Renderer {
 
     private final String mRootPath;
+    private boolean isdrawFinish;
     private int mWidth;
     private int mHeight;
+    //使用弱引用还是？待我想想
+    private RenderLinstener renderLinstener;
+    private Handler mHandler = new Handler(Looper.getMainLooper());
+    private void drawFinish(){
+            if(!isdrawFinish &&renderLinstener!=null){
+                isdrawFinish = true;
+                //必须得在主线程下
+                mHandler.postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        renderLinstener.onDrawOneFrameFinish();
+                    }
+                },1200);
+
+            }
+    }
+
+
+    public void setRenderListener(RenderLinstener listener){
+        renderLinstener = listener;
+    }
+
+
     public PictureRenderer() {
         mRootPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator;
     }
@@ -47,8 +72,8 @@ public class PictureRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl) {
-        Log.e("sen_","onDrawFrame");
         BaseGLNative.onDrawFrame(null,0,0);
+        drawFinish();
     }
 
 }

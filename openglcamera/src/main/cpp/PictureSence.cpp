@@ -51,19 +51,16 @@ void PictureSence::onSurfaceChanged(float width, float height) {
     mFrameBuffer->attachColorBuffer("color", GL_COLOR_ATTACHMENT0,(int)width,(int)height);
     mFrameBuffer->attachDepthBuffer("depth", (int)width,(int)height);
     mFrameBuffer->finish();
+    fullScreenQuad->mShader->setTexture("U_Texture", sdcardPicTexurid);
+    mPicture->setTexture("U_Texture", mFrameBuffer->getBufferByName("color"));
 }
 
 //绘制场景
 void PictureSence::onDrawFrame(void *data, int width, int height) {
     float time = getTime();
-    glClearColor(0.8f, 0.0f, 0.0f, 1.0f);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     mFrameBuffer->bind();
-    fullScreenQuad->mShader->setTexture("U_Texture", sdcardPicTexurid);
     fullScreenQuad->draw();
-  //  mPicture->draw();
     mFrameBuffer->unBind();
-    mPicture->setTexture("U_Texture", mFrameBuffer->getBufferByName("color"));
     mPicture->draw();
     //良好习惯，当绘制完毕后，将程序置为0 号程序
     glUseProgram(0);

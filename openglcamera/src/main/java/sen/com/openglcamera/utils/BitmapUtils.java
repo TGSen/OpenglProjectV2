@@ -39,6 +39,12 @@ public class BitmapUtils {
         return "";
     }
 
+    public static Bitmap getBitmap(String rootPicPath,byte[] data){
+            // 获取当前旋转角度, 并旋转图片
+            Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
+            return bitmap;
+    }
+
     // 旋转图片
     public static Bitmap rotateBitmapByDegree(Bitmap bm, int degree) {
         Bitmap returnBm = null;

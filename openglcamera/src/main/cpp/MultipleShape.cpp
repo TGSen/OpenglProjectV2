@@ -6,8 +6,10 @@
  * Des    : 这个是多边行的，假如无数的边，那么就成为圆形
  */
 #include "camera/MultipleShape.h"
-MultipleShape::MultipleShape(){
+MultipleShape::MultipleShape(float rotateAngle,int preInt){
     LOGE("MultipleShapeV::MultipleShape()");
+    this->rotateAngle = rotateAngle;
+    this->preInt = preInt;
 }
 MultipleShape::~MultipleShape(){
     LOGE("MultipleShapeV::~MultipleShape()");
@@ -16,8 +18,8 @@ MultipleShape::~MultipleShape(){
 void MultipleShape::initMVP( float width,float height,glm::vec3 carmeaPos){
     LOGE("MultipleShapeV::initMVP");
     mViewMatrix = glm::lookAt(carmeaPos,glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,0.0f));
-    mModelMatrix = glm::mat4(1.0f);
-   mModelMatrix = glm::rotate(glm::mat4(1.0f),90.0f,glm::vec3(0.0f,0.0f,1.0f));
+    //mModelMatrix = glm::mat4(1.0f);
+    mModelMatrix = glm::rotate(glm::mat4(1.0f),rotateAngle,glm::vec3(0.0f,0.0f,1.0f));
     float ratio= width > height ? (float)width / height : (float)height / width;
 //    mProjectionMatrix= glm::perspective(60.0f,ratio,0.1f,100.0f);
     if (width > height) {
@@ -48,8 +50,10 @@ void MultipleShape::initShapeData(float x,float y,float z,int count, float size)
         angle= 2 * M_PI * i / vertexBuffer->mVertexCount;
         sinValue= sin(angle);
         cosValue = cos(angle);
-        vertexBuffer->setPosition(i, shapeSize * cosValue, shapeSize *sinValue, 0);
+        vertexBuffer->setPosition(i,shapeSize * cosValue,shapeSize *sinValue, 0);
         vertexBuffer->setColor(i, 0.7f, 0.3f, 0.1f, 1.0f);
-        vertexBuffer->setTexcoord(i,(-cosValue + 1.0f)*0.5f,(sinValue + 1.0f)*0.5f);
+        //vertexBuffer->setTexcoord(i,(-cosValue + 1.0f)*0.5f,(sinValue + 1.0f)*0.5f);
+        vertexBuffer->setTexcoord(i,(preInt* cosValue + 1.0f)*0.5f,(sinValue + 1.0f)*0.5f);
+        //vertexBuffer->setTexcoord(i,abs(cosValue)*0.5f,abs(sinValue )*0.5f);
     }
 }

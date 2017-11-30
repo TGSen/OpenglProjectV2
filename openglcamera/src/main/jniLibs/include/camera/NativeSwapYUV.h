@@ -12,10 +12,10 @@ extern "C" {
  * Method:    swapYUV
  * Signature: ([B)[B
  */
-JNIEXPORT jbyteArray JNICALL Java_sen_com_openglcamera_mediacodec_NativeSwapYUV_nV21ToI420
+JNIEXPORT jbyteArray JNICALL Java_sen_com_openglcamera_natives_NativeSwapYUV_nV21ToI420
   (JNIEnv *, jclass, jbyteArray,jint,jint,jint);
 
-JNIEXPORT jbyteArray JNICALL Java_sen_com_openglcamera_mediacodec_NativeSwapYUV_yV12ToI420
+JNIEXPORT jbyteArray JNICALL Java_sen_com_openglcamera_natives_NativeSwapYUV_yV12ToI420
         (JNIEnv *, jclass, jbyteArray,jint,jint,jint);
 
 #ifdef __cplusplus

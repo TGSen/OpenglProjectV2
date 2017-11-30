@@ -3,7 +3,7 @@ precision mediump float;
 #endif
 
 
-uniform sampler2D  U_Texture;//纹理贴图
+uniform sampler2D U_Texture;//纹理贴图
 varying vec2 V_textcoord;
 varying vec4 V_color;
 varying vec4 V_Normal;
@@ -22,10 +22,12 @@ void main(){
  //黑白滤镜
   vec4 colorBase = texture2D(U_Texture, V_textcoord.xy);
           //混合之后的效果
-          float blendColorR = dot(colorBase.r,U_MultipleFilter.x);
-          float blendColorG = dot(colorBase.g,U_MultipleFilter.y);
-          float blendColorB = dot(colorBase.b,U_MultipleFilter.z);
+          //float blendColorR = dot(colorBase.r,U_MultipleFilter.x);
+          //float blendColorG = dot(colorBase.g,U_MultipleFilter.y);
+          //float blendColorB = dot(colorBase.b,U_MultipleFilter.z);
           //float blendColorA = dot(colorBase.a,U_MultipleFilter.w);
-           gl_FragColor = vec4(blendColorR, blendColorG, blendColorB, 1.0);
+           //gl_FragColor = vec4(blendColorR, blendColorG, blendColorB, 1.0);
+           gl_FragColor =  colorBase*U_MultipleFilter+colorBase*colorBase-colorBase*colorBase*U_MultipleFilter;
+
 
 }

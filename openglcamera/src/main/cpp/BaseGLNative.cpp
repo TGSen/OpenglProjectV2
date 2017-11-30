@@ -68,10 +68,8 @@ void JNICALL Java_sen_com_openglcamera_natives_BaseGLNative_initAssetManager
     }else if(senceType ==PICTURE){
         mBaseSences = new PictureSence;
         mSencesManager.insert(std::pair<NativeSencesType ,BaseSences *>(PICTURE,mBaseSences));
-        LOGE("BaseGLNative_PICTURE");
     }
 
-    LOGE("BaseGLNative_initAssetManager");
 };
 
 
@@ -141,14 +139,11 @@ JNIEXPORT void JNICALL Java_sen_com_openglcamera_natives_BaseGLNative_onSurfaceC
 
 JNIEXPORT void JNICALL Java_sen_com_openglcamera_natives_BaseGLNative_onDrawFrame
         (JNIEnv *env, jclass clzss,jbyteArray data,jint width,jint height) {
-    LOGE("BaseGLNative_onDrawFrame");
     if(data) {
-        LOGE("BaseGLNative_data");
         jbyte *cameraData = env->GetByteArrayElements(data, NULL);
         mBaseSences->onDrawFrame(data,width, height);
         env->ReleaseByteArrayElements(data,cameraData,0);
     }else{
-        LOGE("BaseGLNative_PICTURE onDrawFrame");
         mBaseSences->onDrawFrame(nullptr,width, height);
     }
 };

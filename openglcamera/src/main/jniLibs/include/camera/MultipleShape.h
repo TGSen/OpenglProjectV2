@@ -12,7 +12,7 @@
 #include "CameraShape.h"
 class MultipleShape:public CameraShape{
 public:
-    MultipleShape();
+    MultipleShape(float rotateAngle,int preInt);
     virtual ~MultipleShape();
     //初始化矩阵 ,virtual子类可加可不加，不加编译器自动加，加了可读性高
     virtual void initMVP( float width,float height,glm::vec3 carmeaPos);

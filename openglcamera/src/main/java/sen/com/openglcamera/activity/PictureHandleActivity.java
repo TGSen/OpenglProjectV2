@@ -28,7 +28,9 @@ import sen.com.openglcamera.R;
 import sen.com.openglcamera.fragment.picture.FilterFragment;
 import sen.com.openglcamera.fragment.picture.ShapeFragment;
 import sen.com.openglcamera.natives.BaseGLNative;
+import sen.com.openglcamera.renderer.RenderLinstener;
 import sen.com.openglcamera.utils.PermissionsUitls;
+import sen.com.openglcamera.view.LoadingView;
 import sen.com.openglcamera.view.PictureSGLSurfaceView;
 
 /**
@@ -36,7 +38,7 @@ import sen.com.openglcamera.view.PictureSGLSurfaceView;
  * Version: 1.0
  * Des    : 图像处理
  */
-public class PictureHandleActivity extends AppCompatActivity implements View.OnClickListener {
+public class PictureHandleActivity extends AppCompatActivity implements View.OnClickListener, RenderLinstener {
     PictureSGLSurfaceView mSGlSurfaceView;
     private final String LTag = "sen_";
     private View rootView;
@@ -52,6 +54,8 @@ public class PictureHandleActivity extends AppCompatActivity implements View.OnC
     private TabLayout mTablayout;
     private ViewPager mViewPager;
     private String mTiltes[] = {"形色","滤镜","特效"};
+    private LoadingView loadingView;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -65,14 +69,16 @@ public class PictureHandleActivity extends AppCompatActivity implements View.OnC
 
     }
 
+
     @Override
     public void onContentChanged() {
         super.onContentChanged();
         mSGlSurfaceView = (PictureSGLSurfaceView) rootView.findViewById(R.id.camera_glview);
-        mSGlSurfaceView.init();
+        mSGlSurfaceView.init().setRenderListener(this);
         mTablayout = (TabLayout) findViewById(R.id.tabLayout);
         mViewPager = (ViewPager)findViewById(R.id.viewPager);
-
+        loadingView = findViewById(R.id.loadingView);
+        loadingView.startAnimator();
         for (int i = 0;i<mTiltes.length;i++){
             mTablayout.addTab(mTablayout.newTab().setText(mTiltes[i]));
         }
@@ -103,6 +109,12 @@ public class PictureHandleActivity extends AppCompatActivity implements View.OnC
         });
 
         mViewPager.setCurrentItem(0);
+    }
+
+    @Override
+    public void onDrawOneFrameFinish() {
+        loadingView.stopAnimator();
+        loadingView.setVisibility(View.GONE);
     }
 
     public class ViewPagerAdapter extends FragmentPagerAdapter {

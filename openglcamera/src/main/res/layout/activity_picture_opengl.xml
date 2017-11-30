@@ -12,7 +12,16 @@
         <sen.com.openglcamera.view.PictureSGLSurfaceView
             android:id="@+id/camera_glview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            />
+
+
+        <sen.com.openglcamera.view.LoadingView
+            android:id="@+id/loadingView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/white"/>
+
 
         <sen.com.openglcamera.view.CustomerViewPager
             android:id="@+id/viewPager"

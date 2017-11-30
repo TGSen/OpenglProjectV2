@@ -18,7 +18,8 @@ public:
     virtual ~CameraShape();
     VertexBuffer *vertexBuffer;
     //由于opengl画时可以指定，从哪些点开始画，那么我一次性就先画个圆的数量，但修改多边形时，不必要删除了，只要指定数量就行
-
+    float rotateAngle;
+    int preInt; //目前情况，camera 需要-1，picture 需要1，要不显示不准
     //矩阵相关
     glm::mat4 mModelMatrix;
     glm::mat4 mViewMatrix;
