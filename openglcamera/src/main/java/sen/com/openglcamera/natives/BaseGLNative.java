@@ -1,6 +1,7 @@
 package sen.com.openglcamera.natives;
 
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
 import android.graphics.SurfaceTexture;
 
 /**
@@ -18,6 +19,8 @@ public class BaseGLNative {
     static{
         System.loadLibrary("sgles");
     }
+
+
 
     public enum CameraShape{
 
@@ -82,5 +85,8 @@ public class BaseGLNative {
     public static native void onChangeShapeCount(int count) ;
     //修改要渲染的区域
     public static native void onChangeFileterZoom(int i, int max) ;
+
+    //特效 添加文字
+    public static native void addTextEffect(Bitmap bitmap) ;
 
 }

@@ -18,7 +18,10 @@ GLuint sdcardPicTexurid;
 
 FrameBuffer *mFrameBuffer;
 FullScreenQuad *fullScreenQuad;
-PictureSence::PictureSence() {}
+PictureSence::PictureSence() {
+    isNewText = true;
+    dataBit =NULL;
+}
 
 PictureSence::~PictureSence() {}
 
@@ -26,6 +29,8 @@ void PictureSence::onBeforeSurfaceCreated(JNIEnv *env, jobject bitmapObj) {
 
     sdcardPicTexurid = createTexture2dFromBitmap(env, mPicture->mResWidth, mPicture->mResHeight,
                                                  bitmapObj);
+
+    //sdcardPicTexurid = crateTexture2dFromBmp("resource/picture/testv2.bmp");
 }
 
 void PictureSence::onSurfaceCreated() {
@@ -59,6 +64,11 @@ void PictureSence::onSurfaceChanged(float width, float height) {
 void PictureSence::onDrawFrame(void *data, int width, int height) {
     float time = getTime();
     mFrameBuffer->bind();
+    if(dataBit &&isNewText){
+        GLuint  newText = createTexture2D(dataBit,this->width,this->height,GL_RGB);
+        fullScreenQuad->mShader->setTexture("U_Texture", newText);
+        isNewText = false;
+    }
     fullScreenQuad->draw();
     mFrameBuffer->unBind();
     mPicture->draw();
@@ -111,6 +121,17 @@ void PictureSence::changeShapeDrawCount(int count) {
 void PictureSence::changeFileterZoom(float temp) {
     if (mPicture) {
         mPicture->changeFileterZoom(temp);
+    }
+}
+
+
+void PictureSence::addTextEffect(void *piexl, float width, float height) {
+    if( piexl &&mPicture){
+        dataBit = (unsigned char *) piexl;
+        this->width = width;
+        this->height = height;
+        isNewText = true;
+      // mPicture->addTextEffect(piexl);
     }
 }
 

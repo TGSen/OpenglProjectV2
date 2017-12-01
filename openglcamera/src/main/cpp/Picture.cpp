@@ -3,7 +3,8 @@
  * Author : 唐家森
  * Version: 1.0
  * On     : 2017/11/13 17:45
- * Des    :
+ * Des    : 加入fbo ,这个可以作为第一阶段的opengl 和Android 坐标有冲突的，纠正正确的显示，
+ *         第二点，可以作为下一阶段加入特效的输出
  */
 //
 
@@ -75,11 +76,11 @@ bool Picture::initShapeData(float x, float y, float z, int count, float shapSize
                 shape->initShapeData(x, y, z, mMultipleCount, shapSize);
                 break;
             case Circle:
-                shape = new MultipleShape(0.0f,1);
+                shape = new MultipleShape(0.0f);
                 shape->initShapeData(x, y, z, 300, shapSize);
                 break;
             case Multiple:
-                shape = new MultipleShape(0.0f,1);
+                shape = new MultipleShape(0.0f);
                 shape->initShapeData(x, y, z, mMultipleCount, shapSize);
                 break;
 
@@ -187,8 +188,13 @@ void Picture::draw() {
     mShader->bind(glm::value_ptr(cameraShape->mModelMatrix),
                   glm::value_ptr(cameraShape->mViewMatrix),
                   glm::value_ptr(cameraShape->mProjectionMatrix));
+    if(currentShap ==Normal){
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, cameraShape->getDrawCount());
+    }else{
+        //以0.5 0.5 作为中心
+        glDrawArrays(GL_TRIANGLE_FAN, 0, cameraShape->getDrawCount());
+    }
 
-    glDrawArrays(GL_TRIANGLE_FAN, 0, cameraShape->getDrawCount());
     cameraShape->vertexBuffer->unBind();
 }
 //修改 shader 变量参数
@@ -270,4 +276,8 @@ void Picture::setTexture(const char*name,GLuint textureId){
 
 void Picture::changeBgColor(glm::vec4 bgcolor){
     mBgColor = bgcolor;
+}
+
+void Picture::addTextEffect(void *data){
+    dataBit = (unsigned char *) data;
 }

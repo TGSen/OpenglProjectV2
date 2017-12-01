@@ -1,5 +1,7 @@
 package sen.com.openglcamera.renderer;
 
+import android.graphics.Bitmap;
+
 /**
  * Author : 唐家森
  * Version: 1.0
@@ -9,4 +11,5 @@ package sen.com.openglcamera.renderer;
 
 public interface RenderLinstener {
     void onDrawOneFrameFinish();
+
 }

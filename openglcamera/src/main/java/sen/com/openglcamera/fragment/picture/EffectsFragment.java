@@ -1,20 +1,22 @@
 package sen.com.openglcamera.fragment.picture;
 
+import android.content.DialogInterface;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.RadioButton;
-import android.widget.SeekBar;
-
-import java.util.List;
 
 import sen.com.openglcamera.R;
-import sen.com.openglcamera.bean.FilterInfo;
 import sen.com.openglcamera.fragment.BaseFragment;
 import sen.com.openglcamera.natives.BaseGLNative;
+import sen.com.openglcamera.utils.BitmapUtils;
 
 
 /**
@@ -25,10 +27,8 @@ import sen.com.openglcamera.natives.BaseGLNative;
  *         目前有文字贴图
  */
 
-public class EffectsFragment extends BaseFragment implements CompoundButton.OnCheckedChangeListener, SeekBar.OnSeekBarChangeListener {
+public class EffectsFragment extends BaseFragment implements CompoundButton.OnCheckedChangeListener {
 
-    private SeekBar seekBarOne,seekBarTwo,seekBarThree,seekFilterZoom;
-    private List<FilterInfo> filterList;
     private double currentIndex;
 
     @Override
@@ -38,76 +38,16 @@ public class EffectsFragment extends BaseFragment implements CompoundButton.OnCh
 
     @Override
     public View initParentView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View rootView = inflater.inflate(R.layout.layout_change_filter, container, false);
+        View rootView = inflater.inflate(R.layout.layout_change_effects, container, false);
         return rootView;
     }
-
-    @Override
-    public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
-        if(seekBar.getId()==R.id.seekFilterZoom){
-            BaseGLNative.onChangeFileterZoom(seekFilterZoom.getProgress(), seekFilterZoom.getMax());
-            return;
-        }
-        //只要seekBar有变化，都全部获取当前的进度
-        //说明一点，如果当前，为美白效果的话，seekBarOne ，seekBarTwo 分别代表亮度，和对比度
-        //如果为自定义效果，那么就为分别为红绿蓝
-        int one = seekBarOne.getProgress();
-        int two = seekBarTwo.getProgress();
-        int three = seekBarThree.getProgress();
-
-        //处理数据
-        if (currentIndex == 3) {
-            //自定义
-            BaseGLNative.onChangeFileter(one,two,three,1,seekBarOne.getMax());
-        } else if (currentIndex == 2) {
-            //只需要，处理一下，不必要变化很大
-            BaseGLNative.onChangeFileter(one/5,two/5,1,1,seekBarOne.getMax());
-        }
-
-
-    }
-
-    @Override
-    public void onStartTrackingTouch(SeekBar seekBar) {
-
-    }
-
-    @Override
-    public void onStopTrackingTouch(SeekBar seekBar) {
-
-    }
-
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        filterList = FilterInfo.getFilterInfos(FilterInfo.PICTURE_DATA_TYPE);
-        RadioButton btnNormal = (RadioButton) view.findViewById(R.id.btnNormal);
-        RadioButton btnGray = (RadioButton) view.findViewById(R.id.btnGray);
-        RadioButton btnSkinWhile = (RadioButton) view.findViewById(R.id.btnSkinWhile);
-        RadioButton btnCustomer = (RadioButton) view.findViewById(R.id.btnCustomer);
-
-        btnNormal.setOnCheckedChangeListener(this);
-        btnGray.setOnCheckedChangeListener(this);
-        btnSkinWhile.setOnCheckedChangeListener(this);
-        btnCustomer.setOnCheckedChangeListener(this);
-
-        seekBarOne = (SeekBar) view.findViewById(R.id.seekBarOne);
-        seekBarTwo = (SeekBar) view.findViewById(R.id.seekBarTwo);
-        seekBarThree = (SeekBar) view.findViewById(R.id.seekBarThree);
-        seekFilterZoom = (SeekBar) view.findViewById(R.id.seekFilterZoom);
-
-        setSeekBarView(false,false,false);
-        seekBarOne.setOnSeekBarChangeListener(this);
-        seekBarTwo.setOnSeekBarChangeListener(this);
-        seekBarThree.setOnSeekBarChangeListener(this);
-        seekFilterZoom.setOnSeekBarChangeListener(this);
-        seekBarOne.setMax(100);
-        seekBarTwo.setMax(100);
-        seekBarThree.setMax(100);
-        seekFilterZoom.setMax(100);
-        //滤镜的区域大小
-//        seekFilterZoom.setProgress(50);
-//        BaseGLNative.onChangeFileterZoom(seekFilterZoom.getProgress(), seekFilterZoom.getMax());
+        RadioButton btnTextEffect = (RadioButton) view.findViewById(R.id.btnTextEffect);
+        RadioButton btnPicture = (RadioButton) view.findViewById(R.id.btnPicture);
+        btnTextEffect.setOnCheckedChangeListener(this);
+        btnPicture.setOnCheckedChangeListener(this);
     }
 
     @Override
@@ -116,36 +56,42 @@ public class EffectsFragment extends BaseFragment implements CompoundButton.OnCh
             return;
         switch (buttonView.getId()) {
 
-            case R.id.btnNormal:
-                setSeekBarView(false,false,false);
+            case R.id.btnTextEffect:
                 currentIndex = 0;
-                BaseGLNative.onChangeVSFS(filterList.get(0).getVsPath(),filterList.get(0).getFsPath());
+                showEidtDialog();
                 break;
-            case R.id.btnGray:
+            case R.id.btnPicture:
                 currentIndex = 1;
-                setSeekBarView(false,false,false);
-                BaseGLNative.onChangeVSFS(filterList.get(1).getVsPath(),filterList.get(1).getFsPath());
                 break;
-            case R.id.btnSkinWhile:
-                currentIndex = 2;
-                setSeekBarView(true,true,false);
-                BaseGLNative.onChangeVSFS(filterList.get(2).getVsPath(),filterList.get(2).getFsPath());
-                break;
-            case R.id.btnCustomer:
-                currentIndex = 3;
-                setSeekBarView(true,true,true);
-                BaseGLNative.onChangeVSFS(filterList.get(3).getVsPath(),filterList.get(3).getFsPath());
-                break;
-
-
         }
     }
 
-    public void setSeekBarView(boolean isOne,boolean isTwo,boolean isThree) {
-        seekBarOne.setVisibility(isOne ? View.VISIBLE : View.GONE);
-        seekBarTwo.setVisibility(isTwo ? View.VISIBLE : View.GONE);
-        seekBarThree.setVisibility(isThree ? View.VISIBLE : View.GONE);
-    }
+    private void showEidtDialog() {
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(mActivity);
+        builder.setMessage("文字以空格作为下一行");
+
+        builder.setCancelable(false);
+        builder.setTitle("请输入文字");
+        LayoutInflater inflater =mActivity.getLayoutInflater();
+        View   dialog = inflater.inflate(R.layout.layout_eidtext_dialog,(ViewGroup) mActivity.findViewById(R.id.dialog));
+        final EditText editText = (EditText) dialog.findViewById(R.id.editText);
+        builder.setNegativeButton("取消", null);
+        builder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+              //  Toast.makeText(mActivity, editText.getText().toString(), Toast.LENGTH_SHORT).show();
+                Bitmap bitmap = BitmapUtils.creatBitmapFromText("我是唐家森",mActivity);
+                String path = Environment.getExternalStorageDirectory().getAbsolutePath();
+                if(bitmap!=null){
+                    BitmapUtils.saveBitmap(path,bitmap);
+                    BaseGLNative.addTextEffect(bitmap);
+                }
+              //
+            }
+        });
+        builder.setView(dialog);
+        builder.show();
+    }
 
 }

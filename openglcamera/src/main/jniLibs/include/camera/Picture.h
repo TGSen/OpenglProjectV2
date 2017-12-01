@@ -19,9 +19,8 @@ class Picture {
     private:
         float mShapSize;
     public:
-    Picture ();
-    ~Picture();
-        GLuint textureId;
+
+    GLuint textureId;
         SShader *mShader;
         CameraShape * cameraShape;
         glm::vec3 mCameraPos;
@@ -41,6 +40,12 @@ class Picture {
         enum ShapeType currentShap;
         char* vsPath;
         char* fsPath;
+        unsigned char *dataBit;
+       // vector<dataBit> vector1;
+public:
+    Picture();
+
+    ~Picture();
         //初始化shader 顶点
         void initVertex(float x,float y,float z, int count);
         //初始化形状数据顶点,和形状大小
@@ -66,6 +71,7 @@ class Picture {
         void setTexture(const char *name,GLuint textureId);
 
         void changeBgColor(glm::vec4 bgcolor);
+        void addTextEffect(void *data);
 };
 
 

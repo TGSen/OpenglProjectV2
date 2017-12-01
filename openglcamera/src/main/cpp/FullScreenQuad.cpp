@@ -12,10 +12,10 @@
 void FullScreenQuad::init() {
     mVertexBuffer = new VertexBuffer;
     mVertexBuffer->setSize(4);
-    mVertexBuffer->setTexcoord(0,0.0f,0.0f);
-    mVertexBuffer->setTexcoord(1,1.0f,0.0f);
-    mVertexBuffer->setTexcoord(2,0.0f,1.0f);
-    mVertexBuffer->setTexcoord(3,1.0f,1.0f);
+    mVertexBuffer->setTexcoord(0,0.0f,1.0f);
+    mVertexBuffer->setTexcoord(1,1.0f,1.0f);
+    mVertexBuffer->setTexcoord(2,0.0f,0.0f);
+    mVertexBuffer->setTexcoord(3,1.0f,0.0f);
     mShader = new SShader;
 }
 

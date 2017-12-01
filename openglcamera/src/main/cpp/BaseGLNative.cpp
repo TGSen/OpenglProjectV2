@@ -9,6 +9,7 @@
 #include <camera/BaseSences.h>
 #include <camera/PictureSence.h>
 #include <camera/utils.h>
+#include <camera/sggl.h>
 #include "camera/sggl.h"
 #include "camera/CameraSence.h"
 #include "camera/BaseGLNative.h"
@@ -265,5 +266,24 @@ Java_sen_com_openglcamera_natives_BaseGLNative_onChangeFileterZoom(JNIEnv *env, 
 JNIEXPORT jobject JNICALL Java_sen_com_openglcamera_natives_BaseGLNative_getSurfaceTexture
         (JNIEnv *env, jclass jcla){
     return mBaseSences->getSurfaceTexture();
+
+}
+
+JNIEXPORT void JNICALL
+Java_sen_com_openglcamera_natives_BaseGLNative_addTextEffect(JNIEnv *env, jclass type,
+                                                             jobject bitmap) {
+    if(bitmap){
+        LOGE("sen______0");
+        void *piexl;
+        float width,height;
+        AndroidBitmap_lockPixels(env,bitmap,&piexl);
+        AndroidBitmapInfo info;
+        AndroidBitmap_getInfo(env,bitmap,&info);
+        width = info.width;
+        height = info.height;
+        mBaseSences->addTextEffect(piexl,width,height);
+        AndroidBitmap_unlockPixels(env,bitmap);
+    }
+
 
 }

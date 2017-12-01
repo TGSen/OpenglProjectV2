@@ -117,15 +117,15 @@ void Camera::initShapeData(float x, float y, float z, int count, float shapSize)
         CameraShape *shape;
         switch (currentShap) {
             case Normal:
-                shape = new NormalShape;
+                shape = new NormalShape(-90.0f);
                 shape->initShapeData(x, y, z, mMultipleCount, shapSize);
                 break;
             case Circle:
-                shape = new MultipleShape(90.0f,-1);
+                shape = new MultipleShape(-90.0f);
                 shape->initShapeData(x, y, z, 300, shapSize);
                 break;
             case Multiple:
-                shape = new MultipleShape(90.0f,-1);
+                shape = new MultipleShape(-90.0f);
                 shape->initShapeData(x, y, z, mMultipleCount, shapSize);
                 break;
 
@@ -266,8 +266,12 @@ void Camera::draw(int width,int height,vector<Rect2f> faces) {
 
 
 
+    if(currentShap ==Normal){
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, cameraShape->getDrawCount());
+    }else{
+        glDrawArrays(GL_TRIANGLE_FAN, 0, cameraShape->getDrawCount());
+    }
 
-    glDrawArrays(GL_TRIANGLE_FAN, 0, cameraShape->getDrawCount());
     cameraShape->vertexBuffer->unBind();
 }
 //修改 shader 变量参数

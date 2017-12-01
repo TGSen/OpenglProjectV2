@@ -11,6 +11,9 @@
 #include "BaseSences.h"
 class PictureSence:public BaseSences{
 public:
+    unsigned char *dataBit;
+    float width, height;
+    bool isNewText;
     PictureSence();
     virtual ~PictureSence();
     //增加一个方法，这个方法在onSurfaceCreated 之前调用
@@ -37,5 +40,7 @@ public:
     virtual void changeShapeDrawCount(int count);
 
     virtual void changeFileterZoom(float temp);
+
+    virtual void addTextEffect(void *piexl, float width, float height);
 };
 

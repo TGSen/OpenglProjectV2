@@ -62,7 +62,9 @@ public class PictureRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onSurfaceChanged(GL10 gl, int width, int height) {
-        Bitmap bitmap = BitmapUtils.decodeFile(mRootPath + "test.jpg", 200, 300);
+
+        final Bitmap bitmap = BitmapUtils.decodeFile(mRootPath + "test.jpg", 200, 300);
+
         mWidth = bitmap.getWidth();
         mHeight = bitmap.getHeight();
         BaseGLNative.onBeforeSurfaceCreated(bitmap);

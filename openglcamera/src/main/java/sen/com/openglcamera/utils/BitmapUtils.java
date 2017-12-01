@@ -1,14 +1,23 @@
 package sen.com.openglcamera.utils;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.Matrix;
+import android.support.v4.content.ContextCompat;
+import android.view.Gravity;
+import android.view.View;
+import android.widget.LinearLayout;
+import android.widget.TextView;
 
 import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+
+import sen.com.openglcamera.R;
 
 /**
  * Author : 唐家森
@@ -24,6 +33,25 @@ public class BitmapUtils {
             // 获取当前旋转角度, 并旋转图片
             Bitmap bitmap = BitmapFactory.decodeByteArray(data, 0, data.length);
             bitmap = rotateBitmapByDegree(bitmap, 90);
+            BufferedOutputStream bos = new BufferedOutputStream(
+                    new FileOutputStream(file));
+            bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
+            bos.flush();
+            bos.close();
+            bitmap.recycle();
+            return file.getAbsolutePath();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return "";
+    }
+
+    public static String saveBitmap(String rootPicPath,Bitmap bitmap){
+        File file = new File(rootPicPath,System.currentTimeMillis()+".png");
+        try {
+            // 获取当前旋转角度, 并旋转图片
             BufferedOutputStream bos = new BufferedOutputStream(
                     new FileOutputStream(file));
             bitmap.compress(Bitmap.CompressFormat.JPEG, 100, bos);
@@ -93,6 +121,28 @@ public class BitmapUtils {
             inSampleSize = heightRatio < widthRatio ? heightRatio : widthRatio;
         }
         return inSampleSize;
+    }
+
+
+    public static Bitmap creatBitmapFromText(String contents ,Context context) {
+        float scale=context.getResources().getDisplayMetrics().scaledDensity;
+        TextView tv = new TextView(context);
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+        tv.setLayoutParams(layoutParams);
+        tv.setText(contents);
+        tv.setTextSize(scale*12);
+        tv.setGravity(Gravity.CENTER_HORIZONTAL);
+        tv.setDrawingCacheEnabled(true);
+        tv.setTextColor(Color.BLACK);
+        tv.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
+        tv.layout(0, 0, tv.getMeasuredWidth(), tv.getMeasuredHeight());
+        tv.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        tv.buildDrawingCache();
+        Bitmap bitmapCode = tv.getDrawingCache();
+        return bitmapCode;
     }
 
 }

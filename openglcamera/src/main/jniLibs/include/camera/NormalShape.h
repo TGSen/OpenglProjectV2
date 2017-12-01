@@ -11,7 +11,7 @@
 #include "CameraShape.h"
 class NormalShape:public CameraShape{
 public:
-    NormalShape();
+    NormalShape(float rotateAngle);
 
     virtual ~NormalShape();
     //初始化矩阵 ,子类可加可不加，不加编译器自动加，加了可读性高

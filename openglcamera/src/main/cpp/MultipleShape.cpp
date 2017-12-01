@@ -6,10 +6,9 @@
  * Des    : 这个是多边行的，假如无数的边，那么就成为圆形
  */
 #include "camera/MultipleShape.h"
-MultipleShape::MultipleShape(float rotateAngle,int preInt){
+MultipleShape::MultipleShape(float rotateAngle){
     LOGE("MultipleShapeV::MultipleShape()");
     this->rotateAngle = rotateAngle;
-    this->preInt = preInt;
 }
 MultipleShape::~MultipleShape(){
     LOGE("MultipleShapeV::~MultipleShape()");
@@ -53,7 +52,7 @@ void MultipleShape::initShapeData(float x,float y,float z,int count, float size)
         vertexBuffer->setPosition(i,shapeSize * cosValue,shapeSize *sinValue, 0);
         vertexBuffer->setColor(i, 0.7f, 0.3f, 0.1f, 1.0f);
         //vertexBuffer->setTexcoord(i,(-cosValue + 1.0f)*0.5f,(sinValue + 1.0f)*0.5f);
-        vertexBuffer->setTexcoord(i,(preInt* cosValue + 1.0f)*0.5f,(sinValue + 1.0f)*0.5f);
+        vertexBuffer->setTexcoord(i,( cosValue + 1.0f)*0.5f,(sinValue + 1.0f)*0.5f);
         //vertexBuffer->setTexcoord(i,abs(cosValue)*0.5f,abs(sinValue )*0.5f);
     }
 }

@@ -27,7 +27,7 @@ public:
 
     virtual void onSurfaceChanged(float width, float height);
 
-    virtual void onDrawFrame( void * data,int width,int height);
+    virtual void onDrawFrame(  void * data,int width,int height);
 
     virtual void releaseNative(JNIEnv *env);
 
@@ -44,7 +44,7 @@ public:
     virtual void changeShapeDrawCount(int count);
 
     virtual void changeFileterZoom(float temp);
-
+    virtual void addTextEffect(void *piexl, float width, float height);
     virtual jobject getSurfaceTexture();
     void  initEyeTracker();
 };

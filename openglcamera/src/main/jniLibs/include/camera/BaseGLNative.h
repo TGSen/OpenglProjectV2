@@ -132,6 +132,10 @@ Java_sen_com_openglcamera_natives_BaseGLNative_onChangeFileterZoom(JNIEnv *, jcl
 JNIEXPORT jobject JNICALL Java_sen_com_openglcamera_natives_BaseGLNative_getSurfaceTexture
         (JNIEnv *, jclass);
 
+
+JNIEXPORT void JNICALL
+Java_sen_com_openglcamera_natives_BaseGLNative_addTextEffect(JNIEnv *, jclass, jobject);
+
 #ifdef __cplusplus
 }
 #endif

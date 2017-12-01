@@ -43,6 +43,7 @@ void  BaseSences::changeShapeDrawCount(int count) {}
 void  BaseSences::changeFileterZoom(float temp) {}
 
 jobject BaseSences::getSurfaceTexture() {}
+void BaseSences::addTextEffect(void *piexl, float width, float height) {}
 
 void  BaseSences::initEyeTracker(){
     //加载人脸检测,先检查文件是否存在，并且是否可读权限

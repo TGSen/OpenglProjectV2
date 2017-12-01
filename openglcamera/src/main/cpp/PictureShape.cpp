@@ -57,13 +57,18 @@ void PictureShape::initShapeData(float x,float y,float z,int count, float shapeS
 //    vertexBuffer->setTexcoord(2,1.0f, 0.0f);
 //    vertexBuffer->setTexcoord(3,0.0f, 0.0f);
 
-    vertexBuffer->setTexcoord(0,0.0f,1.0f);
-    vertexBuffer->setTexcoord(1,0.0f, 0.0f);
-    vertexBuffer->setTexcoord(2,1.0f, 0.0f);
-    vertexBuffer->setTexcoord(3,1.0f,1.0f);
+//    vertexBuffer->setTexcoord(0,0.0f,1.0f);
+//    vertexBuffer->setTexcoord(1,0.0f, 0.0f);
+//    vertexBuffer->setTexcoord(2,1.0f, 0.0f);
+//    vertexBuffer->setTexcoord(3,1.0f,1.0f);
 
-    vertexBuffer->setPosition(0,-1.0f, 1.0f, 0.0f, 1.0f);
-    vertexBuffer->setPosition(1,-1.0f, -1.0f, 0.0f, 1.0f);
-    vertexBuffer->setPosition(2,1.0f, -1.0f, 0.0f, 1.0f);
+    vertexBuffer->setTexcoord(0,0.0f,0.0f);
+    vertexBuffer->setTexcoord(1,1.0f,0.0f);
+    vertexBuffer->setTexcoord(2,0.0f, 1.0f);
+    vertexBuffer->setTexcoord(3,1.0f, 1.0f);
+
+    vertexBuffer->setPosition(0,-1.0f, -1.0f, 0.0f, 1.0f);
+    vertexBuffer->setPosition(1,1.0f, -1.0f, 0.0f, 1.0f);
+    vertexBuffer->setPosition(2,-1.0f, 1.0f, 0.0f, 1.0f);
     vertexBuffer->setPosition(3,1.0f, 1.0f, 0.0f,1.0f);
 }
