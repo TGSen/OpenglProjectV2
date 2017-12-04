@@ -3,7 +3,7 @@
     android:id="@+id/item_name"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="16dp"
+    android:layout_margin="8dp"
     android:gravity="bottom"
     android:text="Page1"
     android:paddingBottom="6dp"

@@ -11,6 +11,7 @@ import java.io.File;
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
+import sen.com.openglcamera.fragment.picture.EffectsFragment;
 import sen.com.openglcamera.natives.BaseGLNative;
 import sen.com.openglcamera.utils.BitmapUtils;
 
@@ -22,15 +23,21 @@ import sen.com.openglcamera.utils.BitmapUtils;
  * Des    : 图片的渲染器
  */
 
-public class PictureRenderer implements GLSurfaceView.Renderer {
+public class PictureRenderer implements GLSurfaceView.Renderer ,EffectsFragment.OnAddObjecteDrawFrameLisenter {
 
     private final String mRootPath;
     private boolean isdrawFinish;
+    private boolean isAddFinish;
     private int mWidth;
     private int mHeight;
     //使用弱引用还是？待我想想
     private RenderLinstener renderLinstener;
+
+
+
     private Handler mHandler = new Handler(Looper.getMainLooper());
+    private Object object;
+
     private void drawFinish(){
             if(!isdrawFinish &&renderLinstener!=null){
                 isdrawFinish = true;
@@ -74,8 +81,21 @@ public class PictureRenderer implements GLSurfaceView.Renderer {
 
     @Override
     public void onDrawFrame(GL10 gl) {
+       onDrawFrameBefore();
         BaseGLNative.onDrawFrame(null,0,0);
         drawFinish();
     }
 
+    private void onDrawFrameBefore(){
+        if(isAddFinish){
+            isAddFinish = false;
+            BaseGLNative.addTextEffect((Bitmap) object);
+        }
+    }
+
+    @Override
+    public void add(Object object) {
+        this.object = object;
+        isAddFinish = true;
+    }
 }

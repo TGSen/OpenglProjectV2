@@ -12,34 +12,99 @@
         android:orientation="vertical"
         android:padding="8dp">
 
-
-    <RadioGroup
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_marginLeft="16dp"
-        android:layout_marginTop="16dp"
-        android:orientation="horizontal"
-        android:paddingBottom="8dp"
-        android:showDividers="middle">
-
-
-        <android.support.v7.widget.AppCompatRadioButton
-            android:id="@+id/btnTextEffect"
-            style="@style/CircleRadioStytle"
-            android:layout_width="wrap_content"
+        <HorizontalScrollView
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="文字" />
+            android:scrollbars="none">
 
-        <android.support.v7.widget.AppCompatRadioButton
-            android:id="@+id/btnPicture"
-            style="@style/CircleRadioStytle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginLeft="16dp"
-            android:text="贴纸" />
+            <RadioGroup
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginLeft="16dp"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:paddingBottom="8dp"
+                android:paddingRight="20dp"
+                android:showDividers="middle">
 
-    </RadioGroup>
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/btnNormalEff"
+                    style="@style/CircleRadioStytle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    android:text="正常" />
+
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/btnTextEffect"
+                    style="@style/CircleRadioStytle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:text="文字" />
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/btnPicture"
+                    style="@style/CircleRadioStytle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:text="贴纸" />
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/btnGaussion"
+                    style="@style/CircleRadioStytle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:text="高斯模糊" />
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/btnAnime"
+                    style="@style/CircleRadioStytle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:text="手绘" />
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/btnEclosion"
+                    style="@style/CircleRadioStytle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:text="羽化" />
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/btnDarkGreens"
+                    style="@style/CircleRadioStytle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:text="碧绿" />
+
+
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/btnBlueCold"
+                    style="@style/CircleRadioStytle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:text="冰冻" />
+
+                <android.support.v7.widget.AppCompatRadioButton
+                    android:id="@+id/btnDarkBrown"
+                    style="@style/CircleRadioStytle"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:text="怀旧" />
+
+            </RadioGroup>
+        </HorizontalScrollView>
     </LinearLayout>
 
 </LinearLayout>

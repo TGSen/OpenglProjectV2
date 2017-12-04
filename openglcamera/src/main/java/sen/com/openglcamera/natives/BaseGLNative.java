@@ -60,8 +60,11 @@ public class BaseGLNative {
     public static native void onSurfaceCreated();
 
     public static native void onSurfaceChanged(int width, int height);
+
     //更新一帧画面
     public static native void onDrawFrame(byte[] currentData,int width,int height);
+    //主要用于在GL线程在不断画的过程中初始化一些东西，比如传递图片到底层
+    public static native void onDrawFrameBefore(Object currentData);
 
     //稀放带有一个参数，是释放谁的场景
     public static native void releaseNative(int senceType);

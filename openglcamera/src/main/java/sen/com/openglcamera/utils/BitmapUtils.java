@@ -139,7 +139,7 @@ public class BitmapUtils {
         tv.measure(View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED),
                 View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED));
         tv.layout(0, 0, tv.getMeasuredWidth(), tv.getMeasuredHeight());
-        tv.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary));
+        tv.setBackgroundColor(ContextCompat.getColor(context, R.color.gray9E));
         tv.buildDrawingCache();
         Bitmap bitmapCode = tv.getDrawingCache();
         return bitmapCode;

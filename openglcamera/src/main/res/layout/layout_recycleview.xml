@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@null"
-    android:gravity="bottom"
     android:orientation="horizontal">
 
     <LinearLayout
@@ -12,14 +11,13 @@
         android:gravity="bottom"
         android:orientation="vertical"
         >
-
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/recyclerView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom"
-        android:background="@android:color/transparent"
-        android:gravity="bottom" />
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/recyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"
+            android:background="@android:color/transparent"
+            android:gravity="bottom" />
     </LinearLayout>
 </LinearLayout>
 
