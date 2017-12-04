@@ -2,6 +2,17 @@
 // Created by Administrator on 2017/10/20.
 //
 
+/**
+ *
+ * Author : 唐家森
+ * Version: 1.0
+ * On     : 2017/10/20
+ * Des    : 修改版本，由于要升级opengl3.0 GL_TEXTURE_EXTERNAL_OES 在3.0里没有
+ *           修改成GL_TEXTURE_2D
+ *
+ *           camera 需要旋转90 picture 不需要
+ */
+
 #include <camera/sggl.h>
 #include "camera/camera.h"
 #include <camera/NormalShape.h>
@@ -10,20 +21,8 @@
 
 
 Camera::Camera (){
-    isChangeVSFS = false;
-    isChangeShape = false;
-    isInitFinish = false;
-    fsPath = nullptr;
-    vsPath = nullptr;
-    cameraShape = nullptr;
-     mWidth=0;
-     mHeight=0;
-    mFilterZoom =0;
-    mMultipleCount = 4;
-    currentShap = Normal;
-    //初始化为黑色
-    mBgColor = glm::vec4(0.0f, 0.0f, 0.0f, 0.0f);
-    mShapSize =1.0f;
+    mShapSize =0.5f;
+    constShapSize=0.5f;
 }
 
 Camera::~Camera(){
@@ -52,6 +51,20 @@ jobject Camera::getSurfaceTextureObject() {
     }
     return javaSurfaceTextureObj;
 }
+void Camera::initTextureId(){
+    glGenTextures(1, &textureId);
+    glBindTexture(GL_TEXTURE_2D, textureId);
+    //解析来自http://blog.csdn.net/junzia/article/details/53861519
+    //设置环绕方向S，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    //设置环绕方向T，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    //设置缩小过滤为使用纹理中坐标最接近的一个像素的颜色作为需要绘制的像素颜色
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    //设置放大过滤为使用纹理中坐标最接近的若干个颜色，通过加权平均算法得到需要绘制的像素颜色
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, 0);
+}
 
 void Camera::initVertex(float x, float y, float z, int count) {
 //    mModelMatrix = glm::translate(x,y,z);
@@ -73,8 +86,13 @@ void Camera::initVertex(float x, float y, float z, int count) {
 //    vertexBuffer->setPosition(3,1.0f, 1.0f, 0.0f,1.0f);
     //将上面的操作放到一个形状相关的类里 CameraShape ,这样可以方便拓展
     initShapeData(x, y, z, 4,mShapSize);
+
+}
+
+void Camera::initShader(){
     mShader = new SShader;
-    mShader->init("resource/camera/camera_normal.vs", "resource/camera/camera_normal.fs");
+    mShader->init("resource/camera/camera_normal.vs","resource/effects/fullsrceenfbo.fs");
+    //  mShader->init("resource/camera/camera_normal.vs", "resource/camera/camera_normal.fs");
 //    mShader->init("Res/camera_filter_rgba.vs", "Res/camera_filter_customer.fs");
     //设置滤镜的分量，请查看camera_back&while.fs ,注意的是如果fs vs 没有这个属性不要设置，避免出现黑屏，或者是清屏颜色
     mShader->setUiformVec4("U_MultipleFilter",1.0f,1.0f,1.0f,1.0f);
@@ -90,15 +108,15 @@ void Camera::initShapeData(float x, float y, float z, int count, float shapSize)
         CameraShape *shape;
         switch (currentShap) {
             case Normal:
-                shape = new NormalShape;
+                shape = new NormalShape();
                 shape->initShapeData(x, y, z, mMultipleCount, shapSize);
                 break;
             case Circle:
-                shape = new MultipleShape;
-                shape->initShapeData(x, y, z, 200, shapSize);
+                shape = new MultipleShape();
+                shape->initShapeData(x, y, z, 300, shapSize);
                 break;
             case Multiple:
-                shape = new MultipleShape;
+                shape = new MultipleShape();
                 shape->initShapeData(x, y, z, mMultipleCount, shapSize);
                 break;
 
@@ -118,7 +136,7 @@ void Camera::initShapeData(float x, float y, float z, int count, float shapSize)
             //边数相等，看大小有没相等
             if (cameraShape->shapeSize != shapSize) {
                 LOGE("cameraShape->changeShapeSize(shapSize)");
-                cameraShape->changeShapeSize(shapSize);
+                changeShapeSize(shapSize);
             }
 
         }
@@ -131,16 +149,30 @@ void Camera::initShapeData(float x, float y, float z, int count, float shapSize)
 
 void Camera::createSurfaceTextureObject(JNIEnv *env) {
     glGenTextures(1, &textureId);
-    glBindTexture(GL_TEXTURE_EXTERNAL_OES, textureId);
+
+//    glBindTexture(GL_TEXTURE_EXTERNAL_OES, textureId);
+//    //解析来自http://blog.csdn.net/junzia/article/details/53861519
+//    //设置环绕方向S，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
+//    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+//    //设置环绕方向T，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
+//    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+//    //设置缩小过滤为使用纹理中坐标最接近的一个像素的颜色作为需要绘制的像素颜色
+//    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+//    //设置放大过滤为使用纹理中坐标最接近的若干个颜色，通过加权平均算法得到需要绘制的像素颜色
+//    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+
+    glBindTexture(GL_TEXTURE_2D, textureId);
     //解析来自http://blog.csdn.net/junzia/article/details/53861519
     //设置环绕方向S，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
-    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     //设置环绕方向T，截取纹理坐标到[1/2n,1-1/2n]。将导致永远不会与border融合
-    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     //设置缩小过滤为使用纹理中坐标最接近的一个像素的颜色作为需要绘制的像素颜色
-    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
     //设置放大过滤为使用纹理中坐标最接近的若干个颜色，通过加权平均算法得到需要绘制的像素颜色
-    glTexParameteri(GL_TEXTURE_EXTERNAL_OES, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glBindTexture(GL_TEXTURE_2D, 0);
     //创建 java SurfaceTexture 并绑定textureId
     const char *stClassPath = "android/graphics/SurfaceTexture";
     const jclass surfaceTextureClass = env->FindClass(stClassPath);
@@ -159,20 +191,22 @@ void Camera::createSurfaceTextureObject(JNIEnv *env) {
 
 }
 
-void Camera::initMVP(float width, float height, glm::vec3 carmeaPos) {
+void Camera::initMVPMatrix(float width, float height,glm::vec3 carmeaPos,float rotateAngle,float ratio) {
     mWidth = width;
     mHeight = height;
     mCameraPos = carmeaPos;
-    cameraShape->initMVP(width, height, carmeaPos);
+    mRotateAngle = rotateAngle;
+    cameraShape->initMVPMatirxV2(width, height, carmeaPos,rotateAngle,ratio);
 
 }
-void Camera::draw() {
+void Camera::draw(int width,int height,vector<Rect2f> faces) {
     //画之前看看有没有更改了滤镜形状
     if (isChangeShape) {
         LOGE("camera->mShapSize %f",mShapSize);
         initShapeData(0.0f,0.0f,0.0f,mMultipleCount,mShapSize);
-        cameraShape->initMVP(mWidth,mHeight,mCameraPos);
-
+        if(cameraShape->mMvpMatrix== nullptr){
+            initMVPMatrix(mWidth,mHeight,mCameraPos,mRotateAngle,constShapSize);
+        }
         isChangeShape = false;
     }
 
@@ -191,6 +225,11 @@ void Camera::draw() {
         
     }
 
+    if(isChangeFilterColor){
+        changeFilterColor();
+        isChangeFilterColor = false;
+    }
+
     //OpenGl设定
 //    glEnable(GL_BLEND);             //启用混合功能，将图形颜色同周围颜色相混合
 //    glBlendFunc(GL_SRC_ALPHA,GL_ONE_MINUS_SRC_ALPHA);
@@ -198,17 +237,46 @@ void Camera::draw() {
     //深度测试
     glEnable(GL_DEPTH_TEST);
     glHint(GL_NEAREST_MIPMAP_LINEAR,GL_NICEST);
-    cameraShape->vertexBuffer->bind();
-    mShader->bind(glm::value_ptr(cameraShape->mModelMatrix),
-                  glm::value_ptr(cameraShape->mViewMatrix),
-                  glm::value_ptr(cameraShape->mProjectionMatrix));
+    //设置眼睛的位置,现在眼睛是0-width,0-height,由于纹理坐标是0-1，需要转化该范围
+    if(!faces.empty()){
+      //  LOGE("检测到：%f",faces[0].x/width);
+        mShader->setUiformVec4("U_LeftEyePos", faces[0].x/width,faces[0].y/height,0.0f,0.0f);
+        mShader->setUiformVec4("U_RightEyePos", faces[1].x/width,faces[1].y/height,0.0f,0.0f);
+        //放大系数
+        mShader->setUiformVec4("U_ScaleNum", 5.0f,0.0f,0.0f,0.0f);
+    }else{
+     //   LOGE("未检测到");
+        mShader->setUiformVec4("U_LeftEyePos", 0.0f,0.0f,0.0f,0.0f);
+        mShader->setUiformVec4("U_RightEyePos",0.0f,0.0f,0.0f,0.0f);
+        //放大系数
+        mShader->setUiformVec4("U_ScaleNum", 5.0f,0.0f,0.0f,0.0f);
+    }
 
-    glDrawArrays(GL_TRIANGLE_FAN, 0, cameraShape->getDrawCount());
+    cameraShape->vertexBuffer->bind();
+    mShader->bind(glm::value_ptr(cameraShape->mMvpMatrix->mModelMatrix),
+                  glm::value_ptr(cameraShape->mMvpMatrix->mViewMatrix),
+                  glm::value_ptr(cameraShape->mMvpMatrix->mProjectionMatrix));
+
+
+
+    if(currentShap ==Normal){
+        glDrawArrays(GL_TRIANGLE_STRIP, 0, cameraShape->getDrawCount());
+    }else{
+        glDrawArrays(GL_TRIANGLE_FAN, 0, cameraShape->getDrawCount());
+    }
+
     cameraShape->vertexBuffer->unBind();
 }
 //修改 shader 变量参数
 void Camera::changeFilter(float cr,float cg, float cb , float ca){
-    mShader->setUiformVec4("U_MultipleFilter",cr,cg,cb,ca);
+    isChangeFilterColor = true;
+    mFilterColor = glm::vec4(cr,cg,cb,ca);
+}
+
+//修改 shader 变量参数
+void Camera::changeFilterColor(){
+    mShader->setUiformVec4("U_MultipleFilter",mFilterColor.r,mFilterColor.g,mFilterColor.b,mFilterColor.a);
+
 }
 
 //修改 vs shader ,和fs shader
@@ -229,6 +297,7 @@ void Camera::changeVSFS(const char* vspath, const char*fspath){
 }
 
 bool Camera::changeShape(int shape, int count) {
+    LOGE("changeShape.....shape");
     if (!isInitFinish) {
         LOGE("changeShape.....last not finish");
         return false;
@@ -240,7 +309,7 @@ bool Camera::changeShape(int shape, int count) {
         isChangeShape = true;
         return true;
     }
-
+    return false;
 }
 
 void Camera::changeShapeDrawCount(int count){
@@ -253,8 +322,18 @@ void Camera::changeShapeDrawCount(int count){
 }
 
 void Camera::changeShapeSize(float size){
-    mShapSize =size;
-    cameraShape->changeShapeSize(size);
+    if(currentShap ==Normal){
+        return;
+    }
+    mShapSize =constShapSize-size;
+    if(mShapSize<0.0){
+        mShapSize =0.0f;
+    }
+    LOGE("CameraShape:: changeShapeSize%f",mShapSize);
+    //每次用初始化为单位矩阵glm::mat4(1.0f)
+    cameraShape->mMvpMatrix->mModelMatrix = glm::scale(glm::mat4(1.0f),glm::vec3(mShapSize,mShapSize,1.0f));
+    //还需要旋转过来,图片不需要转
+    cameraShape->mMvpMatrix->mModelMatrix = glm::rotate( cameraShape-> mMvpMatrix->mModelMatrix, cameraShape->mMvpMatrix->rotateAngle,glm::vec3(0.0f,0.0f,1.0f));
 }
 //修改路径的区域
 void Camera::changeFileterZoom(float zoom){
@@ -269,6 +348,10 @@ void Camera::changeFileterZoom(float zoom){
 
    mFilterZoom = zoom;
 
+}
+
+void Camera::changeBgColor(glm::vec4 bgcolor){
+    mBgColor = bgcolor;
 }
 
 

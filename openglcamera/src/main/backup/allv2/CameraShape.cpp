@@ -11,6 +11,7 @@
 CameraShape::CameraShape(){
     LOGE("CameraShape::CameraShape()");
     vertexBuffer = nullptr;
+    mMvpMatrix = nullptr;
 }
 CameraShape::~CameraShape(){
     LOGE("CameraShape::~CameraShape()");
@@ -28,10 +29,19 @@ CameraShape::~CameraShape(){
 
 
 }
-//初始化矩阵
-void CameraShape::initMVP( float width,float height,glm::vec3 carmeaPos){
-    LOGE("CameraShape::initMVP");
-}
+
+void
+CameraShape::initMVPMatirxV2(float width, float height, glm::vec3 carmeaPos, float rotateAngle,float ratio) {}
+
+void CameraShape::initMVPMatirx(float width, float height, float reqWidth, float reqHeight,
+                                glm::vec3 carmeaPos, float rotateAngle,float ratio) {}
+
+
+
+
+
+
+
 //初始化顶点
 void CameraShape::initShapeData(float x,float y,float z,int count, float shapeSize){
     LOGE("CameraShape::initShapeData");
@@ -50,12 +60,4 @@ void CameraShape::changeDrawCount(int count){
         count =3;
     }
     this->drawCount = count;
-}
-
-void CameraShape::changeShapeSize(float size){
-    LOGE("CameraShape:: changeShapeSize%f",size);
-    //每次用初始化为单位矩阵glm::mat4(1.0f)
-    mModelMatrix = glm::scale(glm::mat4(1.0f),glm::vec3(size,size,1.0f));
-    //还需要旋转过来
-    mModelMatrix = glm::rotate(mModelMatrix,90.0f,glm::vec3(0.0f,0.0f,1.0f));
 }

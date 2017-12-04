@@ -13,6 +13,7 @@
 #include "camera/Model3D.h"
 #include "camera/FrameBuffer.h"
 #include "camera/FullScreenQuad.h"
+#include "camera/MVPMatrix.h"
 using namespace cv;
 glm::vec3 carmeaPoss(0.0f, 0.0f, 6.0f);
 Camera *mCamera ;
@@ -20,7 +21,7 @@ Camera *mCamera ;
 FrameBuffer *frameBuffer;
 FullScreenQuad *normalSQ;
 CameraSence::CameraSence() {
-    isNeedEyeTracker = true;
+    isNeedEyeTracker = false;
 }
 
 CameraSence::~CameraSence() {}
@@ -32,12 +33,12 @@ void CameraSence::onBeforeSurfaceCreated(JNIEnv *env, jobject bitmapObj) {
 }
 
 void CameraSence::onSurfaceCreated() {
-    mCamera->initVertex(0.0f,0.0f,0.0f,4);
+
+    mCamera-> initShader();
     //全屏四方形
     normalSQ = new FullScreenQuad;
     normalSQ->init();
  //   mCamera->mShader->init("resource/camera/camera_normal.vs","resource/effects/effect_scale_eye.fs");
-    mCamera->mShader->init("resource/camera/camera_normal.vs","resource/effects/fullsrceenfbo.fs");
     normalSQ->mShader->init("resource/camera/camera_normal.vs","resource/camera/camera_normal.fs");
 }
 
@@ -45,12 +46,14 @@ void CameraSence::onSurfaceCreated() {
 
 void CameraSence::onSurfaceChanged(float width, float height) {
     glViewport(0,0,width,height);
-    mCamera->initMVP(width,height,carmeaPoss);
+    mCamera->initMVPMatrix(width,height,carmeaPoss,-90.0f,mCamera->constShapSize);
+    mCamera->mShapSize = mCamera->constShapSize;
+    //等大小初始化完毕先
+    mCamera->initVertex(0.0f,0.0f,0.0f,4);
     frameBuffer = new FrameBuffer;
     frameBuffer->attachColorBuffer("color",GL_COLOR_ATTACHMENT0,(int)width,(int)height);
     frameBuffer->attachDepthBuffer("depth",(int)width,(int)height);
     frameBuffer->finish();
-
     mCamera->mShader->setTexture("U_Texture",frameBuffer->getBufferByName("color"));
 }
 
@@ -70,16 +73,12 @@ void CameraSence::onDrawFrame( void * data,int width,int height) {
             float endtime = getTime()-time;
             LOGE("check face usetime %f",endtime);
         }else{
-            LOGE("eyesTracker has not init,lookat last log");
+           // LOGE("eyesTracker has not init,lookat last log");
         }
         eyes.clear();
     }else{
         LOGE("BaseGLNative_onDrawFrame");
     }
-
-
-
-
     glClearColor(mCamera->mBgColor.r,mCamera->mBgColor.g,mCamera->mBgColor.b,mCamera->mBgColor.a);
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
     float time = getTime();
@@ -88,7 +87,7 @@ void CameraSence::onDrawFrame( void * data,int width,int height) {
     frameBuffer->unBind();
     mCamera->draw( width, height,eyes);
 //    //良好习惯，当绘制完毕后，将程序置为0 号程序
-//    glUseProgram(0);
+    glUseProgram(0);
 //    LOGE("draw usetime %f",time);
 }
 

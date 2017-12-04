@@ -11,27 +11,11 @@
 
 
 #include <camera/PictureShape.h>
+#include <camera/MVPMatrix.h>
 #include "camera/Picture.h"
 
 Picture::Picture (){
-    isChangeVSFS = false;
-    isChangeShape = false;
-    isChangeFilterColor= false;
-    isInitFinish = false;
-    fsPath = nullptr;
-    vsPath = nullptr;
-    cameraShape = nullptr;
-    mWidth=0;
-    mHeight=0;
-    mResWidth = 0;
-    mResHeight =0;
-    mFilterZoom =0;
-    mMultipleCount = 4;
-    currentShap = Normal;
-    //初始化为白色
-    mBgColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    mFilterColor = glm::vec4(1.0f, 1.0f, 1.0f, 1.0f);
-    mShapSize =1.0f;
+
 }
 
 Picture::~Picture(){
@@ -61,10 +45,9 @@ void Picture::initVertex(float x, float y, float z, int count) {
     mShader->setTexture("U_Texture", textureId);
 }
 
-bool Picture::initShapeData(float x, float y, float z, int count, float shapSize) {
+void Picture::initShapeData(float x, float y, float z, int count, float shapSize) {
     //没次进来都要这样，外部调用时都要更新
     isInitFinish = false;
-    bool  isNeedReInitMvp = false;
     auto iterators = mShapeTypeMap.find(currentShap);
     if (iterators == mShapeTypeMap.end()) {
         LOGE("cameraShape->initShapeData,没有该形状，new");
@@ -76,24 +59,22 @@ bool Picture::initShapeData(float x, float y, float z, int count, float shapSize
                 shape->initShapeData(x, y, z, mMultipleCount, shapSize);
                 break;
             case Circle:
-                shape = new MultipleShape(0.0f);
+                shape = new MultipleShape();
                 shape->initShapeData(x, y, z, 300, shapSize);
                 break;
             case Multiple:
-                shape = new MultipleShape(0.0f);
+                shape = new MultipleShape();
                 shape->initShapeData(x, y, z, mMultipleCount, shapSize);
                 break;
 
         }
         cameraShape = shape;
-        isNeedReInitMvp= true;
         mShapeTypeMap.insert(std::pair<ShapeType, CameraShape *>(currentShap, shape));
         LOGE("cameraShape->mShapeTypeMap.insert");
     } else {
         //重新赋值
         LOGE("cameraShape->initShapeData,有该形状");
         cameraShape = iterators->second;
-        isNeedReInitMvp= false;
         if (cameraShape->vertexBuffer->mVertexCount != count) {
             //如果边数不等于的话重建
             LOGE("cameraShape->initShapeData ，形状不一样");
@@ -102,7 +83,7 @@ bool Picture::initShapeData(float x, float y, float z, int count, float shapSize
             //边数相等，看大小有没相等,normal就不需要检查了
             if (cameraShape->shapeSize != shapSize && currentShap!=Normal) {
                 LOGE("cameraShape->changeShapeSize(shapSize)");
-                cameraShape->changeShapeSize(shapSize);
+                changeShapeSize(shapSize);
             }
 
         }
@@ -110,52 +91,28 @@ bool Picture::initShapeData(float x, float y, float z, int count, float shapSize
     }
 
     isInitFinish = true;
-    return isNeedReInitMvp;
 }
 
-void Picture::initMVP(float width, float height,float reqWidth,float reqHeight, glm::vec3 carmeaPos) {
+void Picture::initMVPMatrix(float width, float height,float reqWidth, float reqHeight,glm::vec3 carmeaPos,float rotateAngle,float ratio) {
     mWidth = width;
     mHeight = height;
+    mReqHeight = reqHeight;
+    mReqWidth = reqWidth;
     mCameraPos = carmeaPos;
-    //窗口的宽高比
-    float widthHeight=width/height;
-    //图片的宽高比
-    float reqWidthHeight=reqWidth/reqHeight;
-    LOGE("宽高：%f-%f-%f-%f",width,  height, reqWidth, reqHeight);
-    if(width>height){
-        LOGE("sen width>height");
-        if(reqWidthHeight>widthHeight){
-            LOGE("sen 1");
-            cameraShape->initMVPV2(0, -reqWidthHeight*widthHeight,reqWidthHeight*widthHeight,-1.0f,1.0f, 0.1f, 100.0f, carmeaPos);
-        }else{
-            LOGE("sen 2");
-            cameraShape->initMVPV2(0, -widthHeight/reqWidthHeight,widthHeight/reqWidthHeight,-1.0f,1.0f, 0.1f, 100.0f, carmeaPos);
-        }
-    }else{
-        LOGE("sen width<height");
-//        if (wHImg > sWH) {
-//            mProjectionMatrix = glm::ortho(-1.0f, 1.0f, -wHImg / sWH, wHImg / sWH, 0.1f, 100.0f);
-//        } else {
-//            mProjectionMatrix = glm::ortho(-sWH / wHImg, sWH / wHImg, -1.0f, 1.0f, 0.1f, 100.0f);
-//        }
-        if(reqWidthHeight>widthHeight){
-            LOGE("sen 3");
-            cameraShape->initMVPV2( 0,-1.0f, 1.0f, -reqWidthHeight/widthHeight,reqWidthHeight/widthHeight, 0.1f, 100.0f,carmeaPos);
-        }else{
-            LOGE("sen 4");
-            cameraShape->initMVPV2( 0, -1.0f, 1.0f,-reqWidthHeight/widthHeight,reqWidthHeight/widthHeight, 0.1f, 100.0f,carmeaPos);
-        }
-    }
+    mRotateAngle = rotateAngle;
+    cameraShape->initMVPMatirx(width, height,reqWidth, reqHeight,carmeaPos,rotateAngle,ratio);
 
 }
+
+
 void Picture::draw() {
     //画之前看看有没有更改了滤镜形状
     if (isChangeShape) {
         LOGE("camera->mShapSize %f",mShapSize);
         //一般如果存在Shape 都不会变mvp 的
-       bool isNeedChangeMvp= initShapeData(0.0f,0.0f,0.0f,mMultipleCount,mShapSize);
-        if(isNeedChangeMvp){
-            cameraShape->initMVP(mWidth,mHeight,mCameraPos);
+      initShapeData(0.0f,0.0f,0.0f,mMultipleCount,mShapSize);
+        if(cameraShape->mMvpMatrix== nullptr){
+            initMVPMatrix(mWidth,mHeight,mReqWidth,mReqHeight,mCameraPos,mRotateAngle,constShapSize);
         }
         isChangeShape = false;
     }
@@ -190,9 +147,9 @@ void Picture::draw() {
     glClearColor(mBgColor.r, mBgColor.g, mBgColor.b,mBgColor.a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     cameraShape->vertexBuffer->bind();
-    mShader->bind(glm::value_ptr(cameraShape->mModelMatrix),
-                  glm::value_ptr(cameraShape->mViewMatrix),
-                  glm::value_ptr(cameraShape->mProjectionMatrix));
+    mShader->bind(glm::value_ptr(cameraShape->mMvpMatrix->mModelMatrix),
+                  glm::value_ptr(cameraShape->mMvpMatrix->mViewMatrix),
+                  glm::value_ptr(cameraShape->mMvpMatrix->mProjectionMatrix));
     if(currentShap ==Normal){
         glDrawArrays(GL_TRIANGLE_STRIP, 0, cameraShape->getDrawCount());
     }else{
@@ -257,8 +214,12 @@ void Picture::changeShapeDrawCount(int count){
 }
 
 void Picture::changeShapeSize(float size){
-    mShapSize =size;
-    cameraShape->changeShapeSize(size);
+    mShapSize = constShapSize - size;
+    LOGE("CameraShape:: changeShapeSize%f", size);
+    //每次用初始化为单位矩阵glm::mat4(1.0f)
+    glm::mat4  scale = glm::scale(glm::mat4(1.0f), glm::vec3(size, size, 1.0f));
+    //还需要旋转过来,图片不需要转
+    cameraShape->mMvpMatrix->mModelMatrix = glm::rotate(scale, cameraShape->mMvpMatrix->rotateAngle,glm::vec3(0.0f, 0.0f, 1.0f));
 }
 //修改路径的区域
 void Picture::changeFileterZoom(float zoom){

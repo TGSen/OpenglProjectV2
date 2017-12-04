@@ -12,22 +12,22 @@ MultipleShape::MultipleShape(){
 MultipleShape::~MultipleShape(){
     LOGE("MultipleShapeV::~MultipleShape()");
 }
+
 //初始化矩阵
-void MultipleShape::initMVP( float width,float height,glm::vec3 carmeaPos){
-    LOGE("MultipleShapeV::initMVP");
-//    mViewMatrix = glm::lookAt(carmeaPos,glm::vec3(0.0f,0.0f,0.0f),glm::vec3(0.0f,1.0f,1.0f));
-//    mProjectionMatrix= glm::perspective(60.0f,width/height,0.1f,100.0f);
-    mModelMatrix = glm::rotate(glm::mat4(1.0f),90.0f,glm::vec3(0.0f,0.0f,1.0f));
-    mProjectionMatrix =glm::ortho(-1.0f, 1.0f, - height / width,  height / width, 5.0f, 7.0f);
-    mViewMatrix = glm::lookAt(glm::vec3(0.0f, 0.0f, 6.0f),
-                       glm::vec3(0.0f, 0.0f, 0.0f),
-                       glm::vec3(0.0f, 1.0f, 0.0f));
+ void MultipleShape::initMVPMatirxV2( float width,float height,glm::vec3 carmeaPos,float rotateAngle,float ratio){
+    mMvpMatrix = new MVPMatrix(rotateAngle);
+    mMvpMatrix->initMVPMatrixV2(width,height,carmeaPos,ratio);
 
 }
+ void MultipleShape::initMVPMatirx( float width,float height,float reqWidth,float reqHeight,glm::vec3 carmeaPos,float rotateAngle,float ratio){
+    mMvpMatrix = new MVPMatrix(rotateAngle);
+    mMvpMatrix->initMVPMatrix(width,height,reqWidth,reqHeight,carmeaPos,ratio);
+}
+
+
 //初始化顶点 ,假如多边形为200 为圆形
 void MultipleShape::initShapeData(float x,float y,float z,int count, float size){
-    LOGE("MultipleShapeV::initShapeData %d -- %f",count,shapeSize);
-    mModelMatrix = glm::translate(x,y,z);
+    LOGE("MultipleShapeV::initShapeData %d -- %f",count,size);
     if(vertexBuffer == nullptr){
         vertexBuffer = new VertexBuffer;
     }
@@ -44,8 +44,10 @@ void MultipleShape::initShapeData(float x,float y,float z,int count, float size)
         angle= 2 * M_PI * i / vertexBuffer->mVertexCount;
         sinValue= sin(angle);
         cosValue = cos(angle);
-        vertexBuffer->setPosition(i, shapeSize * cosValue, shapeSize *sinValue, 0);
+        vertexBuffer->setPosition(i,shapeSize * cosValue,shapeSize *sinValue, 0);
         vertexBuffer->setColor(i, 0.7f, 0.3f, 0.1f, 1.0f);
-        vertexBuffer->setTexcoord(i,(-cosValue + 1.0f)*0.5f,(sinValue + 1.0f)*0.5f);
+        //vertexBuffer->setTexcoord(i,(-cosValue + 1.0f)*0.5f,(sinValue + 1.0f)*0.5f);
+        vertexBuffer->setTexcoord(i,( cosValue + 1.0f)*0.5f,(sinValue + 1.0f)*0.5f);
+        //vertexBuffer->setTexcoord(i,abs(cosValue)*0.5f,abs(sinValue )*0.5f);
     }
 }

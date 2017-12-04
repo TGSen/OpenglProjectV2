@@ -1,6 +1,7 @@
 //
 // Created by Administrator on 2017/10/11.
 //
+#include <camera/sggl.h>
 #include "camera/utils.h"
 GLuint complieShader(GLenum shaderType, const char *shaderCode) {
     GLuint shader = glCreateShader(shaderType);
@@ -79,6 +80,20 @@ unsigned char *decodeBmp(unsigned char *bmpFileData, int &width, int &height) {
     return nullptr;
 }
 
+void createTexture2DByData(const char *name, unsigned char *piexlData, int width, int height, GLenum type) {
+    //创建一个纹理对象
+    GLuint textureId;
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_2D, textureId);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+    glTexImage2D(GL_TEXTURE_2D, 0, type, width, height, 0, type, GL_UNSIGNED_BYTE, piexlData);
+    //上面已经生成了texture,这里置为0，避免被其他程序修改，良好习惯
+    //glUniform1i(glGetUniformLocation())
+}
+
 
 GLuint createTexture2D(unsigned char *piexlData, int width, int height, GLenum type) {
     GLuint textureId;
@@ -133,6 +148,24 @@ pixels 指定内存中指向图像数据的指针
 
 }
 
+GLuint createTexture2dFromBitmap(JNIEnv *env,float &reqW,float& reqH, jobject bitmap){
+    void* pixel = NULL;
+    if(AndroidBitmap_lockPixels(env, bitmap, &pixel)<0){
+        LOGE("AndroidBitmap_lockPixels <0");
+    } else{
+        LOGE("AndroidBitmap_lockPixels >0");
+    }
+    AndroidBitmapInfo info ;
+    AndroidBitmap_getInfo(env,bitmap,&info);
+    reqW = info.width;
+    reqH = info.height;
+    //加载纹理
+    GLuint  textId =  createTexture2D((unsigned char *) pixel, info.width, info.height, GL_RGBA);
+    AndroidBitmap_unlockPixels(env,bitmap);
+    free(pixel);
+    return textId;
+}
+
 GLuint crateTexture2dFromBmp(const char* bmpPath){
     int fileSize = 0;
     //加载文件
@@ -158,6 +191,16 @@ GLuint crateTexture2dFromBmp(const char* bmpPath){
 //    delete pixelData;
     LOGE("crateTexture2dFromBmp yes");
     return textId;
+}
+
+//检验数据
+float checkData(float data) {
+    if (data > 1.0f) {
+        data = 1.0f;
+    } else if (data < 0) {
+        data = 0.0f;
+    }
+    return data;
 }
 
 GLuint createBufferObj(GLenum bufferType,GLsizeiptr size,GLenum usage, void *data){

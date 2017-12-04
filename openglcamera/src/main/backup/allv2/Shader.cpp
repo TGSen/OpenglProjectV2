@@ -36,6 +36,7 @@ void SShader::init(const char *vsPath, const char *fsPath) {
         LOGE("mProgram ==0");
         return;
     }
+    LOGE("SShader::init ShaderCode is ok");
     //从shader 读取属性
     positionLocation = glGetAttribLocation(mProgram,"poistion");
     colorLocation = glGetAttribLocation(mProgram,"color");
@@ -63,7 +64,13 @@ void SShader::bind(float *M, float *V, float *P) {
         glBindTexture(GL_TEXTURE_2D,iterators->second->mTexture);
         glUniform1i(iterators->second->mLocation,index++);
     }
-
+    // textcube 贴图
+    for(auto iterators = uniformTexCubes.begin(); iterators !=uniformTexCubes.end();++iterators){
+        //需要激活
+        glActiveTexture(GL_TEXTURE0+index);
+        glBindTexture(GL_TEXTURE_CUBE_MAP,iterators->second->mTexture);
+        glUniform1i(iterators->second->mLocation,index++);
+    }
 
 
     /* 单个贴图做法
@@ -97,7 +104,8 @@ void SShader::bind(float *M, float *V, float *P) {
 }
 
 void SShader::setTextureEexternalOes(GLuint textureId){
-    glBindTexture(GL_TEXTURE_EXTERNAL_OES, textureId);
+//    GL_TEXTURE_EXTERNAL_OES ,在3.0 没有了
+   // glBindTexture(GL_TEXTURE_EXTERNAL_OES, textureId);
     glActiveTexture(GL_TEXTURE0);
     glUniform1i(texcoordLocation, 0);
 }
@@ -134,6 +142,28 @@ void SShader::setTexture(const char* name , const char* imagePath){
     }
 
 }
+////setTextureCube
+GLuint SShader::setTextureCube(const char * name,GLuint texture){
+    auto iterators = uniformTexCubes.find(name);
+    GLuint oldTexture = 0;
+    if (iterators ==uniformTexCubes.end()){
+        //找不到就创建
+        GLuint  location  = glGetUniformLocation(mProgram,name);
+        if (location !=-1){
+            UniformTextureCube *uniformTexture =new UniformTextureCube;
+            LOGE("setTexture yes");
+            uniformTexture->mTexture =texture;
+            uniformTexture->mLocation = location;
+            uniformTexCubes.insert(std::pair<std::string,UniformTextureCube *>(name,uniformTexture));
+        }
+    } else{
+        //重新赋值
+        oldTexture = iterators->second->mTexture;
+        //glDeleteTextures(1, &iterators->second->mTexture);
+        iterators->second->mTexture = texture;
+    }
+    return oldTexture;
+}
 
 //设置Uniformvec4
 void SShader::setUiformVec4(const char *name, float x, float y, float z, float w) {
@@ -161,7 +191,7 @@ void SShader::setUiformVec4(const char *name, float x, float y, float z, float w
 }
 
 
-void SShader::setTexture(char * name,GLuint texture){
+void SShader::setTexture(const char * name,GLuint texture){
     auto iterators = uniformTextures.find(name);
     if (iterators ==uniformTextures.end()){
         //找不到就创建
